@@ -1,11 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -13,17 +9,58 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
 import { IconButton, useTheme } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { tokens } from "../../../theme";
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+import {
+  fetchCategories,
+  getCategoriesError,
+  getCategoriesStatus,
+  selectAllCategories,
+} from "../../../features/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../../../components/loading";
+import Error from "../../../components/Error";
+import ProductCard from "../../../components/card";
+import NoData from "../../../components/no_data";
 
 const Category = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const dispatch = useDispatch();
+  const categories = useSelector(selectAllCategories);
+  const error = useSelector(getCategoriesError);
+  const categoryStatus = useSelector(getCategoriesStatus);
+  const [search, setSearch] = useState("");
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+  let content;
+  if (categoryStatus === "loading") {
+    content = <Loading />;
+  } else if (categoryStatus === "error") {
+    content = <Error>{error}</Error>;
+  } else if (categoryStatus === "allCategories") {
+    const filteredCategories = categories?.filter((dish) =>
+      dish.name.toLowerCase().includes(search.toLowerCase())
+    );
+    content = (
+      <>
+        {filteredCategories && filteredCategories.length > 0 ? (
+          filteredCategories.map((card) => (
+            <ProductCard
+              data={card}
+              content={card.products.length + " Produit"}
+            />
+          ))
+        ) : (
+          <NoData />
+        )}
+      </>
+    );
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     navigate("/addCategory");
@@ -48,6 +85,7 @@ const Category = () => {
               placeholder="Search"
               className="search-input pl-2"
               style={{ paddingLeft: "10px", width: "300px" }}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <IconButton type="button" sx={{ p: 1 }}>
               <SearchIcon />
@@ -65,55 +103,9 @@ const Category = () => {
         </Toolbar>
       </AppBar>
       <main>
-        <Container maxWidth="lg" sx={{ mt: 2 }}>
+        <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <CardMedia
-                    component="div"
-                    sx={{
-                      paddingTop: "56.25%",
-                    }}
-                    image="https://source.unsplash.com/random?wallpapers"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Burger
-                    </Typography>
-                    <Typography variant="h7" color="text.secondary">
-                      5 produits
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      startIcon={<DeleteForeverIcon />}
-                      style={{ color: "white" }}
-                    >
-                      Supprimer
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      size="small"
-                      startIcon={<EditIcon />}
-                      style={{ color: "white" }}
-                    >
-                      Modifier
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+            {content}
           </Grid>
         </Container>
       </main>

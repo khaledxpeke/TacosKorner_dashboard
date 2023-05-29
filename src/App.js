@@ -9,6 +9,8 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Category from "./screens/categories/category";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -27,9 +29,9 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-      
-        <div className="app-signin app" >
-          {!isSignInPage && <Sidebar/>}
+
+        <div className={!isSignInPage ? "app-signin app" : ""}>
+          {!isSignInPage && <Sidebar />}
           <main className="content">
             {!isSignInPage && (
               <Topbar
@@ -56,6 +58,16 @@ function App() {
                 </>
               )}
             </Routes>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              closeOnClick={true}
+              pauseOnHover={true}
+              draggable={true}
+              progress={undefined}
+              theme="colored"
+            />
           </main>
         </div>
       </ThemeProvider>

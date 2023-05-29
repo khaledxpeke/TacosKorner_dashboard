@@ -1,10 +1,15 @@
 import { Box } from "@mui/material";
-import Loader from "react-spinners/PacmanLoader";
+import Loader from "react-spinners/ClockLoader";
 
 const Loading = () => {
   return (
-    <Box>
-      <Loader color={"#F85649"} />
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+    >
+      <Loader color={"#E9313C"} />
     </Box>
   );
 };

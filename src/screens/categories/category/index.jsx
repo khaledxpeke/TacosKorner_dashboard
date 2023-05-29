@@ -1,7 +1,6 @@
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
-import CameraIcon from "@mui/icons-material/PhotoCamera";
 import AddIcon from "@mui/icons-material/Add";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -9,20 +8,22 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
+import { IconButton, useTheme } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { tokens } from "../../../theme";
 
-
-const cards = [1, 2, 3, 4, 5 , 6 , 7, 8 , 9 , 10 , 11 , 12 , 13];
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
 const Category = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const handleSubmit = (event) => {
     event.preventDefault();
     navigate("/addCategory");
@@ -36,6 +37,22 @@ const Category = () => {
           <Typography variant="h3" color="inherit" noWrap>
             Mes Categories
           </Typography>
+          <Box
+            ml={2}
+            display="flex"
+            backgroundColor={colors.primary[400]}
+            borderRadius="3px"
+          >
+            <input
+              type="text"
+              placeholder="Search"
+              className="search-input pl-2"
+              style={{ paddingLeft: "10px", width: "300px" }}
+            />
+            <IconButton type="button" sx={{ p: 1 }}>
+              <SearchIcon />
+            </IconButton>
+          </Box>
           <Button
             variant="contained"
             color="success"
@@ -68,10 +85,10 @@ const Category = () => {
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Burger 
+                      Burger
                     </Typography>
                     <Typography variant="h7" color="text.secondary">
-                        5 produits
+                      5 produits
                     </Typography>
                   </CardContent>
                   <CardActions>

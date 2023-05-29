@@ -7,11 +7,16 @@ import LanguageIcon from "@mui/icons-material/Language";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-const Topbar = ({ userLoggedIn }) => {
+import { useDispatch } from "react-redux";
+import { logOut } from "../features/authSlice";
+const Topbar = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
-  const handleLogout = () => {
+  const dispatch = useDispatch();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logOut());
     navigate("/signin");
   };
 

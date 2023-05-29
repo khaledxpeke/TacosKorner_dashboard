@@ -1,4 +1,4 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -6,18 +6,19 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import CategoryIcon from '@mui/icons-material/Category';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import KebabDiningIcon from '@mui/icons-material/KebabDining';
-import SoupKitchenIcon from '@mui/icons-material/SoupKitchen';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
-import IcecreamIcon from '@mui/icons-material/Icecream';
-import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import CategoryIcon from "@mui/icons-material/Category";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
+import KebabDiningIcon from "@mui/icons-material/KebabDining";
+import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
+import IcecreamIcon from "@mui/icons-material/Icecream";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <MenuItem
       active={selected === title}
@@ -39,7 +40,8 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [sidebarHeight, setSidebarHeight] = useState("100vh");
-
+  const output = window.localStorage.getItem("user");
+  const user = JSON.parse(output);
   useEffect(() => {
     const handleResize = () => {
       const windowHeight = window.innerHeight;
@@ -76,168 +78,168 @@ const Sidebar = () => {
       className="sidebar"
     >
       <Box
-      sx={{
-        // ... existing styles ...
-        height: sidebarHeight,
-      }}
-    >
-      <Box>
-        <ProSidebar collapsed={isCollapsed}>
-          <Menu iconShape="square">
-            {/* LOGO AND MENU ICON */}
-            <MenuItem
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-              style={{
-                margin: "10px 0 20px 0",
-                color: colors.grey[100],
-              }}
-            >
+        sx={{
+          // ... existing styles ...
+          height: sidebarHeight,
+        }}
+      >
+        <Box>
+          <ProSidebar collapsed={isCollapsed}>
+            <Menu iconShape="square">
+              {/* LOGO AND MENU ICON */}
+              <MenuItem
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
+                style={{
+                  margin: "10px 0 20px 0",
+                  color: colors.grey[100],
+                }}
+              >
+                {!isCollapsed && (
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    ml="15px"
+                  >
+                    <Typography variant="h3" color={colors.grey[100]}>
+                      DASHBOARD
+                    </Typography>
+                    <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                      <MenuOutlinedIcon />
+                    </IconButton>
+                  </Box>
+                )}
+              </MenuItem>
+
               {!isCollapsed && (
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  ml="15px"
-                >
-                  <Typography variant="h3" color={colors.grey[100]}>
-                    DASHBOARD
-                  </Typography>
-                  <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                    <MenuOutlinedIcon />
-                  </IconButton>
+                <Box mb="25px">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <img
+                      alt="profile-user"
+                      width="100px"
+                      height="100px"
+                      src={`../../assets/user.png`}
+                      style={{ cursor: "pointer", borderRadius: "50%" }}
+                    />
+                  </Box>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h2"
+                      color={colors.grey[100]}
+                      fontWeight="bold"
+                      sx={{ m: "10px 0 0 0" }}
+                    >
+                      {user.fullName ? user.fullName : "Admin name"}
+                    </Typography>
+                    <Typography variant="h5" color={colors.greenAccent[500]}>
+                      Admin
+                    </Typography>
+                  </Box>
                 </Box>
               )}
-            </MenuItem>
 
-            {!isCollapsed && (
-              <Box mb="25px">
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
+              <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+                <Item
+                  title="Home"
+                  to="/"
+                  icon={<HomeOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
                 >
-                  <img
-                    alt="profile-user"
-                    width="100px"
-                    height="100px"
-                    src={`../../assets/user.png`}
-                    style={{ cursor: "pointer", borderRadius: "50%" }}
-                  />
-                </Box>
-                <Box textAlign="center">
-                  <Typography
-                    variant="h2"
-                    color={colors.grey[100]}
-                    fontWeight="bold"
-                    sx={{ m: "10px 0 0 0" }}
-                  >
-                    Khaled Bouajila
-                  </Typography>
-                  <Typography variant="h5" color={colors.greenAccent[500]}>
-                    Admin
-                  </Typography>
-                </Box>
+                  Catégories
+                </Typography>
+                <Item
+                  title="Catégorie"
+                  to="/category"
+                  icon={<CategoryIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Produit"
+                  to="/product"
+                  icon={<DinnerDiningIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Addons
+                </Typography>
+                <Item
+                  title="Ingrediants"
+                  to="/ingrediants"
+                  icon={<KebabDiningIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Supplements"
+                  to="/supplements"
+                  icon={<SoupKitchenIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Type"
+                  to="/type"
+                  icon={<ChecklistIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Extra
+                </Typography>
+                <Item
+                  title="Formule"
+                  to="/formule"
+                  icon={<FastfoodIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Désert"
+                  to="/desert"
+                  icon={<IcecreamIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  History
+                </Typography>
+                <Item
+                  title="History"
+                  to="/history"
+                  icon={<ManageSearchIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
               </Box>
-            )}
-
-            <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-              <Item
-                title="Home"
-                to="/"
-                icon={<HomeOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-
-              <Typography
-                variant="h6"
-                color={colors.grey[300]}
-                sx={{ m: "15px 0 5px 20px" }}
-              >
-                Catégories
-              </Typography>
-              <Item
-                title="Catégorie"
-                to="/category"
-                icon={<CategoryIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Item
-                title="Produit"
-                to="/product"
-                icon={<DinnerDiningIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Typography
-                variant="h6"
-                color={colors.grey[300]}
-                sx={{ m: "15px 0 5px 20px" }}
-              >
-                Addons
-              </Typography>
-              <Item
-                title="Ingrediants"
-                to="/ingrediants"
-                icon={<KebabDiningIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Item
-                title="Supplements"
-                to="/supplements"
-                icon={<SoupKitchenIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Item
-                title="Type"
-                to="/type"
-                icon={<ChecklistIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Typography
-                variant="h6"
-                color={colors.grey[300]}
-                sx={{ m: "15px 0 5px 20px" }}
-              >
-                Extra
-              </Typography>
-              <Item
-                title="Formule"
-                to="/formule"
-                icon={<FastfoodIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Item
-                title="Désert"
-                to="/desert"
-                icon={<IcecreamIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Typography
-                variant="h6"
-                color={colors.grey[300]}
-                sx={{ m: "15px 0 5px 20px" }}
-              >
-                History
-              </Typography>
-              <Item
-                title="History"
-                to="/history"
-                icon={<ManageSearchIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-            </Box>
-          </Menu>
-        </ProSidebar>
-      </Box>
+            </Menu>
+          </ProSidebar>
+        </Box>
       </Box>
     </Box>
   );

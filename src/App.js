@@ -19,16 +19,12 @@ import Desert from "./screens/extra/desserts";
 
 function App() {
   const { theme, colorMode } = useMode();
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogin = () => {
-    setUserLoggedIn(true);
-    navigate("/");
-  };
-
-  const isSignInPage = location.pathname === "/signin";
+  const output = window.localStorage.getItem("user");
+  const user = JSON.parse(output);
+  const isSignInPage = user === null;
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -38,21 +34,11 @@ function App() {
         <div className={!isSignInPage ? "app-signin app" : ""}>
           {!isSignInPage && <Sidebar />}
           <main className="content">
-            {!isSignInPage && (
-              <Topbar
-                userLoggedIn={userLoggedIn}
-                onToggleColorMode={() => {
-                  // handle theme mode toggle logic
-                }}
-                onLoginClick={() => {
-                  navigate("/signin");
-                }}
-              />
-            )}
+            {!isSignInPage && <Topbar />}
             <Routes>
               <Route
                 path="/signin"
-                element={<SignIn onLogin={handleLogin} />}
+                element={<SignIn />}
               />
               {!isSignInPage && (
                 <>

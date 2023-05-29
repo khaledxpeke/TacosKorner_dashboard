@@ -34,14 +34,19 @@ const SignIn = () => {
   const loading = useSelector(getUserLoading);
   const navigate = useNavigate();
   useEffect(() => {
+    if (userStatus === "idle") {
+      return;
+    }
+
     if (userStatus === "logedIn") {
       toast.success("Loged in successfully");
       dispatch(updateStatus());
+
       navigate("/");
     } else if (userStatus === "error") {
       toast.error(error);
     }
-  }, [userStatus, error, navigate,dispatch]);
+  }, [userStatus, error, navigate, dispatch]);
   const initialValues = {
     email: "",
     password: "",

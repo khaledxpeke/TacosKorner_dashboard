@@ -18,9 +18,10 @@ body,
 }
 .app-signin{
   display : grid;
-  grid-template-areas: "sidebar topbar topbar" 
-                       "sidebar main-application main-application"
-                       "sidebar main-application main-application";
+  grid-template-columns: 280px auto; 
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar main-application";
 
 }
 .sidebar{

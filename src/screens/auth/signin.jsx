@@ -21,6 +21,7 @@ import {
   login,
   getUserStatus,
   getUserError,
+  updateStatus,
 } from "../../features/authSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -35,11 +36,12 @@ const SignIn = () => {
   useEffect(() => {
     if (userStatus === "logedIn") {
       toast.success("Loged in successfully");
+      dispatch(updateStatus());
       navigate("/");
     } else if (userStatus === "error") {
       toast.error(error);
     }
-  }, [userStatus, error, navigate]);
+  }, [userStatus, error, navigate,dispatch]);
   const initialValues = {
     email: "",
     password: "",

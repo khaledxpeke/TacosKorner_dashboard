@@ -1,65 +1,52 @@
 import React, { useEffect, useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import CameraIcon from "@mui/icons-material/PhotoCamera";
 import AddIcon from "@mui/icons-material/Add";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
-import { IconButton, useTheme } from "@mui/material";
+import { IconButton, useTheme,Box,Toolbar,Grid,Container,Typography,Button,AppBar } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { toast } from "react-toastify";
 import {
-  getProducts,
-  getProductsError,
-  getProductsStatus,
-  selectAllProducts,
-} from "../../../features/productSlice";
+getPack,
+getPackError,
+getPackStatus,
+selectAllPack
+} from "../../../features/packSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
 
-const Formule = () => {
+const Pack = () => {
   const dispatch = useDispatch();
-  const productStatus = useSelector(getProductsStatus);
-  const error = useSelector(getProductsError);
-  const products = useSelector(selectAllProducts);
+  const packStatus = useSelector(getPackStatus);
+  const error = useSelector(getPackError);
+  const packs = useSelector(selectAllPack);
   const navigate = useNavigate();
   const theme = useTheme();
-  const isLightMode = theme.palette.mode === "light";
   const [search, setSearch] = useState("");
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getPack());
   }, [dispatch]);
 
   let content;
-  if (productStatus === "loading") {
+  if (packStatus === "loading") {
     content = <Loading />;
-  } else if (productStatus === "error") {
+  } else if (packStatus === "error") {
     content = <Error>{error}</Error>;
-  } else if (productStatus === "fetchedProducts") {
-    const filteredProducts = products?.filter((dish) =>
+  } else if (packStatus === "fetchedPack") {
+    const filteredPacks = packs?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
     content = (
       <>
-        {filteredProducts && filteredProducts.length > 0 ? (
-          filteredProducts.map((card) => <ProductCard data={card} content={card.price + " " + card.currency}/>)
+        {filteredPacks && filteredPacks.length > 0 ? (
+          filteredPacks.map((card) => (
+            <ProductCard
+              data={card}
+              content={card.price + " " + card.currency}
+            />
+          ))
         ) : (
           <NoData />
         )}
@@ -69,7 +56,7 @@ const Formule = () => {
     const colors = tokens(theme.palette.mode);
     const handleSubmit = (event) => {
       event.preventDefault();
-      navigate("/addProduct");
+      navigate("/addFormule");
     };
     return (
       <div className="main-application">
@@ -77,7 +64,7 @@ const Formule = () => {
         <AppBar position="relative">
           <Toolbar>
             <Typography variant="h3" color="inherit" noWrap>
-              Mes Produits
+              Mes Formules
             </Typography>
             <Box
               ml={2}
@@ -103,12 +90,12 @@ const Formule = () => {
               style={{ marginLeft: "auto" }}
               onClick={handleSubmit}
             >
-              ajouter une produit
+              ajouter une formule
             </Button>
           </Toolbar>
         </AppBar>
         <main>
-          <Container maxWidth="lg" sx={{ mt: 2 }}>
+          <Container maxWidth="lg" sx={{ mt: 2,mb:2 }}>
             <Grid container spacing={4}>
               {content}
             </Grid>
@@ -119,4 +106,4 @@ const Formule = () => {
   }
 };
 
-export default Formule;
+export default Pack;

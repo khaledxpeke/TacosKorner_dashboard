@@ -20,6 +20,7 @@ const ProductCard = ({ data, content }) => {
           height: "100%",
           display: "flex",
           flexDirection: "column",
+          paddingTop: "14px",
         }}
       >
         <CardMedia

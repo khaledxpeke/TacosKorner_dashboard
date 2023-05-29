@@ -11,6 +11,11 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import Category from "./screens/categories/category";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Supplement from "./screens/addons/supplements";
+import Ingrediant from "./screens/addons/ingrediants";
+import Type from "./screens/addons/type";
+import Pack from "./screens/extra/formule";
+import Desert from "./screens/extra/desserts";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -54,6 +59,11 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/category" element={<Category />} />
                   <Route path="/product" element={<Product />} />
+                  <Route path="/supplements" element={<Supplement />} />
+                  <Route path="/ingrediants" element={<Ingrediant />} />
+                  <Route path="/type" element={<Type />} />
+                  <Route path="/formule" element={<Pack />} />
+                  <Route path="/desert" element={<Desert />} />
                   <Route path="/addProduct" element={<AddProduct />} />
                 </>
               )}

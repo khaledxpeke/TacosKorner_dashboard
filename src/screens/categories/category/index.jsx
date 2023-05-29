@@ -24,6 +24,7 @@ import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
+import AlertDialog from "../../../components/daialog";
 
 const Category = () => {
   const theme = useTheme();
@@ -33,6 +34,7 @@ const Category = () => {
   const error = useSelector(getCategoriesError);
   const categoryStatus = useSelector(getCategoriesStatus);
   const [search, setSearch] = useState("");
+  const [open, setOpen] = React.useState(false);
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
@@ -52,11 +54,13 @@ const Category = () => {
             <ProductCard
               data={card}
               content={card.products.length + " Produit"}
+              handleClickOpen={() => setOpen(true)}
             />
           ))
         ) : (
           <NoData />
         )}
+        <AlertDialog handleClose={() => setOpen(false)} open={open} name={"produit"}/>
       </>
     );
   }

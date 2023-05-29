@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-const ProductCard = ({ data, content }) => {
+const ProductCard = ({ data, content,handleClickOpen }) => {
   const theme = useTheme();
   const isLightMode = theme.palette.mode === "light";
   return (
@@ -49,13 +49,14 @@ const ProductCard = ({ data, content }) => {
             {content}
           </Typography>
         </CardContent>
-        <CardActions sx={{backgroundColor: isLightMode ? "#F0F0F7" : "dark"}}>
+        <CardActions sx={{ backgroundColor: isLightMode ? "#F0F0F7" : "dark" }}>
           <Button
             variant="contained"
             color="error"
             size="small"
             startIcon={<DeleteForeverIcon />}
             style={{ color: "white" }}
+            onClick={handleClickOpen}
           >
             Supprimer
           </Button>

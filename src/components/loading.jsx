@@ -1,16 +1,11 @@
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import Loader from "react-spinners/ClockLoader";
 
 const Loading = () => {
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-    >
-      <Loader color={"#E9313C"} />
-    </Box>
+    <Grid container justifyContent="center" alignItems="center" height="60vh">
+      <Loader color={"#E9313C"} size={80}/>
+    </Grid>
   );
 };
 

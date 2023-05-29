@@ -33,8 +33,12 @@ const SignIn = () => {
   const loading = useSelector(getUserLoading);
   const navigate = useNavigate();
   useEffect(() => {
+    if (userStatus === "idle") {
+      return;
+    }
+  
     if (userStatus === "logedIn") {
-      toast.success("Loged in successfully");
+      toast.success("Logged in successfully");
       navigate("/");
     } else if (userStatus === "error") {
       toast.error(error);

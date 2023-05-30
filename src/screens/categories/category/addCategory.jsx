@@ -45,7 +45,7 @@ const AddCategory = () => {
       toast.success("Category added successfully");
       dispatch(updateStatus());
       navigate("/category");
-    } else if (status === "error") {
+    } else if (status === "addError") {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate]);

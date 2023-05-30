@@ -17,6 +17,7 @@ import Ingrediant from "./screens/addons/ingrediants";
 import Type from "./screens/addons/type";
 import Pack from "./screens/extra/formule";
 import Desert from "./screens/extra/desserts";
+import History from "./screens/history";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -55,6 +56,7 @@ function App() {
                   <Route path="/formule" element={<Pack />} />
                   <Route path="/desert" element={<Desert />} />
                   <Route path="/addProduct" element={<AddProduct />} />
+                  <Route path="/history" element={<History />} />
                 </>
               )}
             </Routes>

@@ -6,8 +6,34 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteCategory,
+  getCategoriesError,
+  getCategoriesStatus,
+  updateStatus,
+} from "../features/categorySlice";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
-const AlertDialog = ({ open, handleClose,name }) => {
+const AlertDialog = ({ open, handleClose, name, cardId }) => {
+  console.log(cardId)
+  const dispatch = useDispatch();
+  const status = useSelector(getCategoriesStatus);
+  const error = useSelector(getCategoriesError);
+  const onDelete = () => {
+    dispatch(deleteCategory(cardId));
+  };
+  useEffect(() => {
+    if (status === "categoryDeleted") {
+      toast.success("Category deleted successfully");
+      dispatch(updateStatus());
+      handleClose();
+    } else if (status === "deleteError") {
+      toast.error(error);
+      handleClose();
+    }
+  }, [status, error, dispatch, handleClose]);
   return (
     <Dialog
       open={open}
@@ -34,7 +60,7 @@ const AlertDialog = ({ open, handleClose,name }) => {
           variant="contained"
           color="success"
           style={{ color: "white" }}
-          onClick={handleClose}
+          onClick={onDelete}
           autoFocus
         >
           Oui

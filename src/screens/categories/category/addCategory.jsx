@@ -4,17 +4,55 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  addCategory,
+  getCategoriesError,
+  getCategoriesStatus,
+  updateStatus,
+  getCategoriesLoading,
+} from "../../../features/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Loading from "../../../components/loading";
+import { useNavigate } from "react-router-dom";
 
 const AddCategory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const handleFormSubmit = (values) => {
-    console.log(values);
+  const navigate = useNavigate();
+  const productSchema = yup.object().shape({
+    name: yup.string().required("required"),
+  });
+  const initialValues = {
+    name: "",
   };
+  const dispatch = useDispatch();
+  const status = useSelector(getCategoriesStatus);
+  const error = useSelector(getCategoriesError);
+  const loading = useSelector(getCategoriesLoading);
+  const handleFormSubmit = (values) => {
+    dispatch(
+      addCategory({
+        name: values.name,
+        image: previewImage,
+      })
+    );
+  };
+  useEffect(() => {
+    if (status === "categoryAdded") {
+      toast.success("Category added successfully");
+      dispatch(updateStatus());
+      navigate("/category");
+    } else if (status === "error") {
+      toast.error(error);
+    }
+  }, [status, error, dispatch, navigate]);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Box m="20px">
       <Header
         title="AJOUTER CATEGORY"
@@ -73,16 +111,6 @@ const AddCategory = () => {
       </Formik>
     </Box>
   );
-};
-
-const productSchema = yup.object().shape({
-  name: yup.string().required("required"),
-  image: yup.string().required("required"),
-  supplements: yup.array().required("required"),
-});
-const initialValues = {
-  name: "",
-  image: "",
 };
 
 export default AddCategory;

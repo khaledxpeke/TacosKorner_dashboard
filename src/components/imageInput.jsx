@@ -12,12 +12,8 @@ const ImageInput = ({
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImage(reader.result);
-        setDisplayLabel(false);
-      };
-      reader.readAsDataURL(file);
+      setPreviewImage(file);
+      setDisplayLabel(false);
     } else {
       setPreviewImage(null);
       setDisplayLabel(true);
@@ -32,13 +28,13 @@ const ImageInput = ({
   return (
     <div className="position-relative text-center">
       {previewImage && (
-        <IconButton type="button" onClick={handleCancelImage} sx={{ ml: 30 }}>
+        <IconButton type="button" onClick={handleCancelImage} sx={{ ml: 22 }}>
           <CloseIcon />
         </IconButton>
       )}
       <label htmlFor="imageInput">
         <img
-          src={previewImage || upload}
+          src={previewImage ? URL.createObjectURL(previewImage) : upload}
           alt="Upload"
           style={{ maxWidth: "200px", maxHeight: "200px", cursor: "pointer" }}
         />

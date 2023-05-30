@@ -24,7 +24,7 @@ import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
-import AlertDialog from "../../../components/daialog";
+import AlertDialog from "../../../components/dialog";
 
 const Category = () => {
   const theme = useTheme();
@@ -34,7 +34,12 @@ const Category = () => {
   const error = useSelector(getCategoriesError);
   const categoryStatus = useSelector(getCategoriesStatus);
   const [search, setSearch] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [cardId, setCardId] = useState(null);
+  const handleClickOpen = (cardId) => {
+    setOpen(true);
+    setCardId(cardId);
+  };
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
@@ -52,15 +57,21 @@ const Category = () => {
         {filteredCategories && filteredCategories.length > 0 ? (
           filteredCategories.map((card) => (
             <ProductCard
+              key={card._id}
               data={card}
               content={card.products.length + " Produit"}
-              handleClickOpen={() => setOpen(true)}
+              handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))
         ) : (
           <NoData />
         )}
-        <AlertDialog handleClose={() => setOpen(false)} open={open} name={"produit"}/>
+        <AlertDialog
+          handleClose={() => setOpen(false)}
+          open={open}
+          name={"produit"}
+          cardId={cardId}
+        />
       </>
     );
   }

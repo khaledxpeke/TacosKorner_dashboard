@@ -5,6 +5,7 @@ const initialState = {
   items: [],
   status: "idle",
   error: null,
+  success: null,
   loading: false,
 };
 
@@ -35,6 +36,24 @@ export const addProduct = createAsyncThunk(
           },
         }
       );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (productId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3300/api/product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage
+            .getItem("token")
+            .replace(/^"|"$/g, "")}`,
+        },
+      });
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);
@@ -73,12 +92,27 @@ const productSlice = createSlice({
       .addCase(addProduct.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
+        state.success = action.payload.message;
       })
       .addCase(addProduct.rejected, (state, action) => {
         state.status = "addError";
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(deleteProduct.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.status = "deleteSuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -86,5 +120,6 @@ export const { updateStatus } = productSlice.actions;
 export const selectAllProducts = (state) => state.product.items;
 export const getProductsStatus = (state) => state.product.status;
 export const getProductsError = (state) => state.product.error;
+export const getProductsSuccess = (state) => state.product.success;
 export const getProductsisLoading = (state) => state.product.loading;
 export default productSlice.reducer;

@@ -21,6 +21,7 @@ const ProductCard = ({ data, content,handleClickOpen }) => {
           display: "flex",
           flexDirection: "column",
           paddingTop: "14px",
+          backgroundColor: isLightMode ? "#F0F0F7" : "dark",
         }}
       >
         <CardMedia
@@ -30,7 +31,6 @@ const ProductCard = ({ data, content,handleClickOpen }) => {
             height: 0,
             paddingTop: "56.25%",
             backgroundImage: `url(http://localhost:3300/api/${data.image})`,
-            backgroundColor: isLightMode ? "#F0F0F7" : "dark",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             backgroundSize: "contain",
@@ -40,7 +40,6 @@ const ProductCard = ({ data, content,handleClickOpen }) => {
         <CardContent
           sx={{
             flexGrow: 1,
-            backgroundColor: isLightMode ? "#F0F0F7" : "dark",
           }}
         >
           <Typography gutterBottom variant="h5" component="h2">
@@ -50,7 +49,7 @@ const ProductCard = ({ data, content,handleClickOpen }) => {
             {content}
           </Typography>
         </CardContent>
-        <CardActions sx={{ backgroundColor: isLightMode ? "#F0F0F7" : "dark" }}>
+        <CardActions>
           <Button
             variant="contained"
             color="error"

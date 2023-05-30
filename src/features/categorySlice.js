@@ -43,12 +43,11 @@ export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
   async (categoryId) => {
     try {
-      const response = await axios.post(`http://localhost:3300/api/category/${categoryId}`, {
+      const response = await axios.delete(`http://localhost:3300/api/category/${categoryId}`, {
         headers: {
           Authorization: `Bearer ${localStorage
             .getItem("token")
             .replace(/^"|"$/g, "")}`,
-          "Content-Type": "multipart/form-data",
         },
       });
       return response?.data;

@@ -1,20 +1,76 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Loading from "../../../components/loading";
+import {
+  addProduct,
+  getProductsError,
+  getProductsStatus,
+  updateStatus,
+  getProductsisLoading,
+} from "../../../features/productSlice";
+import { selectAllCategories } from "../../../features/categorySlice";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const handleFormSubmit = (values) => {
-    console.log(values);
-  };
+  const dispatch = useDispatch();
+  const status = useSelector(getProductsStatus);
+  const error = useSelector(getProductsError);
+  const loading = useSelector(getProductsisLoading);
+  const navigate = useNavigate();
+  const categories = useSelector(selectAllCategories );
 
-  return (
+  const productSchema = yup.object().shape({
+    name: yup.string().required("required"),
+    image: yup.string().required("required"),
+    category: yup.string().required("required"),
+    currency: yup.string().required("required"),
+    price: yup.number().required("required"),
+    maxIngrediant: yup.number(),
+  });
+  const initialValues = {
+    name: "",
+    image: "",
+    category: categories.length > 0 ? categories[0] : "",
+    currency: "",
+    price: "",
+    maxIngrediant: "",
+  };
+  const handleFormSubmit = (values) => {
+    dispatch(
+      addProduct({
+        name: values.name,
+        image: previewImage,
+        category: values.category,
+        currency: values.currency,
+        price: values.price,
+        maxIngrediant: values.maxIngrediant,
+      })
+    );
+    dispatch(selectAllCategories());
+  };
+  useEffect(() => {
+    if (status === "productAdded") {
+      toast.success("Produit ajoutée avec succées");
+      dispatch(updateStatus());
+      navigate("/product");
+    } else if (status === "error") {
+      toast.error(error);
+    }
+  }, [status, error, dispatch, navigate]);
+
+  return loading ? (
+    <Loading />
+  ) : (
     <Box m="20px">
       <Header title="AJOUTER PRODUIT" subtitle="Créer une nouvelle produit" />
 
@@ -63,7 +119,7 @@ const AddProduct = () => {
               <TextField
                 fullWidth
                 variant="filled"
-                type="text"
+                type="number"
                 label="Price"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -86,6 +142,34 @@ const AddProduct = () => {
                 helperText={touched.currency && errors.currency}
                 sx={{ gridColumn: "span 2" }}
               />
+               <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={values.category}
+                label="Category"
+                onChange={handleChange}
+                sx={{ gridColumn: "span 4" }}
+              >
+                {categories.map((category) => (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
+                ))}
+              </Select>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Max Ingrediant"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.maxIngrediant}
+                name="maxIngrediant"
+                error={!!touched.maxIngrediant && !!errors.maxIngrediant}
+                helperText={touched.maxIngrediant && errors.maxIngrediant}
+                sx={{ gridColumn: "span 4" }}
+              />
+             
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -97,23 +181,6 @@ const AddProduct = () => {
       </Formik>
     </Box>
   );
-};
-
-const productSchema = yup.object().shape({
-  name: yup.string().required("required"),
-  image: yup.string().required("required"),
-  category: yup.string().required("required"),
-  currency: yup.string().required("required"),
-  price: yup.number().required("required"),
-  maxIngrediant: yup.number().required("required"),
-});
-const initialValues = {
-  name: "",
-  image: "",
-  category: "",
-  currency: "",
-  price: "",
-  maxIngrediant: "",
 };
 
 export default AddProduct;

@@ -19,11 +19,36 @@ export const getProducts = createAsyncThunk("product/getProducts", async () => {
   }
 });
 
+export const addProduct = createAsyncThunk(
+  "category/addCategory",
+  async (body) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3300/api/product",
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 
 const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
+    updateStatus: (state) => {
+      state.status = "idle";
+    },
   },
   extraReducers(builder) {
     builder
@@ -41,10 +66,25 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(addProduct.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(addProduct.fulfilled, (state, action) => {
+        state.status = "productAdded";
+        state.loading = false;
+      })
+      .addCase(addProduct.rejected, (state, action) => {
+        state.status = "error";
+        state.loading = false;
+        state.error = action.error.message;
+      })
   },
 });
 
+export const { updateStatus } = productSlice.actions;
 export const selectAllProducts = (state) => state.product.items;
 export const getProductsStatus = (state) => state.product.status;
 export const getProductsError = (state) => state.product.error;
+export const getProductsisLoading = (state) => state.product.loading;
 export default productSlice.reducer;

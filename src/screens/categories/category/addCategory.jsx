@@ -6,7 +6,7 @@ import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
 import { useState } from "react";
 
-const AddProduct = () => {
+const AddCategory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
@@ -16,7 +16,10 @@ const AddProduct = () => {
 
   return (
     <Box m="20px">
-      <Header title="AJOUTER PRODUIT" subtitle="Créer une nouvelle produit" />
+      <Header
+        title="AJOUTER CATEGORY"
+        subtitle="Créer une nouvelle catégorie"
+      />
 
       <Formik
         onSubmit={handleFormSubmit}
@@ -59,37 +62,10 @@ const AddProduct = () => {
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Price"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.price}
-                name="price"
-                error={!!touched.price && !!errors.price}
-                helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 2" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.currency}
-                name="currency"
-                error={!!touched.currency && !!errors.currency}
-                helperText={touched.currency && errors.currency}
-                sx={{ gridColumn: "span 2" }}
-              />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Créer une nouvelle produit
+                Créer une nouvelle catégorie
               </Button>
             </Box>
           </form>
@@ -102,18 +78,11 @@ const AddProduct = () => {
 const productSchema = yup.object().shape({
   name: yup.string().required("required"),
   image: yup.string().required("required"),
-  category: yup.string().required("required"),
-  currency: yup.string().required("required"),
-  price: yup.number().required("required"),
-  maxIngrediant: yup.number().required("required"),
+  supplements: yup.array().required("required"),
 });
 const initialValues = {
   name: "",
   image: "",
-  category: "",
-  currency: "",
-  price: "",
-  maxIngrediant: "",
 };
 
-export default AddProduct;
+export default AddCategory;

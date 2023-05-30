@@ -16,8 +16,8 @@ const Topbar = () => {
   const dispatch = useDispatch();
   const handleLogout = (e) => {
     e.preventDefault();
-    dispatch(logOut());
-    navigate("/signin");
+      dispatch(logOut());
+      navigate("/signin");
   };
 
   return (

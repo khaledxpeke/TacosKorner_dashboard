@@ -92,7 +92,7 @@ const Formule = () => {
             style={{ marginLeft: "auto" }}
             onClick={handleSubmit}
           >
-            ajouter une categorie
+            ajouter une produit
           </Button>
         </Toolbar>
       </AppBar>

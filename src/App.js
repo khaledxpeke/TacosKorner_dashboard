@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Topbar from "./global/Topbar";
 import Dashboard from "./screens/dashboard/index";
 import Sidebar from "./global/Sidebar";
 import Product from "./screens/categories/product/index";
-import AddProduct from "./screens/categories/product/addProduct";
 import SignIn from "./screens/auth/signin";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Category from "./screens/categories/category";
+import AddCategory from "./screens/categories/category/addCategory";
+import AddProduct from "./screens/categories/product/addProduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Supplement from "./screens/addons/supplements";
@@ -21,16 +22,16 @@ function App() {
   const { theme, colorMode } = useMode();
   const navigate = useNavigate();
   const location = useLocation();
-
   const output = window.localStorage.getItem("user");
   const user = JSON.parse(output);
-  const isSignInPage = user === null;
-  if (isSignInPage && location.pathname !== "/signin") {
-    navigate("/signin");
-  } else if (!isSignInPage && location.pathname === "/signin") {
-    navigate("/");
-  }
-
+  const isSignInPage = !user;
+  useEffect(() => {
+    if (isSignInPage && location.pathname !== "/signin") {
+      navigate("/signin");
+    } else if (!isSignInPage && location.pathname === "/signin") {
+      navigate("/");
+    }
+  }, [isSignInPage, location.pathname, navigate]);
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -41,14 +42,12 @@ function App() {
           <main className="content">
             {!isSignInPage && <Topbar />}
             <Routes>
-              <Route
-                path="/signin"
-                element={<SignIn />}
-              />
+              <Route path="/signin" element={<SignIn />} />
               {!isSignInPage && (
                 <>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/category" element={<Category />} />
+                  <Route path="/addCategory" element={<AddCategory />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/supplements" element={<Supplement />} />
                   <Route path="/ingrediants" element={<Ingrediant />} />

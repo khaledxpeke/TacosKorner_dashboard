@@ -9,6 +9,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Category from "./screens/categories/category";
+import AddCategory from "./screens/categories/category/addCategory";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Supplement from "./screens/addons/supplements";
@@ -46,6 +47,7 @@ function App() {
                 <>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/category" element={<Category />} />
+                  <Route path="/addCategory" element={<AddCategory />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/supplements" element={<Supplement />} />
                   <Route path="/ingrediants" element={<Ingrediant />} />

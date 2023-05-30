@@ -25,6 +25,11 @@ function App() {
   const output = window.localStorage.getItem("user");
   const user = JSON.parse(output);
   const isSignInPage = user === null;
+  if (isSignInPage && location.pathname !== "/signin") {
+    navigate("/signin");
+  } else if (!isSignInPage && location.pathname === "/signin") {
+    navigate("/");
+  }
 
   return (
     <ColorModeContext.Provider value={colorMode}>

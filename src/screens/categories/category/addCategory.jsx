@@ -41,7 +41,7 @@ const AddCategory = () => {
     );
   };
   useEffect(() => {
-    if (status === "categoryAdded") {
+    if (status === "addSuccess") {
       toast.success("Category added successfully");
       dispatch(updateStatus());
       navigate("/category");

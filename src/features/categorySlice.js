@@ -5,6 +5,7 @@ const initialState = {
   items: [],
   status: "idle",
   error: null,
+  success: null,
   loading: false,
 };
 
@@ -72,12 +73,12 @@ const categoriesSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.status = "allCategories";
+        state.status = "fetchData";
         state.loading = false;
         state.items = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
-        state.status = "error";
+        state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;
       })
@@ -86,11 +87,11 @@ const categoriesSlice = createSlice({
         state.loading = true;
       })
       .addCase(addCategory.fulfilled, (state, action) => {
-        state.status = "categoryAdded";
+        state.status = "addSuccess";
         state.loading = false;
       })
       .addCase(addCategory.rejected, (state, action) => {
-        state.status = "error";
+        state.status = "deleteSuccess";
         state.loading = false;
         state.error = action.error.message;
       })
@@ -99,8 +100,9 @@ const categoriesSlice = createSlice({
         state.loading = true;
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
-        state.status = "categoryDeleted";
+        state.status = "deleteSuccess";
         state.loading = false;
+        state.success = action.payload.message;
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = "deleteError";
@@ -114,5 +116,6 @@ export const { updateStatus } = categoriesSlice.actions;
 export const selectAllCategories = (state) => state.categories.items;
 export const getCategoriesStatus = (state) => state.categories.status;
 export const getCategoriesError = (state) => state.categories.error;
+export const getCategoriesSuccess = (state) => state.categories.success;
 export const getCategoriesLoading = (state) => state.categories.loading;
 export default categoriesSlice.reducer;

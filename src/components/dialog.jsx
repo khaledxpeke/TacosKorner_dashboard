@@ -12,28 +12,29 @@ import {
   getCategoriesError,
   getCategoriesStatus,
   updateStatus,
+  getCategoriesSuccess,
 } from "../features/categorySlice";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 const AlertDialog = ({ open, handleClose, name, cardId }) => {
-  console.log(cardId)
   const dispatch = useDispatch();
   const status = useSelector(getCategoriesStatus);
   const error = useSelector(getCategoriesError);
+  const success = useSelector(getCategoriesSuccess);
   const onDelete = () => {
     dispatch(deleteCategory(cardId));
   };
   useEffect(() => {
-    if (status === "categoryDeleted") {
-      toast.success("Category deleted successfully");
+    if (status === "deleteSuccess") {
+      toast.success(success);
       dispatch(updateStatus());
       handleClose();
     } else if (status === "deleteError") {
       toast.error(error);
       handleClose();
     }
-  }, [status, error, dispatch, handleClose]);
+  }, [status, error, success, dispatch, handleClose]);
   return (
     <Dialog
       open={open}

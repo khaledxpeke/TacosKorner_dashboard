@@ -91,7 +91,7 @@ const categoriesSlice = createSlice({
         state.loading = false;
       })
       .addCase(addCategory.rejected, (state, action) => {
-        state.status = "deleteSuccess";
+        state.status = "addError";
         state.loading = false;
         state.error = action.error.message;
       })

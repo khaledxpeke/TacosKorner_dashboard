@@ -20,7 +20,7 @@ export const getProducts = createAsyncThunk("product/getProducts", async () => {
 });
 
 export const addProduct = createAsyncThunk(
-  "category/addCategory",
+  "product/addProduct",
   async (body) => {
     try {
       const response = await axios.post(

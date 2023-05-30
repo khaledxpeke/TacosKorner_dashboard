@@ -15,7 +15,10 @@ import {
   updateStatus,
   getProductsisLoading,
 } from "../../../features/productSlice";
-import { selectAllCategories } from "../../../features/categorySlice";
+import {
+  selectAllCategories,
+  fetchCategories,
+} from "../../../features/categorySlice";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
@@ -27,7 +30,7 @@ const AddProduct = () => {
   const error = useSelector(getProductsError);
   const loading = useSelector(getProductsisLoading);
   const navigate = useNavigate();
-  const categories = useSelector(selectAllCategories );
+  const categories = useSelector(selectAllCategories);
 
   const productSchema = yup.object().shape({
     name: yup.string().required("required"),
@@ -40,7 +43,7 @@ const AddProduct = () => {
   const initialValues = {
     name: "",
     image: "",
-    category: categories.length > 0 ? categories[0] : "",
+    category: categories.length > 0 ? categories[0]._id : "",
     currency: "",
     price: "",
     maxIngrediant: "",
@@ -48,25 +51,27 @@ const AddProduct = () => {
   const handleFormSubmit = (values) => {
     dispatch(
       addProduct({
-        name: values.name,
-        image: previewImage,
-        category: values.category,
-        currency: values.currency,
-        price: values.price,
-        maxIngrediant: values.maxIngrediant,
+        body: {
+          name: values.name,
+          image: previewImage,
+          currency: values.currency,
+          price: values.price,
+          maxIngrediant: values.maxIngrediant,
+        },
+        categoryId: values.category._id,
       })
     );
-    dispatch(selectAllCategories());
   };
   useEffect(() => {
-    if (status === "productAdded") {
+    dispatch(fetchCategories());
+    if (status === "addSuccess") {
       toast.success("Produit ajoutée avec succées");
       dispatch(updateStatus());
       navigate("/product");
-    } else if (status === "error") {
+    } else if (status === "addError") {
       toast.error(error);
     }
-  }, [status, error, dispatch, navigate]);
+  }, [status, error, dispatch, navigate, categories]);
 
   return loading ? (
     <Loading />
@@ -142,7 +147,8 @@ const AddProduct = () => {
                 helperText={touched.currency && errors.currency}
                 sx={{ gridColumn: "span 2" }}
               />
-               <Select
+              <Select
+                name="category"
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={values.category}
@@ -151,8 +157,8 @@ const AddProduct = () => {
                 sx={{ gridColumn: "span 4" }}
               >
                 {categories.map((category) => (
-                  <MenuItem key={category} value={category}>
-                    {category}
+                  <MenuItem key={category._id} value={category._id}>
+                    {category.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -169,7 +175,6 @@ const AddProduct = () => {
                 helperText={touched.maxIngrediant && errors.maxIngrediant}
                 sx={{ gridColumn: "span 4" }}
               />
-             
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

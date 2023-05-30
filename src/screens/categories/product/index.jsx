@@ -39,9 +39,9 @@ const Formule = () => {
   let content;
   if (productStatus === "loading") {
     content = <Loading />;
-  } else if (productStatus === "error") {
+  } else if (productStatus === "fetchError") {
     content = <Error>{error}</Error>;
-  } else if (productStatus === "fetchedProducts") {
+  } else if (productStatus === "fetchData") {
     const filteredProducts = products?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );

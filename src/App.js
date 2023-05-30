@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Topbar from "./global/Topbar";
 import Dashboard from "./screens/dashboard/index";
 import Sidebar from "./global/Sidebar";
@@ -21,11 +21,16 @@ function App() {
   const { theme, colorMode } = useMode();
   const navigate = useNavigate();
   const location = useLocation();
-
   const output = window.localStorage.getItem("user");
   const user = JSON.parse(output);
-  const isSignInPage = user === null;
-
+  const isSignInPage = !user;
+  useEffect(() => {
+    if (isSignInPage && location.pathname !== "/signin") {
+      navigate("/signin");
+    } else if (!isSignInPage && location.pathname === "/signin") {
+      navigate("/");
+    }
+  }, [isSignInPage, location.pathname, navigate]);
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -36,10 +41,7 @@ function App() {
           <main className="content">
             {!isSignInPage && <Topbar />}
             <Routes>
-              <Route
-                path="/signin"
-                element={<SignIn />}
-              />
+              <Route path="/signin" element={<SignIn />} />
               {!isSignInPage && (
                 <>
                   <Route path="/" element={<Dashboard />} />

@@ -112,7 +112,7 @@ const Sidebar = () => {
                 )}
               </MenuItem>
 
-              {!isCollapsed && (
+              {!isCollapsed && user && (
                 <Box mb="25px">
                   <Box
                     display="flex"

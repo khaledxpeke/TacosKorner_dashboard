@@ -74,6 +74,7 @@ const History = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
+  const isLightMode = theme.palette.mode === "light";
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -117,8 +118,14 @@ const History = () => {
       <main>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
+            <Table
+              stickyHeader
+              aria-label="sticky table"
+              sx={{
+                backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
+              }}
+            >
+              <TableHead sx={{ backgroundColor: colors.primary[700] }}>
                 <TableRow>
                   {columns.map((column) => (
                     <TableCell

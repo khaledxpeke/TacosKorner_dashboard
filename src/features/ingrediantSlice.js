@@ -57,12 +57,12 @@ const ingrediantSlice = createSlice({
         state.loading = true;
       })
       .addCase(getIngrediants.fulfilled, (state, action) => {
-        state.status = "fetchedIngrediants";
+        state.status = "fetchData";
         state.loading = false;
         state.items = action.payload;
       })
       .addCase(getIngrediants.rejected, (state, action) => {
-        state.status = "error";
+        state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;
       })

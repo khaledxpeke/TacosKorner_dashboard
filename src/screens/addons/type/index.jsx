@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
 import {
   ButtonGroup,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -14,15 +12,10 @@ import {
   TableHead,
   TableRow,
   useTheme,
-  Typography,
-  Toolbar,
-  Box,
   Grid,
   Container,
   Button,
-  AppBar,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import {
   deleteType,
   getTypes,
@@ -37,6 +30,7 @@ import Error from "../../../components/Error";
 import NoData from "../../../components/no_data";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
+import AppBarSearch from "../../../global/appBarSearch";
 const Type = () => {
   const dispatch = useDispatch();
   const typeStatus = useSelector(getTypesStatus);
@@ -66,9 +60,9 @@ const Type = () => {
   let content;
   if (typeStatus === "loading") {
     content = <Loading />;
-  } else if (typeStatus === "error") {
+  } else if (typeStatus === "fetchError") {
     content = <Error>{error}</Error>;
-  } else if (typeStatus === "fetchedTypes") {
+  } else if (typeStatus === "fetchData") {
     const filteredTypes = types?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
@@ -118,70 +112,40 @@ const Type = () => {
         toast.error(error);
       }
     }, [typeStatus, error, success, dispatch]);
-
-  return (
-    <div className="main-application">
-      <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h3" color="inherit" noWrap>
-            Mes Type d'ingrediant
-          </Typography>
-          <Box
-            ml={2}
-            display="flex"
-            backgroundColor={colors.primary[400]}
-            borderRadius="3px"
-          >
-            <input
-              type="text"
-              placeholder="Search"
-              className="search-input pl-2"
-              style={{ paddingLeft: "10px", width: "300px" }}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <IconButton type="button" sx={{ p: 1 }}>
-              <SearchIcon />
-            </IconButton>
-          </Box>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<AddIcon />}
-            style={{ marginLeft: "auto" }}
-            onClick={handleSubmit}
-          >
-            ajouter une type d'ingrediant
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <TableContainer>
-                <Table
-                  sx={{
-                    backgroundColor: isLightMode ? "#F0F0F7" : "inherit",
-                  }}
-                >
-                  <TableHead
+    return (
+      <div className="main-application">
+        <CssBaseline />
+        <AppBarSearch
+          handleSubmit={handleSubmit}
+          handleSearch={(e) => setSearch(e.target.value)}
+        />
+        <main>
+          <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <TableContainer>
+                  <Table
                     sx={{
                       backgroundColor: isLightMode
-                        ? colors.primary[700]
+                        ? "#F0F0F7"
                         : colors.primary[400],
                     }}
                   >
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell align="right">Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>{content}</TableBody>
-                </Table>
-              </TableContainer>
+                    <TableHead
+                      sx={{
+                        backgroundColor: colors.primary[700]
+                      }}
+                    >
+                      <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell align="right">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>{content}</TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
             </Grid>
-          </Grid>
         </Container>
       </main>
     </div>

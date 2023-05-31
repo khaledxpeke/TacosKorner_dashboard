@@ -11,6 +11,7 @@ import {
   getCategoriesStatus,
   updateStatus,
   getCategoriesLoading,
+  getCategoriesSuccess
 } from "../../../features/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -31,6 +32,7 @@ const AddCategory = () => {
   const dispatch = useDispatch();
   const status = useSelector(getCategoriesStatus);
   const error = useSelector(getCategoriesError);
+  const success = useSelector(getCategoriesSuccess);
   const loading = useSelector(getCategoriesLoading);
   const handleFormSubmit = (values) => {
     dispatch(
@@ -42,13 +44,13 @@ const AddCategory = () => {
   };
   useEffect(() => {
     if (status === "addSuccess") {
-      toast.success("Category added successfully");
+      toast.success(success);
       dispatch(updateStatus());
       navigate("/category");
     } else if (status === "addError") {
       toast.error(error);
     }
-  }, [status, error, dispatch, navigate]);
+  }, [status, error,success, dispatch, navigate]);
 
   return loading ? (
     <Loading />

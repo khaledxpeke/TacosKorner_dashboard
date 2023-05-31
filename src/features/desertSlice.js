@@ -119,6 +119,6 @@ export const { updateStatus } = desertSlice.actions;
 export const selectAllDeserts = (state) => state.desert.items;
 export const getDesertsStatus = (state) => state.desert.status;
 export const getDesertsError = (state) => state.desert.error;
-export const getDesertsSuccess = (state) => state.pack.success;
-export const getDesertsLoading = (state) => state.pack.loading;
+export const getDesertsSuccess = (state) => state.desert.success;
+export const getDesertsLoading = (state) => state.desert.loading;
 export default desertSlice.reducer;

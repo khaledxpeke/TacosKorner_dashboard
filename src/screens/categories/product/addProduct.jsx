@@ -28,12 +28,17 @@ import {
   selectAllCategories,
   fetchCategories,
 } from "../../../features/categorySlice";
+import {
+  selectAllIngrediants,
+  getIngrediants,
+} from "../../../features/ingrediantSlice";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
+  const [selectedMeatIngredients, setSelectedMeatIngredients] = useState([]);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
@@ -41,10 +46,12 @@ const AddProduct = () => {
   const success = useSelector(getProductsSuccess);
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
+  const ingrediants = useSelector(selectAllIngrediants);
 
   const productSchema = yup.object().shape({
     name: yup.string().required("name is required"),
     category: yup.string().required("required"),
+    ingrediant: yup.array().required("required"),
     currency: yup.string().required("required"),
     price: yup.number().required("required"),
     maxIngrediant: yup.number(),
@@ -53,6 +60,7 @@ const AddProduct = () => {
     name: "",
     image: "",
     category: categories.length > 0 ? categories[0]._id : "",
+    ingrediant: [],
     currency: "",
     price: "",
     maxIngrediant: "",
@@ -65,7 +73,8 @@ const AddProduct = () => {
           image: previewImage,
           currency: values.currency,
           price: values.price,
-          maxIngrediant: values.maxIngrediant,
+          maxIngrediant: Number(values.maxIngrediant),
+          ingrediants: values.ingrediant.join(","),
         },
         categoryId: values.category,
       })
@@ -73,6 +82,7 @@ const AddProduct = () => {
   };
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(getIngrediants());
     if (status === "addSuccess") {
       toast.success(success);
       dispatch(updateStatus());
@@ -160,7 +170,7 @@ const AddProduct = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="category">Selectioner une categorie</InputLabel>
                 <Select
@@ -170,7 +180,7 @@ const AddProduct = () => {
                   value={values.category}
                   label="Category"
                   onChange={handleChange}
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ gridColumn: "span 1" }}
                 >
                   {categories.map((category) => (
                     <MenuItem key={category._id} value={category._id}>
@@ -179,18 +189,70 @@ const AddProduct = () => {
                   ))}
                 </Select>
               </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
+              >
+                <InputLabel id="ingrediants">
+                  Selectioner les ingrédiants
+                </InputLabel>
+                <Select
+                  name="ingrediant"
+                  labelId="ingrediants"
+                  id="ingrediant"
+                  value={values.ingrediant}
+                  multiple
+                  label="ingrediant"
+                  onChange={(event) => {
+                    handleChange(event);
+                    const selectedIngredientIds = event.target.value;
+                    const selectedMeatIngredients = ingrediants.filter(
+                      (ingredient)=>{
+                        
+                        console.log(ingredient.type);
+                        return (
+                        selectedIngredientIds.includes(ingredient._id) &&
+                        ingredient.type.name.toLowerCase() === 'meat' 
+                        )
+                      });
+                  
+                    setSelectedMeatIngredients(selectedMeatIngredients);
+                    console.log(selectedMeatIngredients);
+                  }}
+                  sx={{ gridColumn: "span 1" }}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: '300px',
+                      },
+                    },
+                  }}
+                >
+                  {ingrediants.map((ingrediant) => (
+                    <MenuItem key={ingrediant._id} value={ingrediant._id}>
+                      {ingrediant.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Max Ingrediant"
+                label="Max Meat"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.maxIngrediant}
                 name="maxIngrediant"
                 error={!!touched.maxIngrediant && !!errors.maxIngrediant}
                 helperText={touched.maxIngrediant && errors.maxIngrediant}
-                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                  gridRow: "3 / span 1",
+                  display:
+                    selectedMeatIngredients.length > 0 ? "block" : "none",
+                }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">

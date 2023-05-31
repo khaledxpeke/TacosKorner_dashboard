@@ -43,9 +43,12 @@ function createData(product, pack, total, boughtAt) {
 }
 
 function Row(props) {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const [addonsOpen, setAddonsOpen] = React.useState(false);
+  const isLightMode = theme.palette.mode === "light";
 
   const handleOpenAddons = () => {
     setAddonsOpen(!addonsOpen);
@@ -53,7 +56,7 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } ,backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],}}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -63,23 +66,23 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" >
           {row.pack}
         </TableCell>
         <TableCell align="right">{row.total}</TableCell>
         <TableCell align="right">{row.boughtAt.substring(0, 10)}</TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow sx={{backgroundColor:colors.primary[700]  }}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Plat
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small" aria-label="purchases" >
                 <TableHead>
                   <TableRow>
-                    <TableCell />
+                    <TableCell sx={{ fontSize: '12px' }} > Plus d'information </TableCell>
                     <TableCell>Nom</TableCell>
                     <TableCell align="right">Prix (DT)</TableCell>
                   </TableRow>
@@ -177,6 +180,7 @@ const History = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
+  const isLightMode = theme.palette.mode === "light";
   let content;
   let filteredHistory = [];
   if (historyStatus === "loading") {
@@ -234,15 +238,15 @@ const History = () => {
         </Toolbar>
       </AppBar>
       <main>
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell>Pack</TableCell>
-                  <TableCell align="right">Total</TableCell>
-                  <TableCell align="right">Bought At</TableCell>
+        <Paper sx={{ width: "100%", overflow: "hidden",mt :2 }}>
+          <TableContainer sx={{ maxHeight: 440}}>
+            <Table aria-label="sticky table" >
+              <TableHead style={{backgroundColor: isLightMode ? colors.primary[700]: colors.primary[700] }}>
+                <TableRow >
+                  <TableCell sx={{ fontSize: '17px',fontWeight:'bold' }} > Plus d'information </TableCell>
+                  <TableCell sx={{ fontSize: '17px',fontWeight:'bold' }}>Pack</TableCell>
+                  <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Total</TableCell>
+                  <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Bought At</TableCell>
                 </TableRow>
               </TableHead>
               {!content && (
@@ -273,7 +277,7 @@ const History = () => {
               )}
             </Table>
           </TableContainer>
-          <TablePagination
+          <TablePagination sx={{backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400]}}
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
             count={filteredHistory.length}

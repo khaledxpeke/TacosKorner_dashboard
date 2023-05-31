@@ -21,49 +21,21 @@ import { tokens } from "../../theme";
 import { useTheme } from "@emotion/react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchHistory,
+  getHistoryError,
+  getHistoryStatus,
+  selectAllHistory,
+} from "../../features/historySlice";
+import { useEffect } from "react";
+import NoData from "../../components/no_data";
+import Loading from "../../components/loading";
+import Error from "../../components/Error";
 
-function createData(pack, total, boughtAt) {
+function createData(product, pack, total, boughtAt) {
   return {
-    product: [
-      {
-        plat: {
-          name: "Burger",
-          price: 8.9,
-          currency: "DT",
-        },
-        addons: [
-          {
-            name: "sauce",
-            currency: "DT",
-            price: 0.5,
-          },
-          {
-            name: "sauce",
-            currency: "DT",
-            price: 0.5,
-          },
-        ],
-      },
-      {
-        plat: {
-          name: "Burger",
-          price: 8.9,
-          currency: "DT",
-        },
-        addons: [
-          {
-            name: "sauce",
-            currency: "DT",
-            price: 0.5,
-          },
-          {
-            name: "sauce",
-            currency: "DT",
-            price: 0.5,
-          },
-        ],
-      },
-    ],
+    product,
     pack,
     total,
     boughtAt,
@@ -95,7 +67,7 @@ function Row(props) {
           {row.pack}
         </TableCell>
         <TableCell align="right">{row.total}</TableCell>
-        <TableCell align="right">{row.boughtAt}</TableCell>
+        <TableCell align="right">{row.boughtAt.substring(0, 10)}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -114,7 +86,7 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.product.map((productRow) => (
-                    <React.Fragment key={productRow.plat.name}>
+                    <React.Fragment key={productRow.plat?.name}>
                       <TableRow>
                         <TableCell component="th" scope="row">
                           <IconButton
@@ -130,10 +102,10 @@ function Row(props) {
                           </IconButton>
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {productRow.plat.name}
+                          {productRow.plat?.name}
                         </TableCell>
                         <TableCell align="right">
-                          {productRow.plat.price}
+                          {productRow.plat?.price}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -166,12 +138,14 @@ function Row(props) {
                                 </TableHead>
                                 <TableBody>
                                   {productRow.addons.map((addonRow) => (
-                                    <TableRow key={addonRow.name}>
+                                    <TableRow key={addonRow?.name}>
                                       <TableCell component="th" scope="row">
-                                        {addonRow.name}
+                                        {addonRow?.name}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {addonRow.price}
+                                        {addonRow?.price
+                                          ? addonRow.price
+                                          : "Free"}
                                       </TableCell>
                                     </TableRow>
                                   ))}
@@ -193,22 +167,35 @@ function Row(props) {
   );
 }
 
-const rows = [
-  createData("Sur place", 159, "12/06/2022"),
-  createData("Importer", 120, "12/07/2023"),
-  createData("Importer", 120, "12/07/2023"),
-  createData("Importer", 120, "12/07/2023"),
-  createData("Importer", 120, "12/07/2023"),
-  createData("Importer", 120, "12/07/2023"),
-  createData("Importer", 120, "12/07/2023"),
-];
-
 const History = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const dispatch = useDispatch();
+  const histories = useSelector(selectAllHistory);
+  const error = useSelector(getHistoryError);
+  const historyStatus = useSelector(getHistoryStatus);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
+  let content;
+  let filteredHistory = [];
+  if (historyStatus === "loading") {
+    content = <Loading />;
+  } else if (historyStatus === "fetchError") {
+    content = <Error>{error}</Error>;
+  }
+  if (historyStatus === "fetchData") {
+    const rows = histories.map((history) =>
+      createData(history.product, history.pack, history.total, history.boughtAt)
+    );
+    filteredHistory = rows?.filter((history) =>
+      history.boughtAt.includes(search.toLowerCase())
+    );
+  }
+
+  useEffect(() => {
+    dispatch(fetchHistory());
+  }, [dispatch]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -218,9 +205,6 @@ const History = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const filteredHistory = rows?.filter((history) =>
-    history.boughtAt.includes(search.toLowerCase())
-  );
 
   return (
     <div className="main-application">
@@ -261,13 +245,32 @@ const History = () => {
                   <TableCell align="right">Bought At</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {filteredHistory
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return <Row key={row.pack} row={row} />;
-                  })}
-              </TableBody>
+              {!content && (
+                <>
+                  {filteredHistory && filteredHistory.length > 0 ? (
+                    filteredHistory
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row) => {
+                        return <Row key={row.pack} row={row} />;
+                      })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4}>
+                        {historyStatus === "loading" ? (
+                          <Loading />
+                        ) : historyStatus === "fetchError" ? (
+                          <Error>{error}</Error>
+                        ) : (
+                          <NoData />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </>
+              )}
             </Table>
           </TableContainer>
           <TablePagination

@@ -5,6 +5,7 @@ const initialState = {
   items: [],
   status: "idle",
   error: null,
+  success: null,
   loading: false,
 };
 
@@ -63,6 +64,9 @@ const desertSlice = createSlice({
   name: "desert",
   initialState,
   reducers: {
+    updateStatus: (state) => {
+      state.status = "idle";
+    },
   },
   extraReducers(builder) {
     builder
@@ -87,6 +91,7 @@ const desertSlice = createSlice({
       .addCase(addDesert.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
+        console.log(action.payload);
         state.success = action.payload.message;
       })
       .addCase(addDesert.rejected, (state, action) => {
@@ -115,5 +120,5 @@ export const selectAllDeserts = (state) => state.desert.items;
 export const getDesertsStatus = (state) => state.desert.status;
 export const getDesertsError = (state) => state.desert.error;
 export const getDesertsSuccess = (state) => state.pack.success;
-export const getPackLoading = (state) => state.pack.loading;
+export const getDesertsLoading = (state) => state.pack.loading;
 export default desertSlice.reducer;

@@ -2,26 +2,42 @@ import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid,Container } from "@mui/material";
+import { Grid, Container } from "@mui/material";
 import {
-getDeserts,
-getDesertsError,
-getDesertsStatus,
-selectAllDeserts
+  deleteDesert,
+  getDeserts,
+  getDesertsError,
+  getDesertsStatus,
+  getDesertsSuccess,
+  selectAllDeserts,
+  updateStatus,
 } from "../../../features/desertSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
 import AppBarSearch from "../../../global/appBarSearch";
+import AlertDialog from "../../../components/dialog";
+import { toast } from "react-toastify";
 
 const Desert = () => {
   const dispatch = useDispatch();
   const desertStatus = useSelector(getDesertsStatus);
   const error = useSelector(getDesertsError);
   const deserts = useSelector(selectAllDeserts);
+  const success = useSelector(getDesertsSuccess);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+  const [cardId, setCardId] = useState(null);
+  const handleClickOpen = (cardId) => {
+    setOpen(true);
+    setCardId(cardId);
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    navigate("/addDesert");
+  };
   useEffect(() => {
     dispatch(getDeserts());
   }, [dispatch]);
@@ -42,25 +58,39 @@ const Desert = () => {
             <ProductCard
               data={card}
               content={card.price + " " + card.currency}
+              handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))
         ) : (
           <NoData />
         )}
+        <AlertDialog
+          handleClose={() => setOpen(false)}
+          open={open}
+          name={"dessert"}
+          cardId={cardId}
+          deleteData={deleteDesert(cardId)}
+        />
       </>
     );
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      navigate("/addDesert");
-    };
-    return (
-      <div className="main-application">
+  }
+  useEffect(() => {
+    if (desertStatus === "deleteSuccess") {
+      toast.success(success);
+      dispatch(getDeserts());
+      dispatch(updateStatus());
+    } else if (desertStatus === "deleteError") {
+      toast.error(error);
+    }
+  }, [desertStatus, error, success, dispatch]);
+  return (
+    <div className="main-application">
       <CssBaseline />
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
         title={"Mes desserts"}
-          buttonTitle={"Ajouter un dessert"}
+        buttonTitle={"Ajouter un dessert"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
@@ -70,8 +100,7 @@ const Desert = () => {
         </Container>
       </main>
     </div>
-    );
-  }
+  );
 };
 
 export default Desert;

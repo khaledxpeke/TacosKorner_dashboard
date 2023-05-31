@@ -16,15 +16,15 @@ import {
  } from "../../../features/desertSlice";
   import { useNavigate } from "react-router-dom";
   
-  const AddDessert = () => {
+  const AddDesert = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [previewImage, setPreviewImage] = useState(null);
     const [displayLabel, setDisplayLabel] = useState(true);
     const dispatch = useDispatch();
     const status = useSelector(getDesertsStatus);
-    const error = useSelector(getPackError);
-    const loading = useSelector(getPackLoading);
-    const success = useSelector(getPackSuccess);
+    const error = useSelector(getDesertsError);
+    const loading = useSelector(getDesertsLoading);
+    const success = useSelector(getDesertsSuccess);
     const navigate = useNavigate();
   
     const desertSchema = yup.object().shape({
@@ -40,7 +40,7 @@ import {
     };
     const handleFormSubmit = (values) => {
       dispatch(
-        addPack({
+        addDesert({
           name: values.name,
           image: previewImage,
           currency: values.currency,
@@ -145,5 +145,5 @@ import {
     );
   };
   
-  export default AddDessert;
+  export default AddDesert;
   

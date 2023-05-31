@@ -18,6 +18,8 @@ import Type from "./screens/addons/type";
 import Pack from "./screens/extra/formule";
 import Desert from "./screens/extra/desserts";
 import History from "./screens/history";
+import AddType from "./screens/addons/type/addType";
+import AddIngrediant from "./screens/addons/ingrediants/addIngrediant";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -52,7 +54,9 @@ function App() {
                   <Route path="/product" element={<Product />} />
                   <Route path="/supplements" element={<Supplement />} />
                   <Route path="/ingrediants" element={<Ingrediant />} />
+                  <Route path="/addIngrediant" element={<AddIngrediant />} />
                   <Route path="/type" element={<Type />} />
+                  <Route path="/addType" element={<AddType />} />
                   <Route path="/formule" element={<Pack />} />
                   <Route path="/desert" element={<Desert />} />
                   <Route path="/addProduct" element={<AddProduct />} />

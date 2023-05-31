@@ -4,13 +4,23 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
-import { IconButton, useTheme,Box,Toolbar,Grid,Container,Typography,Button,AppBar } from "@mui/material";
+import {
+  IconButton,
+  useTheme,
+  Box,
+  Toolbar,
+  Grid,
+  Container,
+  Typography,
+  Button,
+  AppBar,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-getIngrediants,
-getIngrediantsError,
-getIngrediantsStatus,
-selectAllIngrediants
+  getIngrediants,
+  getIngrediantsError,
+  getIngrediantsStatus,
+  selectAllIngrediants,
 } from "../../../features/ingrediantSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
@@ -42,9 +52,7 @@ const Ingrediant = () => {
       <>
         {filteredIngrediants && filteredIngrediants.length > 0 ? (
           filteredIngrediants.map((card) => (
-            <ProductCard
-              data={card}
-            />
+            <ProductCard key={card._id} data={card} />
           ))
         ) : (
           <NoData />
@@ -94,7 +102,7 @@ const Ingrediant = () => {
           </Toolbar>
         </AppBar>
         <main>
-          <Container maxWidth="lg" sx={{ mt: 2,mb:2 }}>
+          <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
             <Grid container spacing={4}>
               {content}
             </Grid>

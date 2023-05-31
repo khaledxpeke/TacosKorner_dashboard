@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { tokens } from "../../../theme";
-import { IconButton, useTheme,Box,Toolbar,Grid,Container,Typography,Button,AppBar } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import {
-getIngrediants,
-getIngrediantsError,
-getIngrediantsStatus,
-selectAllIngrediants
+  getIngrediants,
+  getIngrediantsError,
+  getIngrediantsStatus,
+  selectAllIngrediants,
 } from "../../../features/ingrediantSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
+import AppBarSearch from "../../../global/appBarSearch";
+import { Container, Grid } from "@mui/material";
 
 const Ingrediant = () => {
   const dispatch = useDispatch();
@@ -23,7 +21,6 @@ const Ingrediant = () => {
   const error = useSelector(getIngrediantsError);
   const ingrediants = useSelector(selectAllIngrediants);
   const navigate = useNavigate();
-  const theme = useTheme();
   const [search, setSearch] = useState("");
   useEffect(() => {
     dispatch(getIngrediants());
@@ -32,27 +29,21 @@ const Ingrediant = () => {
   let content;
   if (ingrediantStatus === "loading") {
     content = <Loading />;
-  } else if (ingrediantStatus === "error") {
+  } else if (ingrediantStatus === "fetchError") {
     content = <Error>{error}</Error>;
-  } else if (ingrediantStatus === "fetchedIngrediants") {
+  } else if (ingrediantStatus === "fetchData") {
     const filteredIngrediants = ingrediants?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
     content = (
       <>
         {filteredIngrediants && filteredIngrediants.length > 0 ? (
-          filteredIngrediants.map((card) => (
-            <ProductCard
-              data={card}
-            />
-          ))
+          filteredIngrediants.map((card) => <ProductCard data={card} />)
         ) : (
           <NoData />
         )}
       </>
     );
-
-    const colors = tokens(theme.palette.mode);
     const handleSubmit = (event) => {
       event.preventDefault();
       navigate("/addIngrediant");
@@ -60,41 +51,12 @@ const Ingrediant = () => {
     return (
       <div className="main-application">
         <CssBaseline />
-        <AppBar position="relative">
-          <Toolbar>
-            <Typography variant="h3" color="inherit" noWrap>
-              Mes Ingrediants
-            </Typography>
-            <Box
-              ml={2}
-              display="flex"
-              backgroundColor={colors.primary[400]}
-              borderRadius="3px"
-            >
-              <input
-                type="text"
-                placeholder="Search"
-                className="search-input pl-2"
-                style={{ paddingLeft: "10px", width: "300px" }}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <IconButton type="button" sx={{ p: 1 }}>
-                <SearchIcon />
-              </IconButton>
-            </Box>
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<AddIcon />}
-              style={{ marginLeft: "auto" }}
-              onClick={handleSubmit}
-            >
-              ajouter une ingrediant
-            </Button>
-          </Toolbar>
-        </AppBar>
+        <AppBarSearch
+          handleSubmit={handleSubmit}
+          handleSearch={(e) => setSearch(e.target.value)}
+        />
         <main>
-          <Container maxWidth="lg" sx={{ mt: 2,mb:2 }}>
+          <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
             <Grid container spacing={4}>
               {content}
             </Grid>

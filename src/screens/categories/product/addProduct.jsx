@@ -1,4 +1,12 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -14,7 +22,7 @@ import {
   getProductsStatus,
   updateStatus,
   getProductsisLoading,
-  getProductsSuccess
+  getProductsSuccess,
 } from "../../../features/productSlice";
 import {
   selectAllCategories,
@@ -72,7 +80,7 @@ const AddProduct = () => {
     } else if (status === "addError") {
       toast.error(error);
     }
-  }, [status, error, dispatch, navigate, categories,success]);
+  }, [status, error, dispatch, navigate, success]);
 
   return loading ? (
     <Loading />
@@ -115,7 +123,7 @@ const AddProduct = () => {
                 helperText={touched.name && errors.name}
                 sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
               />
-             
+
               <TextField
                 fullWidth
                 variant="filled"
@@ -142,30 +150,34 @@ const AddProduct = () => {
                 helperText={touched.currency && errors.currency}
                 sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
               />
-               <ImageInput
-               sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
+              <ImageInput
+                sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-              <FormControl variant="filled" fullWidth sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}>
-              <InputLabel id="category">Selectioner une categorie</InputLabel>
-              <Select
-                name="category"
-                labelId="category"
-                id="category"
-                value={values.category}
-                label="Category"
-                onChange={handleChange}
-                sx={{ gridColumn: "span 2" }}
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
               >
-                {categories.map((category) => (
-                  <MenuItem key={category._id} value={category._id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
+                <InputLabel id="category">Selectioner une categorie</InputLabel>
+                <Select
+                  name="category"
+                  labelId="category"
+                  id="category"
+                  value={values.category}
+                  label="Category"
+                  onChange={handleChange}
+                  sx={{ gridColumn: "span 2" }}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category._id} value={category._id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormControl>
               <TextField
                 fullWidth

@@ -32,12 +32,12 @@ const packSlice = createSlice({
         state.loading = true;
       })
       .addCase(getPack.fulfilled, (state, action) => {
-        state.status = "fetchedPack";
+        state.status = "fetchData";
         state.loading = false;
         state.items = action.payload;
       })
       .addCase(getPack.rejected, (state, action) => {
-        state.status = "error";
+        state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;
       })

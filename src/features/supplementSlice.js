@@ -32,12 +32,12 @@ const supplementSlice = createSlice({
         state.loading = true;
       })
       .addCase(getSupplements.fulfilled, (state, action) => {
-        state.status = "fetchedSupplements";
+        state.status = "fetchData";
         state.loading = false;
         state.items = action.payload;
       })
       .addCase(getSupplements.rejected, (state, action) => {
-        state.status = "error";
+        state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;
       })

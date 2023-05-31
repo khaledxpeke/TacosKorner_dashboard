@@ -91,6 +91,7 @@ const typeSlice = createSlice({
       .addCase(addType.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
+        state.success = action.payload.message;
       })
       .addCase(addType.rejected, (state, action) => {
         state.status = "addError";

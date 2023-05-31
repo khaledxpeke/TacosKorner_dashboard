@@ -11,14 +11,14 @@ import { useTheme } from "@emotion/react";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 
-const AppBarSearch = ({ handleSubmit, handleSearch }) => {
+const AppBarSearch = ({ handleSubmit, handleSearch ,title,buttonTitle}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
     <AppBar position="relative">
       <Toolbar>
         <Typography variant="h3" color="inherit" noWrap>
-          Mes Categories
+          {title}
         </Typography>
         <Box
           ml={2}
@@ -44,7 +44,7 @@ const AppBarSearch = ({ handleSubmit, handleSearch }) => {
           style={{ marginLeft: "auto" }}
           onClick={handleSubmit}
         >
-          ajouter une categorie
+          {buttonTitle}
         </Button>
       </Toolbar>
     </AppBar>

@@ -18,6 +18,45 @@ export const getDeserts = createAsyncThunk("desert/getDeserts", async () => {
     throw new Error(err.response?.data?.message || err.message);
   }
 });
+export const addDesert = createAsyncThunk(
+  "desert/addDesert",
+  async (body) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3300/api/desert",
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+export const deleteDesert= createAsyncThunk(
+  "desert/deleteDesert",
+  async (desertId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3300/api/desert/${desertId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage
+            .getItem("token")
+            .replace(/^"|"$/g, "")}`,
+        },
+      });
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 
 
 const desertSlice = createSlice({
@@ -41,10 +80,40 @@ const desertSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(addDesert.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(addDesert.fulfilled, (state, action) => {
+        state.status = "addSuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(addDesert.rejected, (state, action) => {
+        state.status = "addError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteDesert.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(deleteDesert.fulfilled, (state, action) => {
+        state.status = "deleteSuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(deleteDesert.rejected, (state, action) => {
+        state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
-
+export const { updateStatus } = desertSlice.actions;
 export const selectAllDeserts = (state) => state.desert.items;
 export const getDesertsStatus = (state) => state.desert.status;
 export const getDesertsError = (state) => state.desert.error;
+export const getDesertsSuccess = (state) => state.pack.success;
+export const getPackLoading = (state) => state.pack.loading;
 export default desertSlice.reducer;

@@ -118,6 +118,8 @@ const Type = () => {
         <AppBarSearch
           handleSubmit={handleSubmit}
           handleSearch={(e) => setSearch(e.target.value)}
+          title={"Mes types"}
+          buttonTitle={"Ajouter un type d'ingrédiants"}
         />
         <main>
           <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

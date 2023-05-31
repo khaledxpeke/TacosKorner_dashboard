@@ -4,24 +4,40 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid, Container } from "@mui/material";
 import {
+  deletePack,
   getPack,
   getPackError,
   getPackStatus,
+  getPackSuccess,
   selectAllPack,
+  updateStatus,
 } from "../../../features/packSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
 import AppBarSearch from "../../../global/appBarSearch";
+import AlertDialog from "../../../components/dialog";
+import { toast } from "react-toastify";
 
 const Pack = () => {
   const dispatch = useDispatch();
   const packStatus = useSelector(getPackStatus);
   const error = useSelector(getPackError);
   const packs = useSelector(selectAllPack);
+  const success = useSelector(getPackSuccess);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+  const [cardId, setCardId] = useState(null);
+  const handleClickOpen = (cardId) => {
+    setOpen(true);
+    setCardId(cardId);
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    navigate("/addFormule");
+  };
   useEffect(() => {
     dispatch(getPack());
   }, [dispatch]);
@@ -42,23 +58,40 @@ const Pack = () => {
             <ProductCard
               data={card}
               content={card.price + " " + card.currency}
+              handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))
         ) : (
           <NoData />
         )}
+         <AlertDialog
+          handleClose={() => setOpen(false)}
+          open={open}
+          name={"produit"}
+          cardId={cardId}
+          deleteData={deletePack(cardId)}
+        />
       </>
     );
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      navigate("/addFormule");
-    };
+   
+  }
+  useEffect(() => {
+    if (packStatus === "deleteSuccess") {
+      toast.success(success);
+      dispatch(getPack());
+      dispatch(updateStatus());
+    } else if (packStatus === "deleteError") {
+      toast.error(error);
+    }
+  }, [packStatus, error, success, dispatch]);
     return (
       <div className="main-application">
         <CssBaseline />
         <AppBarSearch
           handleSubmit={handleSubmit}
           handleSearch={(e) => setSearch(e.target.value)}
+          title={"Mes formules"}
+          buttonTitle={"Ajouter un formule"}
         />
         <main>
           <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
@@ -70,6 +103,6 @@ const Pack = () => {
       </div>
     );
   }
-};
+
 
 export default Pack;

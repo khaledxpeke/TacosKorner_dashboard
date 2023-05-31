@@ -42,6 +42,23 @@ export const addIngrediant = createAsyncThunk(
     }
   }
 );
+export const deleteIngrediant = createAsyncThunk(
+  "ingrediant/deleteIngrediant",
+  async (ingrediantId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3300/api/ingrediant/${ingrediantId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage
+            .getItem("token")
+            .replace(/^"|"$/g, "")}`,
+        },
+      });
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 const ingrediantSlice = createSlice({
   name: "ingrediant",
   initialState,
@@ -73,12 +90,27 @@ const ingrediantSlice = createSlice({
       .addCase(addIngrediant.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
+        state.success = action.payload.message;
       })
       .addCase(addIngrediant.rejected, (state, action) => {
         state.status = "addError";
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(deleteIngrediant.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(deleteIngrediant.fulfilled, (state, action) => {
+        state.status = "deleteSuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(deleteIngrediant.rejected, (state, action) => {
+        state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 export const { updateStatus } = ingrediantSlice.actions;

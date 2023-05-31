@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -31,6 +32,7 @@ const AddIngrediant = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
+  const [typeError, setTypeError] = useState(false);
   const dispatch = useDispatch();
   const status = useSelector(getIngrediantsStatus);
   const error = useSelector(getIngrediantsError);
@@ -41,7 +43,7 @@ const AddIngrediant = () => {
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("name is required"),
-    type: yup.string().required("required"),
+    // type: yup.string().required("required"),
   });
   const initialValues = {
     name: "",
@@ -49,6 +51,10 @@ const AddIngrediant = () => {
     type: types.length > 0 ? types[0]._id : "",
   };
   const handleFormSubmit = (values) => {
+    if (!values.type) {
+      setTypeError(true); 
+      return;
+    }
     dispatch(
       addIngrediant({
         name: values.name,
@@ -107,11 +113,11 @@ const AddIngrediant = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
+                sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
               />
 
               <ImageInput
-                sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
+                sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -120,7 +126,7 @@ const AddIngrediant = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 4", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="types">
                   Selectioner une type d'ingrédiant
@@ -131,7 +137,10 @@ const AddIngrediant = () => {
                   id="type"
                   value={values.type}
                   label="Type"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setTypeError(false);
+                  }}
                   sx={{ gridColumn: "span 2" }}
                 >
                   {types.map((type) => (
@@ -140,6 +149,9 @@ const AddIngrediant = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                {typeError && (
+                  <FormHelperText sx={{color:"red" ,mt: "8px",fontSize:"14px"}}>Sélectionnez un type</FormHelperText>
+                )}
               </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">

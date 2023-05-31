@@ -93,6 +93,8 @@ const Category = () => {
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
+        title={"Mes categories"}
+          buttonTitle={"Ajouter un categorie"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

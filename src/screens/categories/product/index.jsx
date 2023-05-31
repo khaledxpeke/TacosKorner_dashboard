@@ -90,6 +90,8 @@ const Formule = () => {
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
+        title={"Mes produits"}
+        buttonTitle={"Ajouter un produit"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

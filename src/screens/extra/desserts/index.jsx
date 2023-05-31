@@ -59,6 +59,8 @@ const Desert = () => {
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
+        title={"Mes desserts"}
+          buttonTitle={"Ajouter un dessert"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

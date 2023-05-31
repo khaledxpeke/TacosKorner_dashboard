@@ -5,67 +5,202 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   AppBar,
   Box,
+  Collapse,
   CssBaseline,
   IconButton,
+  TablePagination,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { tokens } from "../../theme";
 import { useTheme } from "@emotion/react";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-const columns = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "code", label: "ISO\u00a0Code", minWidth: 100 },
-  {
-    id: "population",
-    label: "Population",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "size",
-    label: "Size\u00a0(km\u00b2)",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "density",
-    label: "Density",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
+function createData(pack, total, boughtAt) {
+  return {
+    product: [
+      {
+        plat: {
+          name: "Burger",
+          price: 8.9,
+          currency: "DT",
+        },
+        addons: [
+          {
+            name: "sauce",
+            currency: "DT",
+            price: 0.5,
+          },
+          {
+            name: "sauce",
+            currency: "DT",
+            price: 0.5,
+          },
+        ],
+      },
+      {
+        plat: {
+          name: "Burger",
+          price: 8.9,
+          currency: "DT",
+        },
+        addons: [
+          {
+            name: "sauce",
+            currency: "DT",
+            price: 0.5,
+          },
+          {
+            name: "sauce",
+            currency: "DT",
+            price: 0.5,
+          },
+        ],
+      },
+    ],
+    pack,
+    total,
+    boughtAt,
+  };
+}
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+  const [addonsOpen, setAddonsOpen] = React.useState(false);
+
+  const handleOpenAddons = () => {
+    setAddonsOpen(!addonsOpen);
+  };
+
+  return (
+    <React.Fragment>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.pack}
+        </TableCell>
+        <TableCell align="right">{row.total}</TableCell>
+        <TableCell align="right">{row.boughtAt}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Plat
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>Nom</TableCell>
+                    <TableCell align="right">Prix (DT)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.product.map((productRow) => (
+                    <React.Fragment key={productRow.plat.name}>
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          <IconButton
+                            aria-label="expand addons"
+                            size="small"
+                            onClick={handleOpenAddons}
+                          >
+                            {addonsOpen ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            )}
+                          </IconButton>
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {productRow.plat.name}
+                        </TableCell>
+                        <TableCell align="right">
+                          {productRow.plat.price}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell
+                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                          colSpan={2}
+                        >
+                          <Collapse
+                            in={addonsOpen}
+                            timeout="auto"
+                            unmountOnExit
+                            component="div"
+                          >
+                            <Box sx={{ margin: 1 }}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                component="div"
+                              >
+                                Addons
+                              </Typography>
+                              <Table size="small" aria-label="addons">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell align="right">
+                                      Price (DT)
+                                    </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {productRow.addons.map((addonRow) => (
+                                    <TableRow key={addonRow.name}>
+                                      <TableCell component="th" scope="row">
+                                        {addonRow.name}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {addonRow.price}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
 }
 
 const rows = [
-  createData("India", "IN", 1324171354, 3287263),
-  createData("China", "CN", 1403500365, 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
+  createData("Sur place", 159, "12/06/2022"),
+  createData("Importer", 120, "12/07/2023"),
+  createData("Importer", 120, "12/07/2023"),
+  createData("Importer", 120, "12/07/2023"),
+  createData("Importer", 120, "12/07/2023"),
+  createData("Importer", 120, "12/07/2023"),
+  createData("Importer", 120, "12/07/2023"),
 ];
 
 const History = () => {
@@ -74,7 +209,6 @@ const History = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
-  const isLightMode = theme.palette.mode === "light";
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -85,7 +219,7 @@ const History = () => {
     setPage(0);
   };
   const filteredHistory = rows?.filter((history) =>
-    history.name.toLowerCase().includes(search.toLowerCase())
+    history.boughtAt.includes(search.toLowerCase())
   );
 
   return (
@@ -118,49 +252,20 @@ const History = () => {
       <main>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
-            <Table
-              stickyHeader
-              aria-label="sticky table"
-              sx={{
-                backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
-              }}
-            >
-              <TableHead sx={{ backgroundColor: colors.primary[700] }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
+                  <TableCell />
+                  <TableCell>Pack</TableCell>
+                  <TableCell align="right">Total</TableCell>
+                  <TableCell align="right">Bought At</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredHistory
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
-                      >
-                        {columns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
+                    return <Row key={row.pack} row={row} />;
                   })}
               </TableBody>
             </Table>
@@ -168,7 +273,7 @@ const History = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={rows.length}
+            count={filteredHistory.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

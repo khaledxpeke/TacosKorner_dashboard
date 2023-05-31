@@ -7,6 +7,7 @@ import ingrediantReducer from "./features/ingrediantSlice";
 import typeReducer from "./features/typeSlice";
 import packReducer from "./features/packSlice";
 import desertReducer from "./features/desertSlice";
+import historyReducer from "./features/historySlice";
 
 const store = configureStore({
   reducer: {
@@ -17,8 +18,8 @@ const store = configureStore({
     desert: desertReducer,
     type: typeReducer,
     user:userReducer,
-    categories:categoriesReducer
-
+    categories:categoriesReducer,
+    history:historyReducer
   },
 });
 

@@ -8,6 +8,7 @@ const ImageInput = ({
   setPreviewImage,
   displayLabel,
   setDisplayLabel,
+  image,
 }) => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -34,7 +35,13 @@ const ImageInput = ({
       )}
       <label htmlFor="imageInput">
         <img
-          src={previewImage ? URL.createObjectURL(previewImage) : upload}
+          src={
+            previewImage
+              ? URL.createObjectURL(previewImage)
+              : image
+              ? `http://localhost:3300/api/${image}`
+              : upload
+          }
           alt="Upload"
           style={{ maxWidth: "200px", maxHeight: "200px", cursor: "pointer" }}
         />
@@ -49,7 +56,7 @@ const ImageInput = ({
       <br />
       {displayLabel && (
         <label htmlFor="imageInput" className="mt-2 d-block">
-          Click to choose an image
+          {image ? "Modify an image" : "Click to choose an image"}
         </label>
       )}
     </div>

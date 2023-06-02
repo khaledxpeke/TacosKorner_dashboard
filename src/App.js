@@ -23,6 +23,7 @@ import AddIngrediant from "./screens/addons/ingrediants/addIngrediant";
 import AddSupplement from "./screens/addons/supplements/addSupplement";
 import AddPack from "./screens/extra/formule/addPack";
 import AddDesert from "./screens/extra/desserts/addDessert";
+import ModifyCategory from "./screens/categories/category/modifyCategory";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -54,6 +55,7 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/category" element={<Category />} />
                   <Route path="/addCategory" element={<AddCategory />} />
+                  <Route path="/modifyCategory" element={<ModifyCategory />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/supplements" element={<Supplement />} />
                   <Route path="/addSupplement" element={<AddSupplement />} />

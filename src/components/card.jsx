@@ -10,10 +10,17 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-const ProductCard = ({ data, content,handleClickOpen,handleModify }) => {
+const ProductCard = ({
+  data,
+  content,
+  handleClickOpen,
+  handleModify,
+  viewProduct,
+  noModify
+}) => {
   const theme = useTheme();
   const isLightMode = theme.palette.mode === "light";
-  
+
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card
@@ -26,8 +33,10 @@ const ProductCard = ({ data, content,handleClickOpen,handleModify }) => {
         }}
       >
         <CardMedia
+          onClick={viewProduct}
           component="div"
           sx={{
+            cursor: viewProduct ? "pointer" : "default",
             objectFit: "cover",
             height: 0,
             paddingTop: "56.25%",
@@ -61,16 +70,18 @@ const ProductCard = ({ data, content,handleClickOpen,handleModify }) => {
           >
             Supprimer
           </Button>
-          <Button
-            variant="contained"
-            color="warning"
-            size="small"
-            startIcon={<EditIcon />}
-            style={{ color: "white" }}
-            onClick={handleModify}
-          >
-            Modifier
-          </Button>
+          {!noModify && (
+            <Button
+              variant="contained"
+              color="warning"
+              size="small"
+              startIcon={<EditIcon />}
+              style={{ color: "white" }}
+              onClick={handleModify}
+            >
+              Modifier
+            </Button>
+          )}
         </CardActions>
       </Card>
     </Grid>

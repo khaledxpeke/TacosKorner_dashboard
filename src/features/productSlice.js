@@ -85,6 +85,20 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+export const getProductByCategoryId = createAsyncThunk(
+  "product/getProductByCategoryId",
+  async (categoryId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3300/api/product/${categoryId}`
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product",
   initialState,
@@ -151,7 +165,20 @@ const productSlice = createSlice({
         state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
-      });
+      }).addCase(getProductByCategoryId.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(getProductByCategoryId.fulfilled, (state, action) => {
+        state.status = "fetchDataByCategory";
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(getProductByCategoryId.rejected, (state, action) => {
+        state.status = "fetchErrorByCategory";
+        state.loading = false;
+        state.error = action.error.message;
+      })
   },
 });
 

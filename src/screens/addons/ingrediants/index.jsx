@@ -63,6 +63,7 @@ const Ingrediant = () => {
               data={card}
               handleModify={() => handleModify(card)}
               handleClickOpen={() => handleClickOpen(card._id)}
+              content={"Type: " + card.type.name}
             />
           ))
         ) : (

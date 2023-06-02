@@ -26,6 +26,7 @@ import ModifySupplement from "./screens/addons/supplements/modifySupplement";
 import AddPack from "./screens/extra/formule/addPack";
 import AddDesert from "./screens/extra/desserts/addDessert";
 import ModifyCategory from "./screens/categories/category/modifyCategory";
+import ViewProduct from "./screens/categories/category/viewProduct";
 import ModifyProduct from "./screens/categories/product/modifyProduct";
 import ModifyPack from "./screens/extra/formule/modifyPack";
 import ModifyDesert from "./screens/extra/desserts/modifyDessert";
@@ -62,6 +63,7 @@ function App() {
                   <Route path="/category" element={<Category />} />
                   <Route path="/addCategory" element={<AddCategory />} />
                   <Route path="/modifyCategory" element={<ModifyCategory />} />
+                  <Route path="/viewProduct" element={<ViewProduct />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/modifyProduct" element={<ModifyProduct />} />
                   <Route path="/addProduct" element={<AddProduct />} />

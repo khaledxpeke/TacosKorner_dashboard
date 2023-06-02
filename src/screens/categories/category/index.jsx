@@ -43,6 +43,9 @@ const Category = () => {
   const handleModify = (data) => {
     navigate("/modifyCategory", { state: { category: data } });
   };
+  const handleViewProduct = (id) => {
+    navigate("/viewProduct", { state: { categoryId: id } });
+  };
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -66,6 +69,7 @@ const Category = () => {
               handleModify={() => handleModify(card)}
               content={card.products.length + " Produit"}
               handleClickOpen={() => handleClickOpen(card._id)}
+              viewProduct={() => handleViewProduct(card._id)}
             />
           ))
         ) : (

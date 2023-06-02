@@ -9,16 +9,17 @@ const initialState = {
   loading: false,
 };
 
-export const getIngrediants = createAsyncThunk("ingrediant/getIngrediants", async () => {
-  try {
-    const response = await axios.get(
-      "http://localhost:3300/api/ingrediant",
-    );
-    return response?.data;
-  } catch (err) {
-    throw new Error(err.response?.data?.message || err.message);
+export const getIngrediants = createAsyncThunk(
+  "ingrediant/getIngrediants",
+  async () => {
+    try {
+      const response = await axios.get("http://localhost:3300/api/ingrediant");
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
   }
-});
+);
 
 export const addIngrediant = createAsyncThunk(
   "ingrediant/addIngrediant",
@@ -42,17 +43,44 @@ export const addIngrediant = createAsyncThunk(
     }
   }
 );
+
+export const modifyIngrediant = createAsyncThunk(
+  "ingrediant/modifyIngrediant",
+  async ({ body, ingrediantId }) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3300/api/ingrediant/update/${ingrediantId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 export const deleteIngrediant = createAsyncThunk(
   "ingrediant/deleteIngrediant",
   async (ingrediantId) => {
     try {
-      const response = await axios.delete(`http://localhost:3300/api/ingrediant/${ingrediantId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage
-            .getItem("token")
-            .replace(/^"|"$/g, "")}`,
-        },
-      });
+      const response = await axios.delete(
+        `http://localhost:3300/api/ingrediant/${ingrediantId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);
@@ -108,6 +136,21 @@ const ingrediantSlice = createSlice({
       })
       .addCase(deleteIngrediant.rejected, (state, action) => {
         state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(modifyIngrediant.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(modifyIngrediant.fulfilled, (state, action) => {
+        state.status = "modifySuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+        console.log(action.payload);
+      })
+      .addCase(modifyIngrediant.rejected, (state, action) => {
+        state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });

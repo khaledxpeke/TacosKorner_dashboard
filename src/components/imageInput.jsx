@@ -56,7 +56,7 @@ const ImageInput = ({
       <br />
       {displayLabel && (
         <label htmlFor="imageInput" className="mt-2 d-block">
-          {image ? "Modify an image" : "Click to choose an image"}
+          {image ? "Modifier une image" : "Cliquez pour choisir une image"}
         </label>
       )}
     </div>

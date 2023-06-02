@@ -20,10 +20,13 @@ import Desert from "./screens/extra/desserts";
 import History from "./screens/history";
 import AddType from "./screens/addons/type/addType";
 import AddIngrediant from "./screens/addons/ingrediants/addIngrediant";
+import ModifyIngrediant from "./screens/addons/ingrediants/modifyIngrediant";
 import AddSupplement from "./screens/addons/supplements/addSupplement";
+import ModifySupplement from "./screens/addons/supplements/modifySupplement";
 import AddPack from "./screens/extra/formule/addPack";
 import AddDesert from "./screens/extra/desserts/addDessert";
 import ModifyCategory from "./screens/categories/category/modifyCategory";
+import ModifyProduct from "./screens/categories/product/modifyProduct";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -57,17 +60,20 @@ function App() {
                   <Route path="/addCategory" element={<AddCategory />} />
                   <Route path="/modifyCategory" element={<ModifyCategory />} />
                   <Route path="/product" element={<Product />} />
+                  <Route path="/modifyProduct" element={<ModifyProduct />} />
+                  <Route path="/addProduct" element={<AddProduct />} />
                   <Route path="/supplements" element={<Supplement />} />
                   <Route path="/addSupplement" element={<AddSupplement />} />
+                  <Route path="/modifySupplement" element={<ModifySupplement />} />
                   <Route path="/ingrediants" element={<Ingrediant />} />
                   <Route path="/addIngrediant" element={<AddIngrediant />} />
+                  <Route path="/modifyIngrediant" element={<ModifyIngrediant />} />
                   <Route path="/type" element={<Type />} />
                   <Route path="/addType" element={<AddType />} />
                   <Route path="/formule" element={<Pack />} />
                   <Route path="/addFormule" element={<AddPack />} />
                   <Route path="/desert" element={<Desert />} />
                   <Route path="/addDesert" element={<AddDesert />} />
-                  <Route path="/addProduct" element={<AddProduct />} />
                   <Route path="/history" element={<History />} />
                 </>
               )}

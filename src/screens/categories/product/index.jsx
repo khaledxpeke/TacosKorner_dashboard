@@ -38,6 +38,9 @@ const Formule = () => {
     event.preventDefault();
     navigate("/addProduct");
   };
+  const handleModify = (data) => {
+    navigate("/modifyProduct", { state: { product: data } });
+  };
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
@@ -58,6 +61,7 @@ const Formule = () => {
             <ProductCard
               key={card._id}
               data={card}
+              handleModify={() => handleModify(card)}
               content={card.price + " " + card.currency}
               handleClickOpen={() => handleClickOpen(card._id)}
             />

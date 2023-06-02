@@ -9,16 +9,17 @@ const initialState = {
   loading: false,
 };
 
-export const getSupplements = createAsyncThunk("supplement/getSupplements", async () => {
-  try {
-    const response = await axios.get(
-      "http://localhost:3300/api/supplement",
-    );
-    return response?.data;
-  } catch (err) {
-    throw new Error(err.response?.data?.message || err.message);
+export const getSupplements = createAsyncThunk(
+  "supplement/getSupplements",
+  async () => {
+    try {
+      const response = await axios.get("http://localhost:3300/api/supplement");
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
   }
-});
+);
 export const addSupplement = createAsyncThunk(
   "supplement/addSupplement",
   async (body) => {
@@ -41,17 +42,23 @@ export const addSupplement = createAsyncThunk(
     }
   }
 );
-export const deleteSupplement= createAsyncThunk(
-  "supplement/deleteSupplement",
-  async (supplementId) => {
+
+export const modifySupplement = createAsyncThunk(
+  "supplement/modifySupplement",
+  async ({ body, supplementId }) => {
     try {
-      const response = await axios.delete(`http://localhost:3300/api/supplement/${supplementId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage
-            .getItem("token")
-            .replace(/^"|"$/g, "")}`,
-        },
-      });
+      const response = await axios.put(
+        `http://localhost:3300/api/supplement/update/${supplementId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);
@@ -59,6 +66,26 @@ export const deleteSupplement= createAsyncThunk(
   }
 );
 
+export const deleteSupplement = createAsyncThunk(
+  "supplement/deleteSupplement",
+  async (supplementId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3300/api/supplement/${supplementId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 
 const supplementSlice = createSlice({
   name: "supplement",
@@ -109,6 +136,21 @@ const supplementSlice = createSlice({
       })
       .addCase(deleteSupplement.rejected, (state, action) => {
         state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(modifySupplement.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(modifySupplement.fulfilled, (state, action) => {
+        state.status = "modifySuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+        console.log(action.payload);
+      })
+      .addCase(modifySupplement.rejected, (state, action) => {
+        state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });

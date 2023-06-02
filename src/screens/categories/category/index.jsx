@@ -40,6 +40,9 @@ const Category = () => {
     event.preventDefault();
     navigate("/addCategory");
   };
+  const handleModify = (data) => {
+    navigate("/modifyCategory", { state: { category: data } });
+  };
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -60,6 +63,7 @@ const Category = () => {
             <ProductCard
               key={card._id}
               data={card}
+              handleModify={() => handleModify(card)}
               content={card.products.length + " Produit"}
               handleClickOpen={() => handleClickOpen(card._id)}
             />
@@ -94,7 +98,7 @@ const Category = () => {
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
         title={"Mes categories"}
-          buttonTitle={"Ajouter un categorie"}
+        buttonTitle={"Ajouter un categorie"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

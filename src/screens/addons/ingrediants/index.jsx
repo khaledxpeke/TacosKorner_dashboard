@@ -9,7 +9,7 @@ import {
   getIngrediantsStatus,
   selectAllIngrediants,
   getIngrediantsSuccess,
-  updateStatus
+  updateStatus,
 } from "../../../features/ingrediantSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
@@ -38,6 +38,9 @@ const Ingrediant = () => {
     event.preventDefault();
     navigate("/addIngrediant");
   };
+  const handleModify = (data) => {
+    navigate("/modifyIngrediant", { state: { ingrediant: data } });
+  };
   useEffect(() => {
     dispatch(getIngrediants());
   }, [dispatch]);
@@ -55,12 +58,17 @@ const Ingrediant = () => {
       <>
         {filteredIngrediants && filteredIngrediants.length > 0 ? (
           filteredIngrediants.map((card) => (
-            <ProductCard key={card._id} data={card} handleClickOpen={() => handleClickOpen(card._id)}/>
+            <ProductCard
+              key={card._id}
+              data={card}
+              handleModify={() => handleModify(card)}
+              handleClickOpen={() => handleClickOpen(card._id)}
+            />
           ))
         ) : (
           <NoData />
         )}
-         <AlertDialog
+        <AlertDialog
           handleClose={() => setOpen(false)}
           open={open}
           name={"produit"}
@@ -69,35 +77,34 @@ const Ingrediant = () => {
         />
       </>
     );
-
   }
-    useEffect(() => {
-      if (ingrediantStatus === "deleteSuccess") {
-        toast.success(success);
-        dispatch(getIngrediants());
-        dispatch(updateStatus());
-      } else if (ingrediantStatus === "deleteError") {
-        toast.error(error);
-      }
-    }, [ingrediantStatus, error, success, dispatch]);
-    return (
-      <div className="main-application">
-        <CssBaseline />
-        <AppBarSearch
-          handleSubmit={handleSubmit}
-          handleSearch={(e) => setSearch(e.target.value)}
-          title={"Mes ingrédiants"}
-          buttonTitle={"Ajouter un ingrédiants"}
-        />
-        <main>
-          <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
-            <Grid container spacing={4}>
-              {content}
-            </Grid>
-          </Container>
-        </main>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (ingrediantStatus === "deleteSuccess") {
+      toast.success(success);
+      dispatch(getIngrediants());
+      dispatch(updateStatus());
+    } else if (ingrediantStatus === "deleteError") {
+      toast.error(error);
+    }
+  }, [ingrediantStatus, error, success, dispatch]);
+  return (
+    <div className="main-application">
+      <CssBaseline />
+      <AppBarSearch
+        handleSubmit={handleSubmit}
+        handleSearch={(e) => setSearch(e.target.value)}
+        title={"Mes ingrédiants"}
+        buttonTitle={"Ajouter un ingrédiants"}
+      />
+      <main>
+        <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
+          <Grid container spacing={4}>
+            {content}
+          </Grid>
+        </Container>
+      </main>
+    </div>
+  );
+};
 
 export default Ingrediant;

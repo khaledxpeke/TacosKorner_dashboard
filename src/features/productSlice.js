@@ -11,9 +11,7 @@ const initialState = {
 
 export const getProducts = createAsyncThunk("product/getProducts", async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:3300/api/product",
-    );
+    const response = await axios.get("http://localhost:3300/api/product");
     return response?.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || err.message);
@@ -43,17 +41,43 @@ export const addProduct = createAsyncThunk(
   }
 );
 
+export const modifyProduct = createAsyncThunk(
+  "product/modifyProduct",
+  async ({ body, productId }) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3300/api/product/update/${productId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (productId) => {
     try {
-      const response = await axios.delete(`http://localhost:3300/api/product/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage
-            .getItem("token")
-            .replace(/^"|"$/g, "")}`,
-        },
-      });
+      const response = await axios.delete(
+        `http://localhost:3300/api/product/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);
@@ -110,6 +134,21 @@ const productSlice = createSlice({
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(modifyProduct.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(modifyProduct.fulfilled, (state, action) => {
+        state.status = "modifySuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+        console.log(action.payload);
+      })
+      .addCase(modifyProduct.rejected, (state, action) => {
+        state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });

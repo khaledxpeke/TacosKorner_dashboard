@@ -10,14 +10,10 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
-const ProductCard = ({ data, content,handleClickOpen }) => {
+const ProductCard = ({ data, content,handleClickOpen,handleModify }) => {
   const theme = useTheme();
   const isLightMode = theme.palette.mode === "light";
-  const navigate = useNavigate();
-  const handleModify = () => {
-    navigate("/modifyCategory", { state: { category: data } });
-  };
+  
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card

@@ -38,6 +38,9 @@ const Supplement = () => {
     event.preventDefault();
     navigate("/addSupplement");
   };
+  const handleModify = (data) => {
+    navigate("/modifySupplement", { state: { supplement: data } });
+  };
   useEffect(() => {
     dispatch(getSupplements());
   }, [dispatch]);
@@ -51,12 +54,15 @@ const Supplement = () => {
     const filteredSupplements = supplements?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
+    console.log(filteredSupplements)
     content = (
       <>
         {filteredSupplements && filteredSupplements.length > 0 ? (
           filteredSupplements.map((card) => (
             <ProductCard
               data={card}
+              key={card._id}
+              handleModify={() => handleModify(card)}
               content={card.price + " " + card.currency}
               handleClickOpen={() => handleClickOpen(card._id)}
             />

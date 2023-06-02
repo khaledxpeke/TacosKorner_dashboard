@@ -41,6 +41,29 @@ export const addDesert = createAsyncThunk(
     }
   }
 );
+
+export const modifyDesert = createAsyncThunk(
+  "desert/modifyDesert",
+  async ({body,desertId}) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3300/api/desert/update/${desertId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 export const deleteDesert= createAsyncThunk(
   "desert/deleteDesert",
   async (desertId) => {
@@ -110,6 +133,21 @@ const desertSlice = createSlice({
       })
       .addCase(deleteDesert.rejected, (state, action) => {
         state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(modifyDesert.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(modifyDesert.fulfilled, (state, action) => {
+        state.status = "modifySuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+        console.log(action.payload);
+      })
+      .addCase(modifyDesert.rejected, (state, action) => {
+        state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });

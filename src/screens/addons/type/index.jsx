@@ -52,7 +52,9 @@ const Type = () => {
     event.preventDefault();
     navigate("/addType");
   };
-
+  const handleModify = (data) => {
+    navigate("/modifyType", { state: { type: data } });
+  };
   useEffect(() => {
     dispatch(getTypes());
   }, [dispatch]);
@@ -101,7 +103,11 @@ const Type = () => {
                         >
                           Delete
                         </Button>
-                        <Button variant="contained" color="warning">
+                        <Button
+                          variant="contained"
+                          color="warning"
+                          onClick={() => handleModify(card)}
+                        >
                           Edit
                         </Button>
                       </ButtonGroup>

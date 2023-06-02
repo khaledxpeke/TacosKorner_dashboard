@@ -38,6 +38,9 @@ const Pack = () => {
     event.preventDefault();
     navigate("/addFormule");
   };
+  const handleModify = (data) => {
+    navigate("/modifyPack", { state: { pack: data } });
+  };
   useEffect(() => {
     dispatch(getPack());
   }, [dispatch]);
@@ -56,7 +59,9 @@ const Pack = () => {
         {filteredPacks && filteredPacks.length > 0 ? (
           filteredPacks.map((card) => (
             <ProductCard
+              key={card._id}
               data={card}
+              handleModify={() => handleModify(card)}
               content={card.price + " " + card.currency}
               handleClickOpen={() => handleClickOpen(card._id)}
             />
@@ -64,7 +69,7 @@ const Pack = () => {
         ) : (
           <NoData />
         )}
-         <AlertDialog
+        <AlertDialog
           handleClose={() => setOpen(false)}
           open={open}
           name={"produit"}
@@ -73,7 +78,6 @@ const Pack = () => {
         />
       </>
     );
-   
   }
   useEffect(() => {
     if (packStatus === "deleteSuccess") {
@@ -84,25 +88,24 @@ const Pack = () => {
       toast.error(error);
     }
   }, [packStatus, error, success, dispatch]);
-    return (
-      <div className="main-application">
-        <CssBaseline />
-        <AppBarSearch
-          handleSubmit={handleSubmit}
-          handleSearch={(e) => setSearch(e.target.value)}
-          title={"Mes formules"}
-          buttonTitle={"Ajouter un formule"}
-        />
-        <main>
-          <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
-            <Grid container spacing={4}>
-              {content}
-            </Grid>
-          </Container>
-        </main>
-      </div>
-    );
-  }
-
+  return (
+    <div className="main-application">
+      <CssBaseline />
+      <AppBarSearch
+        handleSubmit={handleSubmit}
+        handleSearch={(e) => setSearch(e.target.value)}
+        title={"Mes formules"}
+        buttonTitle={"Ajouter un formule"}
+      />
+      <main>
+        <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
+          <Grid container spacing={4}>
+            {content}
+          </Grid>
+        </Container>
+      </main>
+    </div>
+  );
+};
 
 export default Pack;

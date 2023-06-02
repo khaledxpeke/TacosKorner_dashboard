@@ -38,6 +38,9 @@ const Desert = () => {
     event.preventDefault();
     navigate("/addDesert");
   };
+  const handleModify = (data) => {
+    navigate("/modifyDesert", { state: { desert: data } });
+  };
   useEffect(() => {
     dispatch(getDeserts());
   }, [dispatch]);
@@ -56,7 +59,9 @@ const Desert = () => {
         {filteredDeserts && filteredDeserts.length > 0 ? (
           filteredDeserts.map((card) => (
             <ProductCard
+            key={card._id}
               data={card}
+              handleModify={() => handleModify(card)}
               content={card.price + " " + card.currency}
               handleClickOpen={() => handleClickOpen(card._id)}
             />

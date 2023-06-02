@@ -1,10 +1,6 @@
 import {
   Box,
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import { Formik } from "formik";
@@ -16,76 +12,67 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../../components/loading";
-import {
-  getIngrediantsStatus,
-  getIngrediantsError,
-  getIngrediantsSuccess,
-  getIngrediantsLoading,
-  updateStatus,
-  modifyIngrediant
-} from "../../../features/ingrediantSlice";
-import { selectAllTypes, getTypes } from "../../../features/typeSlice";
+import {getPackError,getPackStatus,getPackSuccess,updateStatus,getPackLoading,modifyPack
+} from "../../../features/packSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const AddIngrediant = () => {
+const ModifyPack = () => {
   const location = useLocation();
-  const data = location.state.ingrediant;
-//   console.log(data)
+  const data = location.state.pack;
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const dispatch = useDispatch();
-  const status = useSelector(getIngrediantsStatus);
-  const error = useSelector(getIngrediantsError);
-  const loading = useSelector(getIngrediantsLoading);
-  const success = useSelector(getIngrediantsSuccess);
+  const status = useSelector(getPackStatus);
+  const error = useSelector(getPackError);
+  const loading = useSelector(getPackLoading);
+  const success = useSelector(getPackSuccess);
   const navigate = useNavigate();
-  const types = useSelector(selectAllTypes);
 
-  const ingrediantSchema = yup.object().shape({
+  const packSchema = yup.object().shape({
     name: yup.string().required("name is required"),
-    // type: yup.string().required("required"),
+    currency: yup.string().required("required"),
+    price: yup.number().required("required"),
   });
   const initialValues = {
     name: data.name,
-    type: data.type._id,
+    currency: data.currency,
+    price: data.price,
   };
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
       currency: values.currency,
       price: values.price,
-      type: values.type,
       ...(previewImage && { image: previewImage }),
     };
     dispatch(
-      modifyIngrediant({
+      modifyPack({
         body: requestBody,
-        ingrediantId: data._id,
+        packId: data._id
       })
     );
   };
   useEffect(() => {
-    dispatch(getTypes());
     if (status === "modifySuccess") {
       toast.success(success);
       dispatch(updateStatus());
-      navigate("/ingrediants");
+      navigate("/formule");
     } else if (status === "modifyError") {
       toast.error(error);
     }
-  }, [status, error, dispatch, navigate, types, success]);
+  }, [status, error, dispatch, navigate, success]);
 
   return loading ? (
     <Loading />
   ) : (
     <Box m="20px">
-      <Header title="MODIFIER INGREDIANT" subtitle="Modifier un ingrediant" />
+      <Header title="MODIFIER FORMULE" subtitle="Modifier formule" />
 
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
-        validationSchema={ingrediantSchema}
+        validationSchema={packSchema}
       >
         {({
           values,
@@ -117,7 +104,6 @@ const AddIngrediant = () => {
                 helperText={touched.name && errors.name}
                 sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
               />
-
               <ImageInput
                 sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
                 previewImage={previewImage}
@@ -126,36 +112,36 @@ const AddIngrediant = () => {
                 setDisplayLabel={setDisplayLabel}
                 image={data.image}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 4", gridRow: "3 / span 1" }}
-              >
-                <InputLabel id="types">
-                  Selectioner une type d'ingrédiant
-                </InputLabel>
-                <Select
-                  name="type"
-                  labelId="types"
-                  id="type"
-                  value={values.type}
-                  label="Type"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
-                  sx={{ gridColumn: "span 2" }}
-                >
-                  {types.map((type) => (
-                    <MenuItem key={type._id} value={type._id}>
-                      {type.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+               <TextField
+              fullWidth
+              variant="filled"
+              type="number"
+              label="Price"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.price}
+              name="price"
+              error={!!touched.price && !!errors.price}
+              helperText={touched.price && errors.price}
+              sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+            />
+            <TextField
+              fullWidth
+              variant="filled"
+              type="text"
+              label="Currency"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.currency}
+              name="currency"
+              error={!!touched.currency && !!errors.currency}
+              helperText={touched.currency && errors.currency}
+              sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+            />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier un ingrediant
+                Modifier le formule
               </Button>
             </Box>
           </form>
@@ -165,4 +151,4 @@ const AddIngrediant = () => {
   );
 };
 
-export default AddIngrediant;
+export default ModifyPack;

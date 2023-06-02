@@ -41,6 +41,28 @@ export const addType = createAsyncThunk(
     }
   }
 );
+
+export const modifyType = createAsyncThunk(
+  "type/modifyType",
+  async ({body,typeId}) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3300/api/type/update/${typeId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 export const deleteType = createAsyncThunk(
   "type/deleteType",
   async (typeId) => {
@@ -109,6 +131,20 @@ const typeSlice = createSlice({
       })
       .addCase(deleteType.rejected, (state, action) => {
         state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(modifyType.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(modifyType.fulfilled, (state, action) => {
+        state.status = "modifySuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(modifyType.rejected, (state, action) => {
+        state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });

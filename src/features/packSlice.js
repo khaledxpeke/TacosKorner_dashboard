@@ -42,6 +42,30 @@ export const addPack = createAsyncThunk(
     }
   }
 );
+
+export const modifyPack = createAsyncThunk(
+  "pack/modifyPack",
+  async ({body,packId}) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3300/api/pack/update/${packId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 export const deletePack= createAsyncThunk(
   "pack/deletePack",
   async (packId) => {
@@ -110,6 +134,21 @@ const packSlice = createSlice({
       })
       .addCase(deletePack.rejected, (state, action) => {
         state.status = "deleteError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(modifyPack.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(modifyPack.fulfilled, (state, action) => {
+        state.status = "modifySuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+        console.log(action.payload);
+      })
+      .addCase(modifyPack.rejected, (state, action) => {
+        state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });

@@ -32,6 +32,10 @@ import {
   selectAllIngrediants,
   getIngrediants,
 } from "../../../features/ingrediantSlice";
+import {
+selectAllSupplements,
+getSupplements
+} from "../../../features/supplementSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ModifyProduct = () => {
@@ -42,6 +46,7 @@ const ModifyProduct = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const ingrediants = useSelector(selectAllIngrediants);
+  const supplements = useSelector(selectAllSupplements);
   const max = ingrediants.filter(
     (ingredient) =>
       data.ingrediants.includes(ingredient._id) &&
@@ -61,6 +66,7 @@ const ModifyProduct = () => {
     name: yup.string().required("name is required"),
     category: yup.string().required("required"),
     ingrediant: yup.array().required("required"),
+    supplement: yup.array().required("required"),
     currency: yup.string().required("required"),
     price: yup.number().required("required"),
     maxIngrediant: yup.number(),
@@ -69,6 +75,7 @@ const ModifyProduct = () => {
     name: data.name,
     category: data.category || "",
     ingrediant: data.ingrediants,
+    supplement: data.supplements,
     currency: data.currency,
     price: data.price,
     maxIngrediant: data.maxIngrediant,
@@ -80,18 +87,20 @@ const ModifyProduct = () => {
       price: values.price,
       maxIngrediant: Number(values.maxIngrediant),
       ingrediants: values.ingrediant.join(","),
+      supplements: values.supplement.join(","),
       ...(previewImage && { image: previewImage }),
     };
     dispatch(
       modifyProduct({
         body: requestBody,
-        categoryId: values.category,
+        productId: data._id,
       })
     );
   };
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(getIngrediants());
+    dispatch(getSupplements());
     if (status === "modifySuccess") {
       toast.success(success);
       dispatch(updateStatus());
@@ -202,7 +211,39 @@ const ModifyProduct = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+              >
+                <InputLabel id="supplements">
+                  Selectioner les supplement
+                </InputLabel>
+                <Select
+                  name="supplement"
+                  labelId="supplements"
+                  id="supplement"
+                  value={values.supplement}
+                  multiple
+                  label="supplement"
+                  onChange={handleChange}
+                  sx={{ gridColumn: "span 1" }}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: '300px',
+                      },
+                    },
+                  }}
+                >
+                  {supplements.map((supplement) => (
+                    <MenuItem key={supplement._id} value={supplement._id}>
+                      {supplement.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="ingrediants">
                   Selectioner les ingrédiants

@@ -32,6 +32,10 @@ import {
   selectAllIngrediants,
   getIngrediants,
 } from "../../../features/ingrediantSlice";
+import {
+selectAllSupplements,
+getSupplements,
+} from "../../../features/supplementSlice"
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
@@ -47,11 +51,13 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
   const ingrediants = useSelector(selectAllIngrediants);
+  const supplements = useSelector(selectAllSupplements);
 
   const productSchema = yup.object().shape({
     name: yup.string().required("name is required"),
     category: yup.string().required("required"),
     ingrediant: yup.array().required("required"),
+    supplement: yup.array().required("required"),
     currency: yup.string().required("required"),
     price: yup.number().required("required"),
     maxIngrediant: yup.number(),
@@ -61,6 +67,7 @@ const AddProduct = () => {
     image: "",
     category: categories.length > 0 ? categories[0]._id : "",
     ingrediant: [],
+    supplement: [],
     currency: "",
     price: "",
     maxIngrediant: "",
@@ -75,6 +82,7 @@ const AddProduct = () => {
           price: values.price,
           maxIngrediant: Number(values.maxIngrediant),
           ingrediants: values.ingrediant.join(","),
+          supplements: values.supplement.join(","),
         },
         categoryId: values.category,
       })
@@ -83,6 +91,7 @@ const AddProduct = () => {
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(getIngrediants());
+    dispatch(getSupplements());
     if (status === "addSuccess") {
       toast.success(success);
       dispatch(updateStatus());
@@ -192,7 +201,39 @@ const AddProduct = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+              >
+                <InputLabel id="supplements">
+                  Selectioner les supplement
+                </InputLabel>
+                <Select
+                  name="supplement"
+                  labelId="supplements"
+                  id="supplement"
+                  value={values.supplement}
+                  multiple
+                  label="supplement"
+                  onChange={handleChange}
+                  sx={{ gridColumn: "span 1" }}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: '300px',
+                      },
+                    },
+                  }}
+                >
+                  {supplements.map((supplement) => (
+                    <MenuItem key={supplement._id} value={supplement._id}>
+                      {supplement.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="ingrediants">
                   Selectioner les ingrédiants
@@ -254,6 +295,7 @@ const AddProduct = () => {
                     selectedMeatIngredients.length > 0 ? "block" : "none",
                 }}
               />
+               
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiUrl = process.env.URL;
+console.log(apiUrl);
 
 const initialState = {
   user: "",

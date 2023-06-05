@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   items: [],
+  recents: [],
   status: "idle",
   error: null,
   loading: false,
@@ -16,6 +17,18 @@ export const fetchHistory = createAsyncThunk("history/getAll", async () => {
     throw new Error(err.response?.data?.message || err.message);
   }
 });
+
+export const fetchRecentHistories = createAsyncThunk(
+  "history/getRecentHistories",
+  async () => {
+    try {
+      const response = await axios.get("http://localhost:3300/api/history/10");
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
 
 const historySlice = createSlice({
   name: "history",
@@ -40,6 +53,19 @@ const historySlice = createSlice({
         state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;
+      }).addCase(fetchRecentHistories.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(fetchRecentHistories.fulfilled, (state, action) => {
+        state.status = "fetchRecentsData";
+        state.loading = false;
+        state.recents = action.payload;
+      })
+      .addCase(fetchRecentHistories.rejected, (state, action) => {
+        state.status = "fetchRecentsError";
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
@@ -47,4 +73,8 @@ const historySlice = createSlice({
 export const selectAllHistory = (state) => state.history.items;
 export const getHistoryStatus = (state) => state.history.status;
 export const getHistoryError = (state) => state.history.error;
+
+export const selectRecentHistory = (state) => state.history.recents;
+export const getRecentHistoryStatus = (state) => state.history.status;
+export const getRecentHistoryError = (state) => state.history.error;
 export default historySlice.reducer;

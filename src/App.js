@@ -51,7 +51,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <div className={!isSignInPage ? "app-signin app" : ""}>
+        <div className={!isSignInPage ? "app-content app" : "app-signin"}>
           {!isSignInPage && <Sidebar />}
           <main className="content">
             {!isSignInPage && <Topbar />}

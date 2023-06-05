@@ -9,35 +9,40 @@ body,
   width: 100%;
   font-family: "Source Sans Pro", sans-serif;
 }
+
 .content {
   padding-inline: 20px;
 }
 
 .app {
-  overflow-x:hidden;
+  overflow-x: hidden;
 }
-.app-signin{
-  display : grid;
-  grid-template-columns: 280px auto; 
+.app-content {
+  display: grid;
   grid-template-areas:
-    "sidebar topbar"
-    "sidebar main-application";
-
+    "sidebar topbar topbar"
+    "sidebar main-application main-application"
+    "sidebar main-application main-application";
 }
-.sidebar{
+.app-signin {
+  background-image: url("./assets/login-backgound.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.sidebar {
   position: sticky;
-  top:0;
+  top: 0;
   grid-area: sidebar;
-  height:100vh;
+  height: 100vh;
   overflow-y: auto;
   width: fit-content;
   z-index: 1;
 }
-.topbar{
+.topbar {
   grid-area: topbar;
-  padding : 20px;
+  padding: 20px;
 }
-.main-application{
+.main-application {
   grid-area: main-application;
   overflow: auto;
 }

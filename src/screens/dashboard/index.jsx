@@ -1,18 +1,18 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import TrafficIcon from "@mui/icons-material/Traffic";
 import StatBox from "../../components/statBox";
-import ProgressCircle from "../../components/progressCircle";
-import { mockTransactions } from "../../data/mockData";
-import MyResponsiveLine from "../../components/responsiveLine";
 import BarChart from "../../components/barChart";
 import { useDispatch, useSelector } from "react-redux";
-import RamenDiningIcon from '@mui/icons-material/RamenDining';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import RamenDiningIcon from "@mui/icons-material/RamenDining";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import {
+  fetchRecentHistories,
+  getRecentHistoryError,
+  getRecentHistoryStatus,
+  selectRecentHistory,
   fetchHistory,
   getHistoryError,
   getHistoryStatus,
@@ -28,29 +28,61 @@ const Dashboard = () => {
   const histories = useSelector(selectAllHistory);
   const error = useSelector(getHistoryError);
   const historyStatus = useSelector(getHistoryStatus);
+
+  const recents = useSelector(selectRecentHistory);
+  const recentsError = useSelector(getRecentHistoryError);
+  const recentsStatus = useSelector(getRecentHistoryStatus);
+
   let content;
+  let content2;
   let sales;
+  let addon = 0;
   let commands = histories.length;
-  let plats=0;
-  let importer=0;
-  let surPlace=0;
+  let plats = 0;
+  let importer = 0;
+  let surPlace = 0;
+  let burger = 0;
+  let pizza = 0;
+  let panini = 0;
+  let drinks = 0;
+  let chiken = 0;
+  let tacos = 0;
+  let desert = 0;
   if (historyStatus === "loading") {
     content = <Loading />;
   } else if (historyStatus === "fetchError") {
     content = <Error>{error}</Error>;
   }
   if (historyStatus === "fetchData") {
-    console.log(histories)
     histories.map((history) => {
+      console.log(histories);
+      history.product.map((prod) => {
+        if (prod.plat.category.name.toLowerCase() === "burgers") {
+          burger++;
+        } else if (prod.plat.category.name.toLowerCase() === "pizza") {
+          pizza++;
+        } else if (prod.plat.category.name.toLowerCase() === "panini") {
+          panini++;
+        } else if (prod.plat.category.name.toLowerCase() === "drinks") {
+          drinks++;
+        } else if (prod.plat.category.name.toLowerCase() === "chiken") {
+          chiken++;
+        } else if (prod.plat.category.name.toLowerCase() === "tacos") {
+          tacos++;
+        } else if (prod.plat.category.name.toLowerCase() === "deserts") {
+          desert++;
+        }
+        return null;
+      });
       sales = histories.reduce(
         (total, history) => total + parseFloat(history.total),
         0
       );
       plats += history.product.length;
-      if(history.pack==="Importer"){
-        importer+=1
-      }else{
-        surPlace+=1
+      if (history.pack === "Importer") {
+        importer += 1;
+      } else {
+        surPlace += 1;
       }
       return null;
     });
@@ -59,7 +91,16 @@ const Dashboard = () => {
   let importerPercentage = (importer / commands) * 100;
   useEffect(() => {
     dispatch(fetchHistory());
+    dispatch(fetchRecentHistories());
   }, [dispatch]);
+  if (recentsStatus === "loading") {
+    content2 = <Loading />;
+  } else if (recentsStatus === "fetchRecentsError") {
+    content2 = <Error>{recentsError}</Error>;
+  }
+  if (recentsStatus === "fetchRecentsData") {
+    
+  }
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -67,15 +108,16 @@ const Dashboard = () => {
         <Header title="DASHBOARD" subtitle="Welcome to Tacos Korner" />
       </Box>
       {content}
-      {!content && (
-        <>
-          <Box
-            display="grid"
-            gridTemplateColumns="repeat(12, 1fr)"
-            gridAutoRows="140px"
-            gap="20px"
-          >
-            {/* ROW 1 */}
+
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(12, 1fr)"
+        gridAutoRows="140px"
+        gap="20px"
+      >
+        {/* ROW 1 */}
+        {!content && (
+          <>
             <Box
               gridColumn="span 2"
               backgroundColor={colors.primary[400]}
@@ -143,8 +185,8 @@ const Dashboard = () => {
               <StatBox
                 title={surPlace}
                 subtitle=" Sur place"
-                progress={surPlacePercentage/100}
-                increase={surPlacePercentage+" %"}
+                progress={surPlacePercentage / 100}
+                increase={surPlacePercentage + " %"}
                 icon={
                   <TrafficIcon
                     sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -162,8 +204,8 @@ const Dashboard = () => {
               <StatBox
                 title={importer}
                 subtitle="Impoter"
-                progress={importerPercentage/100}
-                increase={importerPercentage+" %"}
+                progress={importerPercentage / 100}
+                increase={importerPercentage + " %"}
                 icon={
                   <TrafficIcon
                     sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -171,47 +213,62 @@ const Dashboard = () => {
                 }
               />
             </Box>
-            {/* ROW 2 */}
+          </>
+        )}
+        {/* ROW 2 */}
+        {!content && (
+          <>
             <Box
               gridColumn="span 8"
               gridRow="span 2"
               backgroundColor={colors.primary[400]}
             >
-              <Box
-                mt="25px"
-                p="0 30px"
-                display="flex "
-                justifyContent="space-between"
-                alignItems="center"
+              <Typography
+                variant="h5"
+                fontWeight="600"
+                sx={{ padding: "30px 30px 0 30px" }}
               >
-                <Box>
-                  <Typography
-                    variant="h5"
-                    fontWeight="600"
-                    color={colors.grey[100]}
-                  >
-                    Revenue Generated
-                  </Typography>
-                  <Typography
-                    variant="h3"
-                    fontWeight="bold"
-                    color={colors.greenAccent[500]}
-                  >
-                    $59,342.32
-                  </Typography>
-                </Box>
-                <Box>
-                  <IconButton>
-                    <DownloadOutlinedIcon
-                      sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                    />
-                  </IconButton>
-                </Box>
-              </Box>
-              <Box height="250px" m="-20px 0 0 0">
-                <MyResponsiveLine />
+                Quantité de vente
+              </Typography>
+              <Box height="250px" mt="-20px">
+                <BarChart
+                  data={[
+                    {
+                      category: "Burgers",
+                      quantity: burger,
+                    },
+                    {
+                      category: "Tacos",
+                      quantity: tacos,
+                    },
+                    {
+                      category: "Panini",
+                      quantity: panini,
+                    },
+                    {
+                      category: "Chiken",
+                      quantity: chiken,
+                    },
+                    {
+                      category: "Drinks",
+                      quantity: drinks,
+                    },
+                    {
+                      category: "Desert",
+                      quantity: desert,
+                    },
+                    {
+                      category: "Pizza",
+                      quantity: pizza,
+                    },
+                  ]}
+                />
               </Box>
             </Box>
+          </>
+        )}
+        {!content2 && (
+          <>
             <Box
               gridColumn="span 4"
               gridRow="span 2"
@@ -231,90 +288,53 @@ const Dashboard = () => {
                   variant="h5"
                   fontWeight="900"
                 >
-                  Recent Transactions
+                  10 derniers historiques
                 </Typography>
               </Box>
-              {mockTransactions.map((transaction, i) => (
+              {recents.map((recent, i) => (
                 <Box
-                  key={`${transaction.txId}-${i}`}
+                  key={recent._id}
                   display="flex"
                   justifyContent="space-between"
                   alignItems="center"
                   borderBottom={`4px solid ${colors.primary[500]}`}
                   p="15px"
                 >
-                  <Box>
-                    <Typography
-                      color={colors.greenAccent[500]}
-                      variant="h5"
-                      fontWeight="600"
-                    >
-                      {transaction.txId}
-                    </Typography>
-                    <Typography color={colors.grey[100]}>
-                      {transaction.user}
-                    </Typography>
+                  {recent.product.map((prod, i) => {
+                    addon += prod.addons.length;
+                    return (
+                      <Box>
+                        <Typography
+                          color={colors.greenAccent[500]}
+                          variant="h5"
+                          fontWeight="600"
+                        >
+                          {`${i + 1} Plat`}
+                        </Typography>
+                        <Typography color={colors.grey[100]}>
+                          {`${addon} Addons`}
+                        </Typography>
+                      </Box>
+                    );
+                  })}
+
+                  <Box color={colors.grey[100]}>{recent.pack}</Box>
+                  <Box color={colors.grey[100]}>
+                    {recent.boughtAt.substring(0, 10)}
                   </Box>
-                  <Box color={colors.grey[100]}>{transaction.date}</Box>
                   <Box
                     backgroundColor={colors.greenAccent[500]}
                     p="5px 10px"
                     borderRadius="4px"
                   >
-                    ${transaction.cost}
+                    {recent.total}
                   </Box>
                 </Box>
               ))}
             </Box>
-
-            {/* ROW 3 */}
-            <Box
-              gridColumn="span 4"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              p="30px"
-            >
-              <Typography variant="h5" fontWeight="600">
-                Campaign
-              </Typography>
-              <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                mt="25px"
-              >
-                <ProgressCircle size="125" />
-                <Typography
-                  variant="h5"
-                  color={colors.greenAccent[500]}
-                  sx={{ mt: "15px" }}
-                >
-                  $48,352 revenue generated
-                </Typography>
-                <Typography>
-                  Includes extra misc expenditures and costs
-                </Typography>
-              </Box>
-            </Box>
-            <Box
-              gridColumn="span 8"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-            >
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                sx={{ padding: "30px 30px 0 30px" }}
-              >
-                Sales Quantity
-              </Typography>
-              <Box height="250px" mt="-20px">
-                <BarChart />
-              </Box>
-            </Box>
-          </Box>
-        </>
-      )}
+          </>
+        )}
+      </Box>
     </Box>
   );
 };

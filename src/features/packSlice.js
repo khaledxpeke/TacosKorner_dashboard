@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -12,7 +12,7 @@ const initialState = {
 export const getPack = createAsyncThunk("pack/getPack", async () => {
   try {
     const response = await axios.get(
-      "http://localhost:3300/api/pack",
+      `${apiUrl}/pack`,
     );
     return response?.data;
   } catch (err) {
@@ -25,7 +25,7 @@ export const addPack = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        "http://localhost:3300/api/pack",
+        `${apiUrl}/pack`,
         body,
         {
           headers: {
@@ -48,7 +48,7 @@ export const modifyPack = createAsyncThunk(
   async ({body,packId}) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/pack/update/${packId}`,
+        `${apiUrl}/pack/update/${packId}`,
         body,
         {
           headers: {
@@ -70,7 +70,7 @@ export const deletePack= createAsyncThunk(
   "pack/deletePack",
   async (packId) => {
     try {
-      const response = await axios.delete(`http://localhost:3300/api/pack/${packId}`, {
+      const response = await axios.delete(`${apiUrl}/pack/${packId}`, {
         headers: {
           Authorization: `Bearer ${localStorage
             .getItem("token")

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -11,7 +11,7 @@ const initialState = {
 
 export const getProducts = createAsyncThunk("product/getProducts", async () => {
   try {
-    const response = await axios.get("http://localhost:3300/api/product");
+    const response = await axios.get(`${apiUrl}/product`);
     return response?.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || err.message);
@@ -23,7 +23,7 @@ export const addProduct = createAsyncThunk(
   async ({ body, categoryId }) => {
     try {
       const response = await axios.post(
-        `http://localhost:3300/api/product/${categoryId}`,
+        `${apiUrl}/product/${categoryId}`,
         body,
         {
           headers: {
@@ -46,7 +46,7 @@ export const modifyProduct = createAsyncThunk(
   async ({ body, productId }) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/product/update/${productId}`,
+        `${apiUrl}/product/update/${productId}`,
         body,
         {
           headers: {
@@ -69,7 +69,7 @@ export const deleteProduct = createAsyncThunk(
   async (productId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3300/api/product/${productId}`,
+        `${apiUrl}/product/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage
@@ -90,7 +90,7 @@ export const getProductByCategoryId = createAsyncThunk(
   async (categoryId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3300/api/product/${categoryId}`
+        `${apiUrl}/product/${categoryId}`
       );
       return response?.data;
     } catch (err) {

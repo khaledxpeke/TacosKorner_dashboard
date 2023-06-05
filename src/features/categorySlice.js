@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -11,7 +11,7 @@ const initialState = {
 
 export const fetchCategories = createAsyncThunk("category/getAll", async () => {
   try {
-    const response = await axios.get("http://localhost:3300/api/category");
+    const response = await axios.get(`${apiUrl}/category`);
     return response?.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || err.message);
@@ -46,7 +46,7 @@ export const modifyCategory = createAsyncThunk(
   async ({body,categoryId}) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/category/update/${categoryId}`,
+        `${apiUrl}/category/update/${categoryId}`,
         body,
         {
           headers: {
@@ -69,7 +69,7 @@ export const deleteCategory = createAsyncThunk(
   async (categoryId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3300/api/category/${categoryId}`,
+        `${apiUrl}/category/${categoryId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage

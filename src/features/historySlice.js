@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   recents: [],
@@ -11,7 +11,7 @@ const initialState = {
 
 export const fetchHistory = createAsyncThunk("history/getAll", async () => {
   try {
-    const response = await axios.get("http://localhost:3300/api/history");
+    const response = await axios.get(`${apiUrl}/history`);
     return response?.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || err.message);
@@ -22,7 +22,7 @@ export const fetchRecentHistories = createAsyncThunk(
   "history/getRecentHistories",
   async () => {
     try {
-      const response = await axios.get("http://localhost:3300/api/history/10");
+      const response = await axios.get(`${apiUrl}/history/10`);
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);

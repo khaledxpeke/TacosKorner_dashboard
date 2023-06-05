@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -12,7 +12,7 @@ const initialState = {
 export const getTypes = createAsyncThunk("type/getTypes", async () => {
   try {
     const response = await axios.get(
-      "http://localhost:3300/api/type",
+      `${apiUrl}/type`,
     );
     return response?.data;
   } catch (err) {
@@ -25,7 +25,7 @@ export const addType = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        "http://localhost:3300/api/type",
+        `${apiUrl}/type`,
         body,
         {
           headers: {
@@ -47,7 +47,7 @@ export const modifyType = createAsyncThunk(
   async ({body,typeId}) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/type/update/${typeId}`,
+        `${apiUrl}/type/update/${typeId}`,
         body,
         {
           headers: {
@@ -67,7 +67,7 @@ export const deleteType = createAsyncThunk(
   "type/deleteType",
   async (typeId) => {
     try {
-      const response = await axios.delete(`http://localhost:3300/api/type/${typeId}`, {
+      const response = await axios.delete(`${apiUrl}/type/${typeId}`, {
         headers: {
           Authorization: `Bearer ${localStorage
             .getItem("token")

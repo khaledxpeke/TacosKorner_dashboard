@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -13,7 +13,7 @@ export const getSupplements = createAsyncThunk(
   "supplement/getSupplements",
   async () => {
     try {
-      const response = await axios.get("http://localhost:3300/api/supplement");
+      const response = await axios.get(`${apiUrl}/supplement`);
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);
@@ -25,7 +25,7 @@ export const addSupplement = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        "http://localhost:3300/api/supplement",
+        `${apiUrl}/supplement`,
         body,
         {
           headers: {
@@ -48,7 +48,7 @@ export const modifySupplement = createAsyncThunk(
   async ({ body, supplementId }) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/supplement/update/${supplementId}`,
+        `${apiUrl}/supplement/update/${supplementId}`,
         body,
         {
           headers: {
@@ -71,7 +71,7 @@ export const deleteSupplement = createAsyncThunk(
   async (supplementId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3300/api/supplement/${supplementId}`,
+        `${apiUrl}/supplement/${supplementId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage

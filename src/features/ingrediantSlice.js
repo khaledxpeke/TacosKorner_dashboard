@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -13,7 +13,7 @@ export const getIngrediants = createAsyncThunk(
   "ingrediant/getIngrediants",
   async () => {
     try {
-      const response = await axios.get("http://localhost:3300/api/ingrediant");
+      const response = await axios.get(`${apiUrl}/ingrediant`);
       return response?.data;
     } catch (err) {
       throw new Error(err.response?.data?.message || err.message);
@@ -26,7 +26,7 @@ export const addIngrediant = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        "http://localhost:3300/api/ingrediant",
+        `${apiUrl}/ingrediant`,
         body,
         {
           headers: {
@@ -49,7 +49,7 @@ export const modifyIngrediant = createAsyncThunk(
   async ({ body, ingrediantId }) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/ingrediant/update/${ingrediantId}`,
+        `${apiUrl}/ingrediant/update/${ingrediantId}`,
         body,
         {
           headers: {
@@ -72,7 +72,7 @@ export const deleteIngrediant = createAsyncThunk(
   async (ingrediantId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3300/api/ingrediant/${ingrediantId}`,
+        `${apiUrl}/ingrediant/${ingrediantId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage

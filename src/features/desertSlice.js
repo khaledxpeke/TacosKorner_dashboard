@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const initialState = {
   items: [],
   status: "idle",
@@ -12,7 +12,7 @@ const initialState = {
 export const getDeserts = createAsyncThunk("desert/getDeserts", async () => {
   try {
     const response = await axios.get(
-      "http://localhost:3300/api/desert",
+      `${apiUrl}/desert`,
     );
     return response?.data;
   } catch (err) {
@@ -24,7 +24,7 @@ export const addDesert = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        "http://localhost:3300/api/desert",
+        `${apiUrl}/desert`,
         body,
         {
           headers: {
@@ -47,7 +47,7 @@ export const modifyDesert = createAsyncThunk(
   async ({body,desertId}) => {
     try {
       const response = await axios.put(
-        `http://localhost:3300/api/desert/update/${desertId}`,
+        `${apiUrl}/desert/update/${desertId}`,
         body,
         {
           headers: {
@@ -68,7 +68,7 @@ export const deleteDesert= createAsyncThunk(
   "desert/deleteDesert",
   async (desertId) => {
     try {
-      const response = await axios.delete(`http://localhost:3300/api/desert/${desertId}`, {
+      const response = await axios.delete(`${apiUrl}/desert/${desertId}`, {
         headers: {
           Authorization: `Bearer ${localStorage
             .getItem("token")

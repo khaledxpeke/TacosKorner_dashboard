@@ -67,11 +67,11 @@ const AddIngrediant = () => {
     dispatch(getTypes());
     if (status === "addSuccess") {
       toast.success(success);
-      dispatch(updateStatus());
       navigate("/ingrediants");
     } else if (status === "addError") {
       toast.error(error);
     }
+    dispatch(updateStatus());
   }, [status, error, dispatch, navigate, types, success]);
 
   return loading ? (

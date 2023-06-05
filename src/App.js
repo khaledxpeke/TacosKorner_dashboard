@@ -31,15 +31,18 @@ import ModifyProduct from "./screens/categories/product/modifyProduct";
 import ModifyPack from "./screens/extra/formule/modifyPack";
 import ModifyDesert from "./screens/extra/desserts/modifyDessert";
 import ModifyType from "./screens/addons/type/modifyType";
-
+import jwtDecode from "jwt-decode";
 
 function App() {
   const { theme, colorMode } = useMode();
   const navigate = useNavigate();
   const location = useLocation();
-  const output = window.localStorage.getItem("user");
-  const user = JSON.parse(output);
-  const isSignInPage = !user;
+  const output = window.localStorage.getItem("token");
+  const token = output ? JSON.parse(output) : null;
+  const decodedToken = token ? jwtDecode(token) : null;
+  const expirationDate = decodedToken ? new Date(decodedToken.exp * 1000) : null;
+  const isSignInPage = !expirationDate || expirationDate < new Date();
+  console.log(decodedToken)
   useEffect(() => {
     if (isSignInPage && location.pathname !== "/signin") {
       navigate("/signin");
@@ -52,7 +55,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <div className={!isSignInPage ? "app-content app" : "app-signin"}>
+        <div className={!isSignInPage ? "app-content app" : "app-signin app"}>
           {!isSignInPage && <Sidebar />}
           <main className="content">
             {!isSignInPage && <Topbar />}
@@ -70,10 +73,16 @@ function App() {
                   <Route path="/addProduct" element={<AddProduct />} />
                   <Route path="/supplements" element={<Supplement />} />
                   <Route path="/addSupplement" element={<AddSupplement />} />
-                  <Route path="/modifySupplement" element={<ModifySupplement />} />
+                  <Route
+                    path="/modifySupplement"
+                    element={<ModifySupplement />}
+                  />
                   <Route path="/ingrediants" element={<Ingrediant />} />
                   <Route path="/addIngrediant" element={<AddIngrediant />} />
-                  <Route path="/modifyIngrediant" element={<ModifyIngrediant />} />
+                  <Route
+                    path="/modifyIngrediant"
+                    element={<ModifyIngrediant />}
+                  />
                   <Route path="/type" element={<Type />} />
                   <Route path="/addType" element={<AddType />} />
                   <Route path="/modifyType" element={<ModifyType />} />

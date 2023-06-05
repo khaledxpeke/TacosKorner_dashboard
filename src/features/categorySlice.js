@@ -23,7 +23,7 @@ export const addCategory = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        "http://localhost:3300/api/category",
+        `${apiUrl}/category`,
         body,
         {
           headers: {

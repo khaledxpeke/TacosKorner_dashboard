@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
+const apiUrl=process.env.REACT_APP_API_URL
 const ProductCard = ({
   data,
   content,
@@ -40,12 +41,12 @@ const ProductCard = ({
             objectFit: "cover",
             height: 0,
             paddingTop: "56.25%",
-            backgroundImage: `url(http://localhost:3300/api/${data.image})`,
+            backgroundImage: `url(${apiUrl}/${data.image})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             backgroundSize: "contain",
           }}
-          image={`http://localhost:3300/api/${data.image.replace(/\\/g, "/")}`}
+          image={`${apiUrl}/${data.image.replace(/\\/g, "/")}`}
         />
         <CardContent
           sx={{

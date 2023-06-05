@@ -2,7 +2,7 @@ import React from "react";
 import upload from "../assets/upload.png";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
-
+const apiUrl=process.env.REACT_APP_API_URL
 const ImageInput = ({
   previewImage,
   setPreviewImage,
@@ -39,7 +39,7 @@ const ImageInput = ({
             previewImage
               ? URL.createObjectURL(previewImage)
               : image
-              ? `http://localhost:3300/api/${image}`
+              ? `${apiUrl}/${image}`
               : upload
           }
           alt="Upload"

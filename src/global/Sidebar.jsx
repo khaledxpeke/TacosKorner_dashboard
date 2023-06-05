@@ -14,6 +14,7 @@ import ChecklistIcon from "@mui/icons-material/Checklist";
 import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import IcecreamIcon from "@mui/icons-material/Icecream";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import jwtDecode from "jwt-decode";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -40,8 +41,10 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [sidebarHeight, setSidebarHeight] = useState("100vh");
-  const output = window.localStorage.getItem("user");
-  const user = JSON.parse(output);
+  const output = window.localStorage.getItem("token");
+  const token = output ? JSON.parse(output) : null;
+  const decodedToken = token ? jwtDecode(token) : null;
+  const user = decodedToken.user || null;
   useEffect(() => {
     const handleResize = () => {
       const windowHeight = window.innerHeight;
@@ -123,7 +126,7 @@ const Sidebar = () => {
                       alt="profile-user"
                       width="100px"
                       height="100px"
-                      src={`../../assets/user.png`}
+                      src="../../assets/user.png"
                       style={{ cursor: "pointer", borderRadius: "50%" }}
                     />
                   </Box>

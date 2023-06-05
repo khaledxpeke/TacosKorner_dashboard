@@ -55,7 +55,6 @@ const Dashboard = () => {
   }
   if (historyStatus === "fetchData") {
     histories.map((history) => {
-      console.log(histories);
       history.product.map((prod) => {
         if (prod.plat.category.name.toLowerCase() === "burgers") {
           burger++;

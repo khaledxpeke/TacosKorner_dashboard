@@ -3,7 +3,6 @@ import axios from "axios";
 const apiUrl=process.env.REACT_APP_API_URL
 
 const initialState = {
-  user: "",
   token: "",
   status: "idle",
   error: null,
@@ -25,13 +24,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     getUser: (state) => {
-      state.user = localStorage.getItem("user");
       state.token = localStorage.getItem("token");
     },
     logOut: (state) => {
-      localStorage.removeItem("user");
       localStorage.removeItem("token");
-      state.user = "";
       state.token = "";
     },
     updateStatus: (state) => {
@@ -47,10 +43,9 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.status = "logedIn";
         state.loading = false;
-        state.user = action.payload.user;
         state.token = action.payload.token;
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("token", JSON.stringify(action.payload.token));
+        console.log(action.payload)
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "error";
@@ -65,5 +60,4 @@ export const { getUser, logOut, updateStatus } = authSlice.actions;
 export const getUserStatus = (state) => state.user.status;
 export const getUserError = (state) => state.user.error;
 export const getUserLoading = (state) => state.user.loading;
-export const getUserData = (state) => state.user.user;
 export default authSlice.reducer;

@@ -85,6 +85,7 @@ const ModifyProduct = () => {
       name: values.name,
       currency: values.currency,
       price: values.price,
+      category: values.category,
       maxIngrediant: Number(values.maxIngrediant),
       ingrediants: values.ingrediant.join(","),
       supplements: values.supplement.join(","),

@@ -106,11 +106,7 @@ const Category = () => {
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
-          <Grid
-            container
-            spacing={4}
-            sx={{ gridTemplateColumns: "repeat(auto-fit, minmax(20rem, 1fr))" }}
-          >
+          <Grid container spacing={4}>
             {content}
           </Grid>
         </Container>

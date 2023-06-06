@@ -299,6 +299,7 @@ const ModifyProduct = () => {
                 name="maxIngrediant"
                 error={!!touched.maxIngrediant && !!errors.maxIngrediant}
                 helperText={touched.maxIngrediant && errors.maxIngrediant}
+                inputProps={{ min: 1 }}
                 sx={{
                   gridColumn: "span 1",
                   gridRow: "3 / span 1",

@@ -18,11 +18,11 @@ body,
   overflow-x: hidden;
 }
 .app-content {
-   display : grid;
-  grid-template-columns: clamp(50,auto,280px) auto; 
+  display: grid;
   grid-template-areas:
-    "sidebar topbar"
-    "sidebar main-application";
+    "sidebar topbar topbar"
+    "sidebar main-application main-application"
+    "sidebar main-application main-application";
 }
 .app-signin {
   background-image: url("./assets/login-backgound.jpg");

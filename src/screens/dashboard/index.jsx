@@ -36,7 +36,6 @@ const Dashboard = () => {
   let content;
   let content2;
   let sales;
-  let addon = 0;
   let commands = histories.length;
   let plats = 0;
   let importer = 0;
@@ -98,7 +97,6 @@ const Dashboard = () => {
     content2 = <Error>{recentsError}</Error>;
   }
   if (recentsStatus === "fetchRecentsData") {
-    
   }
   return (
     <Box m="20px">
@@ -290,46 +288,49 @@ const Dashboard = () => {
                   10 derniers historiques
                 </Typography>
               </Box>
-              {recents.map((recent, i) => (
-                <Box
-                  key={recent._id}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderBottom={`4px solid ${colors.primary[500]}`}
-                  p="15px"
-                >
-                  {recent.product.map((prod, i) => {
-                    addon += prod.addons.length;
-                    return (
-                      <Box>
-                        <Typography
-                          color={colors.greenAccent[500]}
-                          variant="h5"
-                          fontWeight="600"
-                        >
-                          {`${i + 1} Plat`}
-                        </Typography>
-                        <Typography color={colors.grey[100]}>
-                          {`${addon} Addons`}
-                        </Typography>
-                      </Box>
-                    );
-                  })}
+              {recents.map((recent, index) => {
+                let addon = 0;
+                let plat = 0;
+                recent.product.forEach((prod, i) => {
+                  addon += prod.addons.length;
+                  plat = i + 1;
+                });
 
-                  <Box color={colors.grey[100]}>{recent.pack}</Box>
-                  <Box color={colors.grey[100]}>
-                    {recent.boughtAt.substring(0, 10)}
-                  </Box>
+                return (
                   <Box
-                    backgroundColor={colors.greenAccent[500]}
-                    p="5px 10px"
-                    borderRadius="4px"
+                    key={recent._id}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    borderBottom={`4px solid ${colors.primary[500]}`}
+                    p="15px"
                   >
-                    {recent.total}
+                    <Box>
+                      <Typography
+                        color={colors.greenAccent[500]}
+                        variant="h5"
+                        fontWeight="600"
+                      >
+                        {`${plat} Plat`}
+                      </Typography>
+                      <Typography color={colors.grey[100]}>
+                        {`${addon} Addons`}
+                      </Typography>
+                    </Box>
+                    <Box color={colors.grey[100]}>{recent.pack}</Box>
+                    <Box color={colors.grey[100]}>
+                      {recent.boughtAt.substring(0, 10)}
+                    </Box>
+                    <Box
+                      backgroundColor={colors.greenAccent[500]}
+                      p="5px 10px"
+                      borderRadius="4px"
+                    >
+                      {recent.total}
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                );
+              })}
             </Box>
           </>
         )}

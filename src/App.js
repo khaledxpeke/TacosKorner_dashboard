@@ -57,7 +57,7 @@ function App() {
 
         <div className={!isSignInPage ? "app-content app" : "app-signin app"}>
           {!isSignInPage && <Sidebar />}
-          <main className="content">
+
             {!isSignInPage && <Topbar />}
             <Routes>
               <Route path="/signin" element={<SignIn />} />
@@ -106,7 +106,6 @@ function App() {
               progress={undefined}
               theme="colored"
             />
-          </main>
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>

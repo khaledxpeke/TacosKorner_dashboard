@@ -35,7 +35,7 @@ const Dashboard = () => {
 
   let content;
   let content2;
-  let sales;
+  let sales=0;
   let commands = histories.length;
   let plats = 0;
   let importer = 0;
@@ -99,7 +99,7 @@ const Dashboard = () => {
   if (recentsStatus === "fetchRecentsData") {
   }
   return (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Welcome to Tacos Korner" />

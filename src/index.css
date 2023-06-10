@@ -22,7 +22,10 @@ body,
   grid-template-areas:
     "sidebar topbar topbar"
     "sidebar main-application main-application"
+    "sidebar main-application main-application"
     "sidebar main-application main-application";
+    grid-template-rows: 100px 1fr 1fr 1fr;
+    grid-template-columns: 280px 1fr 1fr;
 }
 .app-signin {
   background-image: url("./assets/login-backgound.jpg");
@@ -40,11 +43,12 @@ body,
 }
 .topbar {
   grid-area: topbar;
-  padding: 20px;
+  padding: 30px!important;
 }
 .main-application {
   grid-area: main-application;
   overflow: auto;
+  padding-inline: 20px;
 }
 
 ::-webkit-scrollbar {

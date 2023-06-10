@@ -104,7 +104,7 @@ const AddProduct = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       <Header title="AJOUTER PRODUIT" subtitle="Créer une nouvelle produit" />
 
       <Formik
@@ -124,7 +124,7 @@ const AddProduct = () => {
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}

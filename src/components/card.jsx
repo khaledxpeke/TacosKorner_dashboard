@@ -31,6 +31,7 @@ const ProductCard = ({
           flexDirection: "column",
           paddingTop: "14px",
           backgroundColor: isLightMode ? "#F0F0F7" : "dark",
+          radius: "25px",
         }}
       >
         <CardMedia

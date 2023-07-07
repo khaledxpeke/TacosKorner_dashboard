@@ -15,6 +15,7 @@ import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import IcecreamIcon from "@mui/icons-material/Icecream";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import jwtDecode from "jwt-decode";
+import LiquorIcon from '@mui/icons-material/Liquor';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -215,6 +216,13 @@ const Sidebar = () => {
                   title="Formule"
                   to="/formule"
                   icon={<FastfoodIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Boissons"
+                  to="/drink"
+                  icon={<LiquorIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />

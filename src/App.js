@@ -31,6 +31,9 @@ import ModifyProduct from "./screens/categories/product/modifyProduct";
 import ModifyPack from "./screens/extra/formule/modifyPack";
 import ModifyDesert from "./screens/extra/desserts/modifyDessert";
 import ModifyType from "./screens/addons/type/modifyType";
+import Drink from "./screens/extra/drinks";
+import AddDrink from "./screens/extra/drinks/addDrink";
+import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
 
 function App() {
@@ -40,9 +43,11 @@ function App() {
   const output = window.localStorage.getItem("token");
   const token = output ? JSON.parse(output) : null;
   const decodedToken = token ? jwtDecode(token) : null;
-  const expirationDate = decodedToken ? new Date(decodedToken.exp * 1000) : null;
+  const expirationDate = decodedToken
+    ? new Date(decodedToken.exp * 1000)
+    : null;
   const isSignInPage = !expirationDate || expirationDate < new Date();
-  console.log(decodedToken)
+  console.log(decodedToken);
   useEffect(() => {
     if (isSignInPage && location.pathname !== "/signin") {
       navigate("/signin");
@@ -58,54 +63,57 @@ function App() {
         <div className={!isSignInPage ? "app-content app" : "app-signin app"}>
           {!isSignInPage && <Sidebar />}
 
-            {!isSignInPage && <Topbar />}
-            <Routes>
-              <Route path="/signin" element={<SignIn />} />
-              {!isSignInPage && (
-                <>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/category" element={<Category />} />
-                  <Route path="/addCategory" element={<AddCategory />} />
-                  <Route path="/modifyCategory" element={<ModifyCategory />} />
-                  <Route path="/viewProduct" element={<ViewProduct />} />
-                  <Route path="/product" element={<Product />} />
-                  <Route path="/modifyProduct" element={<ModifyProduct />} />
-                  <Route path="/addProduct" element={<AddProduct />} />
-                  <Route path="/supplements" element={<Supplement />} />
-                  <Route path="/addSupplement" element={<AddSupplement />} />
-                  <Route
-                    path="/modifySupplement"
-                    element={<ModifySupplement />}
-                  />
-                  <Route path="/ingrediants" element={<Ingrediant />} />
-                  <Route path="/addIngrediant" element={<AddIngrediant />} />
-                  <Route
-                    path="/modifyIngrediant"
-                    element={<ModifyIngrediant />}
-                  />
-                  <Route path="/type" element={<Type />} />
-                  <Route path="/addType" element={<AddType />} />
-                  <Route path="/modifyType" element={<ModifyType />} />
-                  <Route path="/formule" element={<Pack />} />
-                  <Route path="/addFormule" element={<AddPack />} />
-                  <Route path="/modifyPack" element={<ModifyPack />} />
-                  <Route path="/desert" element={<Desert />} />
-                  <Route path="/addDesert" element={<AddDesert />} />
-                  <Route path="/modifyDesert" element={<ModifyDesert />} />
-                  <Route path="/history" element={<History />} />
-                </>
-              )}
-            </Routes>
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              closeOnClick={true}
-              pauseOnHover={true}
-              draggable={true}
-              progress={undefined}
-              theme="colored"
-            />
+          {!isSignInPage && <Topbar />}
+          <Routes>
+            <Route path="/signin" element={<SignIn />} />
+            {!isSignInPage && (
+              <>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/category" element={<Category />} />
+                <Route path="/addCategory" element={<AddCategory />} />
+                <Route path="/modifyCategory" element={<ModifyCategory />} />
+                <Route path="/viewProduct" element={<ViewProduct />} />
+                <Route path="/product" element={<Product />} />
+                <Route path="/modifyProduct" element={<ModifyProduct />} />
+                <Route path="/addProduct" element={<AddProduct />} />
+                <Route path="/supplements" element={<Supplement />} />
+                <Route path="/addSupplement" element={<AddSupplement />} />
+                <Route
+                  path="/modifySupplement"
+                  element={<ModifySupplement />}
+                />
+                <Route path="/ingrediants" element={<Ingrediant />} />
+                <Route path="/addIngrediant" element={<AddIngrediant />} />
+                <Route
+                  path="/modifyIngrediant"
+                  element={<ModifyIngrediant />}
+                />
+                <Route path="/type" element={<Type />} />
+                <Route path="/addType" element={<AddType />} />
+                <Route path="/modifyType" element={<ModifyType />} />
+                <Route path="/formule" element={<Pack />} />
+                <Route path="/addFormule" element={<AddPack />} />
+                <Route path="/modifyPack" element={<ModifyPack />} />
+                <Route path="/drink" element={<Drink />} />
+                <Route path="/addDrink" element={<AddDrink />} />
+                <Route path="/modifyDrink" element={<ModifyDrink />} />
+                <Route path="/desert" element={<Desert />} />
+                <Route path="/addDesert" element={<AddDesert />} />
+                <Route path="/modifyDesert" element={<ModifyDesert />} />
+                <Route path="/history" element={<History />} />
+              </>
+            )}
+          </Routes>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            closeOnClick={true}
+            pauseOnHover={true}
+            draggable={true}
+            progress={undefined}
+            theme="colored"
+          />
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>

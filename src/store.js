@@ -4,6 +4,7 @@ import productReducer from "./features/productSlice";
 import supplementReducer from "./features/supplementSlice";
 import categoriesReducer from "./features/categorySlice";
 import ingrediantReducer from "./features/ingrediantSlice";
+import drinkReducer from "./features/drinkSlice";
 import typeReducer from "./features/typeSlice";
 import packReducer from "./features/packSlice";
 import desertReducer from "./features/desertSlice";
@@ -14,12 +15,13 @@ const store = configureStore({
     product: productReducer,
     supplement: supplementReducer,
     ingrediant: ingrediantReducer,
+    drink: drinkReducer,
     pack: packReducer,
     desert: desertReducer,
     type: typeReducer,
-    user:userReducer,
-    categories:categoriesReducer,
-    history:historyReducer
+    user: userReducer,
+    categories: categoriesReducer,
+    history: historyReducer,
   },
 });
 

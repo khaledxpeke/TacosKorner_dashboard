@@ -22,9 +22,11 @@ const AddType = () => {
   const navigate = useNavigate();
   const typeSchema = yup.object().shape({
     name: yup.string().required("required"),
+    message: yup.string(),
   });
   const initialValues = {
     name: "",
+    message: "",
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -35,6 +37,7 @@ const AddType = () => {
     dispatch(
         addType({
         name: values.name,
+        message: values.message,
       })
     );
   };
@@ -90,7 +93,18 @@ const AddType = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 8" }}
+                sx={{ gridColumn: "span 2" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Message"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.message}
+                name="message"
+                sx={{ gridColumn: "span 2" }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">

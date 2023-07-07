@@ -24,9 +24,11 @@ const ModifyType = () => {
   const navigate = useNavigate();
   const typeSchema = yup.object().shape({
     name: yup.string().required("required"),
+    message: yup.string()
   });
   const initialValues = {
     name: data.name,
+    message: data.message,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -36,6 +38,7 @@ const ModifyType = () => {
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
+      message: values.message,
     };
     dispatch(
       modifyType({
@@ -93,6 +96,17 @@ const ModifyType = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
+                sx={{ gridColumn: "span 8" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Message"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.message}
+                name="message"
                 sx={{ gridColumn: "span 8" }}
               />
             </Box>

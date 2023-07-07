@@ -83,6 +83,7 @@ const Type = () => {
             >
               <TableRow>
                 <TableCell>Name</TableCell>
+                <TableCell>Message</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -91,6 +92,7 @@ const Type = () => {
                 filteredTypes.map((card) => (
                   <TableRow key={card._id}>
                     <TableCell>{card.name}</TableCell>
+                    <TableCell>{card.message}</TableCell>
                     <TableCell align="right">
                       <ButtonGroup
                         variant="contained"

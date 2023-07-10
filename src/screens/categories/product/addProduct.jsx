@@ -2,8 +2,12 @@ import {
   Box,
   Button,
   FormControl,
+  FormControlLabel,
+  FormLabel,
   InputLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
 } from "@mui/material";
@@ -33,9 +37,9 @@ import {
   getIngrediants,
 } from "../../../features/ingrediantSlice";
 import {
-selectAllSupplements,
-getSupplements,
-} from "../../../features/supplementSlice"
+  selectAllSupplements,
+  getSupplements,
+} from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
@@ -56,11 +60,12 @@ const AddProduct = () => {
   const productSchema = yup.object().shape({
     name: yup.string().required("name is required"),
     category: yup.string().required("required"),
-    ingrediant: yup.array().required("required"),
-    supplement: yup.array().required("required"),
+    ingrediant: yup.array().default(() => []),
+    supplement: yup.array().default(() => []),
     currency: yup.string().required("required"),
     price: yup.number().required("required"),
     maxIngrediant: yup.number(),
+    choice: yup.string().required("required"),
   });
   const initialValues = {
     name: "",
@@ -71,8 +76,11 @@ const AddProduct = () => {
     currency: "",
     price: "",
     maxIngrediant: "",
+    choice: "",
   };
   const handleFormSubmit = (values) => {
+    const ingrediants = values.ingrediant.length > 0 ? values.ingrediant.join(",") : [];
+  const supplements = values.supplement.length > 0 ? values.supplement.join(",") : [];
     dispatch(
       addProduct({
         body: {
@@ -81,8 +89,9 @@ const AddProduct = () => {
           currency: values.currency,
           price: values.price,
           maxIngrediant: Number(values.maxIngrediant),
-          ingrediants: values.ingrediant.join(","),
-          supplements: values.supplement.join(","),
+          ingrediants,
+          supplements,
+          choice: values.choice,
         },
         categoryId: values.category,
       })
@@ -218,7 +227,7 @@ const AddProduct = () => {
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: '300px',
+                        maxHeight: "300px",
                       },
                     },
                   }}
@@ -249,23 +258,21 @@ const AddProduct = () => {
                     handleChange(event);
                     const selectedIngredientIds = event.target.value;
                     const selectedMeatIngredients = ingrediants.filter(
-                      (ingredient)=>{
-                        
-                        console.log(ingredient.type);
+                      (ingredient) => {
                         return (
-                        selectedIngredientIds.includes(ingredient._id) &&
-                        ingredient.type.name.toLowerCase() === 'meat' 
-                        )
-                      });
-                  
+                          selectedIngredientIds.includes(ingredient._id) &&
+                          ingredient.type.name.toLowerCase() === "meat"
+                        );
+                      }
+                    );
+
                     setSelectedMeatIngredients(selectedMeatIngredients);
-                    console.log(selectedMeatIngredients);
                   }}
                   sx={{ gridColumn: "span 1" }}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: '300px',
+                        maxHeight: "300px",
                       },
                     },
                   }}
@@ -295,8 +302,31 @@ const AddProduct = () => {
                     selectedMeatIngredients.length > 0 ? "block" : "none",
                 }}
               />
-               
+              <FormControl variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}>
+                <FormLabel>Choix de produit</FormLabel>
+                <RadioGroup
+                  defaultValue="seul"
+                  name="choice"
+                  value={values.choice}
+                  onChange={handleChange}
+                  sx={{ my: 1 }}
+                >
+                  <FormControlLabel
+                    value="seul"
+                    control={<Radio />}
+                    label="Seul"
+                  />
+                  <FormControlLabel
+                    value="multiple"
+                    control={<Radio />}
+                    label="Multiple"
+                  />
+                </RadioGroup>
+              </FormControl>
             </Box>
+
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Créer une nouvelle produit

@@ -54,7 +54,6 @@ const Supplement = () => {
     const filteredSupplements = supplements?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
-    console.log(filteredSupplements)
     content = (
       <>
         {filteredSupplements && filteredSupplements.length > 0 ? (

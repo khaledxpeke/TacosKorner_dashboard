@@ -30,7 +30,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 const AddIngrediant = () => {
   const location = useLocation();
   const data = location.state.ingrediant;
-//   console.log(data)
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);

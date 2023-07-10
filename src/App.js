@@ -47,7 +47,6 @@ function App() {
     ? new Date(decodedToken.exp * 1000)
     : null;
   const isSignInPage = !expirationDate || expirationDate < new Date();
-  console.log(decodedToken);
   useEffect(() => {
     if (isSignInPage && location.pathname !== "/signin") {
       navigate("/signin");

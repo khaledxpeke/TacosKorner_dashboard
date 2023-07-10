@@ -147,7 +147,6 @@ const supplementSlice = createSlice({
         state.status = "modifySuccess";
         state.loading = false;
         state.success = action.payload.message;
-        console.log(action.payload);
       })
       .addCase(modifySupplement.rejected, (state, action) => {
         state.status = "modifyError";

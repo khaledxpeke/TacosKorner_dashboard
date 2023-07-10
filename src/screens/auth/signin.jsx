@@ -59,8 +59,6 @@ const SignIn = () => {
   });
   const handleLogin = (values) => {
     const { email, password } = values;
-    console.log(email);
-    console.log(password);
     dispatch(
       login({
         email: email,

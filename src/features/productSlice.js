@@ -159,7 +159,6 @@ const productSlice = createSlice({
         state.status = "modifySuccess";
         state.loading = false;
         state.success = action.payload.message;
-        console.log(action.payload);
       })
       .addCase(modifyProduct.rejected, (state, action) => {
         state.status = "modifyError";

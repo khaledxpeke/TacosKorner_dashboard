@@ -45,13 +45,11 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         localStorage.setItem("token", JSON.stringify(action.payload.token));
-        console.log(action.payload)
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "error";
         state.loading = false;
         state.error = action.error.message;
-        console.log(action)
       })
   },
 });

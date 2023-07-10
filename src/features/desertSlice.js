@@ -114,7 +114,6 @@ const desertSlice = createSlice({
       .addCase(addDesert.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
-        console.log(action.payload);
         state.success = action.payload.message;
       })
       .addCase(addDesert.rejected, (state, action) => {
@@ -144,7 +143,6 @@ const desertSlice = createSlice({
         state.status = "modifySuccess";
         state.loading = false;
         state.success = action.payload.message;
-        console.log(action.payload);
       })
       .addCase(modifyDesert.rejected, (state, action) => {
         state.status = "modifyError";

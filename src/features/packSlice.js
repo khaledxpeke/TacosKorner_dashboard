@@ -145,7 +145,6 @@ const packSlice = createSlice({
         state.status = "modifySuccess";
         state.loading = false;
         state.success = action.payload.message;
-        console.log(action.payload);
       })
       .addCase(modifyPack.rejected, (state, action) => {
         state.status = "modifyError";

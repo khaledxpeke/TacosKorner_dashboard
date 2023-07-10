@@ -76,11 +76,21 @@ const AddProduct = () => {
     currency: "",
     price: "",
     maxIngrediant: "",
-    choice: "",
+    choice: "seul",
   };
   const handleFormSubmit = (values) => {
-    const ingrediants = values.ingrediant.length > 0 ? values.ingrediant.join(",") : [];
-  const supplements = values.supplement.length > 0 ? values.supplement.join(",") : [];
+    const ingrediants =
+      values.choice === "multiple"
+        ? values.ingrediant.length > 0
+          ? values.ingrediant.join(",")
+          : []
+        : [];
+    const supplements =
+      values.choice === "multiple"
+        ? values.supplement.length > 0
+          ? values.supplement.join(",")
+          : []
+        : [];
     dispatch(
       addProduct({
         body: {
@@ -207,83 +217,88 @@ const AddProduct = () => {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
-              >
-                <InputLabel id="supplements">
-                  Selectioner les supplement
-                </InputLabel>
-                <Select
-                  name="supplement"
-                  labelId="supplements"
-                  id="supplement"
-                  value={values.supplement}
-                  multiple
-                  label="supplement"
-                  onChange={handleChange}
-                  sx={{ gridColumn: "span 1" }}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: "300px",
-                      },
-                    },
-                  }}
+              {values.choice === "multiple" && (
+                <FormControl
+                  variant="filled"
+                  fullWidth
+                  sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
                 >
-                  {supplements.map((supplement) => (
-                    <MenuItem key={supplement._id} value={supplement._id}>
-                      {supplement.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
-              >
-                <InputLabel id="ingrediants">
-                  Selectioner les ingrédiants
-                </InputLabel>
-                <Select
-                  name="ingrediant"
-                  labelId="ingrediants"
-                  id="ingrediant"
-                  value={values.ingrediant}
-                  multiple
-                  label="ingrediant"
-                  onChange={(event) => {
-                    handleChange(event);
-                    const selectedIngredientIds = event.target.value;
-                    const selectedMeatIngredients = ingrediants.filter(
-                      (ingredient) => {
-                        return (
-                          selectedIngredientIds.includes(ingredient._id) &&
-                          ingredient.type.name.toLowerCase() === "meat"
-                        );
-                      }
-                    );
+                  <InputLabel id="supplements">
+                    Selectioner les supplement
+                  </InputLabel>
+                  <Select
+                    name="supplement"
+                    labelId="supplements"
+                    id="supplement"
+                    value={values.supplement}
+                    multiple
+                    label="supplement"
+                    onChange={handleChange}
+                    sx={{ gridColumn: "span 1" }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: "300px",
+                        },
+                      },
+                    }}
+                  >
+                    {supplements.map((supplement) => (
+                      <MenuItem key={supplement._id} value={supplement._id}>
+                        {supplement.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {values.choice === "multiple" && (
+                <FormControl
+                  variant="filled"
+                  fullWidth
+                  sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+                >
+                  <InputLabel id="ingrediants">
+                    Selectioner les ingrédiants
+                  </InputLabel>
+                  <Select
+                    name="ingrediant"
+                    labelId="ingrediants"
+                    id="ingrediant"
+                    value={values.ingrediant}
+                    multiple
+                    label="ingrediant"
+                    onChange={(event) => {
+                      handleChange(event);
+                      const selectedIngredientIds = event.target.value;
+                      const selectedMeatIngredients = ingrediants.filter(
+                        (ingredient) => {
+                          return (
+                            selectedIngredientIds.includes(ingredient._id) &&
+                            ingredient.type.name.toLowerCase() === "meat"
+                          );
+                        }
+                      );
 
-                    setSelectedMeatIngredients(selectedMeatIngredients);
-                  }}
-                  sx={{ gridColumn: "span 1" }}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: "300px",
+                      setSelectedMeatIngredients(selectedMeatIngredients);
+                    }}
+                    sx={{ gridColumn: "span 1" }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: "300px",
+                        },
                       },
-                    },
-                  }}
-                >
-                  {ingrediants.map((ingrediant) => (
-                    <MenuItem key={ingrediant._id} value={ingrediant._id}>
-                      {ingrediant.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                    }}
+                  >
+                    {ingrediants.map((ingrediant) => (
+                      <MenuItem key={ingrediant._id} value={ingrediant._id}>
+                        {ingrediant.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {values.choice === "multiple" && (
               <TextField
                 fullWidth
                 variant="filled"
@@ -301,10 +316,14 @@ const AddProduct = () => {
                   display:
                     selectedMeatIngredients.length > 0 ? "block" : "none",
                 }}
+                
               />
-              <FormControl variant="filled"
+              )}
+              <FormControl
+                variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}>
+                sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}
+              >
                 <FormLabel>Choix de produit</FormLabel>
                 <RadioGroup
                   defaultValue="seul"

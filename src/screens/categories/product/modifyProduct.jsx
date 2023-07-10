@@ -86,9 +86,11 @@ const ModifyProduct = () => {
   };
   const handleFormSubmit = (values) => {
     const ingrediants =
-      values.ingrediant.length > 0 ? values.ingrediant.join(",") : [];
+    values.choice === "multiple"
+    ?values.ingrediant.length > 0 ? values.ingrediant.join(",") : []:[];
     const supplements =
-      values.supplement.length > 0 ? values.supplement.join(",") : [];
+    values.choice === "multiple"
+    ?values.supplement.length > 0 ? values.supplement.join(",") : []:[];
     const requestBody = {
       name: values.name,
       currency: values.currency,
@@ -218,6 +220,7 @@ const ModifyProduct = () => {
                   ))}
                 </Select>
               </FormControl>
+              {values.choice === "multiple" &&(
               <FormControl
                 variant="filled"
                 fullWidth
@@ -250,6 +253,8 @@ const ModifyProduct = () => {
                   ))}
                 </Select>
               </FormControl>
+              )}
+               {values.choice === "multiple" &&(
               <FormControl
                 variant="filled"
                 fullWidth
@@ -295,6 +300,8 @@ const ModifyProduct = () => {
                   ))}
                 </Select>
               </FormControl>
+              )}
+               {values.choice === "multiple" &&(
               <TextField
                 fullWidth
                 variant="filled"
@@ -313,6 +320,7 @@ const ModifyProduct = () => {
                     selectedMeatIngredients.length > 0 ? "block" : "none",
                 }}
               />
+              )}
               <FormControl variant="filled"
                 fullWidth
                 sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}>
@@ -336,6 +344,7 @@ const ModifyProduct = () => {
                   />
                 </RadioGroup>
               </FormControl>
+              
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

@@ -9,10 +9,10 @@ const initialState = {
   loading: false,
 };
 
-export const getPack = createAsyncThunk("pack/getPack", async () => {
+export const getExtra = createAsyncThunk("extra/getExtra", async () => {
   try {
     const response = await axios.get(
-      `${apiUrl}/pack`,
+      `${apiUrl}/extra`,
     );
     return response?.data;
   } catch (err) {
@@ -20,12 +20,12 @@ export const getPack = createAsyncThunk("pack/getPack", async () => {
   }
 });
 
-export const addPack = createAsyncThunk(
-  "pack/addPack",
+export const addExtra = createAsyncThunk(
+  "extra/addExtra",
   async (body) => {
     try {
       const response = await axios.post(
-        `${apiUrl}/pack`,
+        `${apiUrl}/extra`,
         body,
         {
           headers: {
@@ -43,12 +43,12 @@ export const addPack = createAsyncThunk(
   }
 );
 
-export const modifyPack = createAsyncThunk(
-  "pack/modifyPack",
-  async ({body,packId}) => {
+export const modifyExtra = createAsyncThunk(
+  "extra/modifyExtra",
+  async ({body,extraId}) => {
     try {
       const response = await axios.put(
-        `${apiUrl}/pack/update/${packId}`,
+        `${apiUrl}/extra/update/${extraId}`,
         body,
         {
           headers: {
@@ -66,11 +66,11 @@ export const modifyPack = createAsyncThunk(
   }
 );
 
-export const deletePack= createAsyncThunk(
-  "pack/deletePack",
-  async (packId) => {
+export const deleteExtra= createAsyncThunk(
+  "extra/deleteExtra",
+  async (extraId) => {
     try {
-      const response = await axios.delete(`${apiUrl}/pack/${packId}`, {
+      const response = await axios.delete(`${apiUrl}/extra/${extraId}`, {
         headers: {
           Authorization: `Bearer ${localStorage
             .getItem("token")
@@ -85,8 +85,8 @@ export const deletePack= createAsyncThunk(
 );
 
 
-const packSlice = createSlice({
-  name: "pack",
+const extraSlice = createSlice({
+  name: "extra",
   initialState,
   reducers: {
     updateStatus: (state) => {
@@ -95,68 +95,68 @@ const packSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getPack.pending, (state, action) => {
+      .addCase(getExtra.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
       })
-      .addCase(getPack.fulfilled, (state, action) => {
+      .addCase(getExtra.fulfilled, (state, action) => {
         state.status = "fetchData";
         state.loading = false;
         state.items = action.payload;
       })
-      .addCase(getPack.rejected, (state, action) => {
+      .addCase(getExtra.rejected, (state, action) => {
         state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(addPack.pending, (state, action) => {
+      .addCase(addExtra.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
       })
-      .addCase(addPack.fulfilled, (state, action) => {
+      .addCase(addExtra.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
         state.success = action.payload.message;
       })
-      .addCase(addPack.rejected, (state, action) => {
+      .addCase(addExtra.rejected, (state, action) => {
         state.status = "addError";
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(deletePack.pending, (state, action) => {
+      .addCase(deleteExtra.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
       })
-      .addCase(deletePack.fulfilled, (state, action) => {
+      .addCase(deleteExtra.fulfilled, (state, action) => {
         state.status = "deleteSuccess";
         state.loading = false;
         state.success = action.payload.message;
       })
-      .addCase(deletePack.rejected, (state, action) => {
+      .addCase(deleteExtra.rejected, (state, action) => {
         state.status = "deleteError";
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(modifyPack.pending, (state, action) => {
+      .addCase(modifyExtra.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
       })
-      .addCase(modifyPack.fulfilled, (state, action) => {
+      .addCase(modifyExtra.fulfilled, (state, action) => {
         state.status = "modifySuccess";
         state.loading = false;
         state.success = action.payload.message;
       })
-      .addCase(modifyPack.rejected, (state, action) => {
+      .addCase(modifyExtra.rejected, (state, action) => {
         state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;
       });
   },
 });
-export const { updateStatus } = packSlice.actions;
-export const selectAllPack = (state) => state.pack.items;
-export const getPackStatus = (state) => state.pack.status;
-export const getPackError = (state) => state.pack.error;
-export const getPackSuccess = (state) => state.pack.success;
-export const getPackLoading = (state) => state.pack.loading;
-export default packSlice.reducer;
+export const { updateStatus } = extraSlice.actions;
+export const selectAllExtra = (state) => state.extra.items;
+export const getExtraStatus = (state) => state.extra.status;
+export const getExtraError = (state) => state.extra.error;
+export const getExtraSuccess = (state) => state.extra.success;
+export const getExtraLoading = (state) => state.extra.loading;
+export default extraSlice.reducer;

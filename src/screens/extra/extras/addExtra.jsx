@@ -12,22 +12,22 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { toast } from "react-toastify";
   import Loading from "../../../components/loading";
-  import {addPack,getPackError,getPackStatus,getPackSuccess,updateStatus,getPackLoading
- } from "../../../features/packSlice";
+  import {addExtra,getExtraError,getExtraStatus,getExtraSuccess,getExtraLoading,updateStatus
+ } from "../../../features/extraSlice";
   import { useNavigate } from "react-router-dom";
   
-  const AddPack = () => {
+  const AddExtra = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [previewImage, setPreviewImage] = useState(null);
     const [displayLabel, setDisplayLabel] = useState(true);
     const dispatch = useDispatch();
-    const status = useSelector(getPackStatus);
-    const error = useSelector(getPackError);
-    const loading = useSelector(getPackLoading);
-    const success = useSelector(getPackSuccess);
+    const status = useSelector(getExtraStatus);
+    const error = useSelector(getExtraError);
+    const loading = useSelector(getExtraLoading);
+    const success = useSelector(getExtraSuccess);
     const navigate = useNavigate();
   
-    const packSchema = yup.object().shape({
+    const extraSchema = yup.object().shape({
       name: yup.string().required("name is required"),
       currency: yup.string().required("required"),
       price: yup.number().required("required"),
@@ -40,7 +40,7 @@ import {
     };
     const handleFormSubmit = (values) => {
       dispatch(
-        addPack({
+        addExtra({
           name: values.name,
           image: previewImage,
           currency: values.currency,
@@ -52,7 +52,7 @@ import {
       if (status === "addSuccess") {
         toast.success(success);
         dispatch(updateStatus());
-        navigate("/formule");
+        navigate("/extra");
       } else if (status === "addError") {
         toast.error(error);
       }
@@ -62,12 +62,12 @@ import {
       <Loading />
     ) : (
       <Box m="20px">
-        <Header title="AJOUTER FORMULE" subtitle="Créer une nouvelle formule" />
+        <Header title="AJOUTER EXTRAS" subtitle="Créer une nouvelle extra" />
   
         <Formik
           onSubmit={handleFormSubmit}
           initialValues={initialValues}
-          validationSchema={packSchema}
+          validationSchema={extraSchema}
         >
           {({
             values,
@@ -145,5 +145,5 @@ import {
     );
   };
   
-  export default AddPack;
+  export default AddExtra;
   

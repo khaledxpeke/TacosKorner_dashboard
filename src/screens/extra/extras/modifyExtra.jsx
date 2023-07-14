@@ -12,24 +12,24 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../../components/loading";
-import {getPackError,getPackStatus,getPackSuccess,updateStatus,getPackLoading,modifyPack
-} from "../../../features/packSlice";
+import {getExtraError,getExtraStatus,getExtraSuccess,getExtraLoading,updateStatus, modifyExtra
+} from "../../../features/extraSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const ModifyPack = () => {
+const ModifyExtra = () => {
   const location = useLocation();
-  const data = location.state.pack;
+  const data = location.state.extra;
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const dispatch = useDispatch();
-  const status = useSelector(getPackStatus);
-  const error = useSelector(getPackError);
-  const loading = useSelector(getPackLoading);
-  const success = useSelector(getPackSuccess);
+  const status = useSelector(getExtraStatus);
+  const error = useSelector(getExtraError);
+  const loading = useSelector(getExtraLoading);
+  const success = useSelector(getExtraSuccess);
   const navigate = useNavigate();
 
-  const packSchema = yup.object().shape({
+  const extraSchema = yup.object().shape({
     name: yup.string().required("name is required"),
     currency: yup.string().required("required"),
     price: yup.number().required("required"),
@@ -47,9 +47,9 @@ const ModifyPack = () => {
       ...(previewImage && { image: previewImage }),
     };
     dispatch(
-      modifyPack({
+      modifyExtra({
         body: requestBody,
-        packId: data._id
+        extraId: data._id
       })
     );
   };
@@ -57,7 +57,7 @@ const ModifyPack = () => {
     if (status === "modifySuccess") {
       toast.success(success);
       dispatch(updateStatus());
-      navigate("/formule");
+      navigate("/extra");
     } else if (status === "modifyError") {
       toast.error(error);
     }
@@ -67,12 +67,12 @@ const ModifyPack = () => {
     <Loading />
   ) : (
     <Box m="20px">
-      <Header title="MODIFIER FORMULE" subtitle="Modifier formule" />
+      <Header title="MODIFIER Extra" subtitle="Modifier extra" />
 
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
-        validationSchema={packSchema}
+        validationSchema={extraSchema}
       >
         {({
           values,
@@ -141,7 +141,7 @@ const ModifyPack = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier le formule
+                Modifier le extra
               </Button>
             </Box>
           </form>
@@ -151,4 +151,4 @@ const ModifyPack = () => {
   );
 };
 
-export default ModifyPack;
+export default ModifyExtra;

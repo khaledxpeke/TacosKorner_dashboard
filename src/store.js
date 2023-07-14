@@ -6,7 +6,7 @@ import categoriesReducer from "./features/categorySlice";
 import ingrediantReducer from "./features/ingrediantSlice";
 import drinkReducer from "./features/drinkSlice";
 import typeReducer from "./features/typeSlice";
-import packReducer from "./features/packSlice";
+import extraReducer from "./features/extraSlice";
 import desertReducer from "./features/desertSlice";
 import historyReducer from "./features/historySlice";
 
@@ -16,7 +16,7 @@ const store = configureStore({
     supplement: supplementReducer,
     ingrediant: ingrediantReducer,
     drink: drinkReducer,
-    pack: packReducer,
+    extra: extraReducer,
     desert: desertReducer,
     type: typeReducer,
     user: userReducer,

@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Supplement from "./screens/addons/supplements";
 import Ingrediant from "./screens/addons/ingrediants";
 import Type from "./screens/addons/type";
-import Pack from "./screens/extra/formule";
+import Extra from "./screens/extra/extras";
 import Desert from "./screens/extra/desserts";
 import History from "./screens/history";
 import AddType from "./screens/addons/type/addType";
@@ -23,12 +23,12 @@ import AddIngrediant from "./screens/addons/ingrediants/addIngrediant";
 import ModifyIngrediant from "./screens/addons/ingrediants/modifyIngrediant";
 import AddSupplement from "./screens/addons/supplements/addSupplement";
 import ModifySupplement from "./screens/addons/supplements/modifySupplement";
-import AddPack from "./screens/extra/formule/addPack";
+import AddExtra from "./screens/extra/extras/addExtra";
 import AddDesert from "./screens/extra/desserts/addDessert";
 import ModifyCategory from "./screens/categories/category/modifyCategory";
 import ViewProduct from "./screens/categories/category/viewProduct";
 import ModifyProduct from "./screens/categories/product/modifyProduct";
-import ModifyPack from "./screens/extra/formule/modifyPack";
+import ModifyExtra from "./screens/extra/extras/modifyExtra";
 import ModifyDesert from "./screens/extra/desserts/modifyDessert";
 import ModifyType from "./screens/addons/type/modifyType";
 import Drink from "./screens/extra/drinks";
@@ -90,9 +90,9 @@ function App() {
                 <Route path="/type" element={<Type />} />
                 <Route path="/addType" element={<AddType />} />
                 <Route path="/modifyType" element={<ModifyType />} />
-                <Route path="/formule" element={<Pack />} />
-                <Route path="/addFormule" element={<AddPack />} />
-                <Route path="/modifyPack" element={<ModifyPack />} />
+                <Route path="/extra" element={<Extra />} />
+                <Route path="/addExtra" element={<AddExtra />} />
+                <Route path="/modifyExtra" element={<ModifyExtra />} />
                 <Route path="/drink" element={<Drink />} />
                 <Route path="/addDrink" element={<AddDrink />} />
                 <Route path="/modifyDrink" element={<ModifyDrink />} />

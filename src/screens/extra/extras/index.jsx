@@ -4,14 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid, Container } from "@mui/material";
 import {
-  deletePack,
-  getPack,
-  getPackError,
-  getPackStatus,
-  getPackSuccess,
-  selectAllPack,
-  updateStatus,
-} from "../../../features/packSlice";
+getExtra,getExtraError,getExtraStatus,getExtraSuccess,deleteExtra,selectAllExtra,updateStatus
+} from "../../../features/extraSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
@@ -20,12 +14,12 @@ import AppBarSearch from "../../../global/appBarSearch";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 
-const Pack = () => {
+const Extra = () => {
   const dispatch = useDispatch();
-  const packStatus = useSelector(getPackStatus);
-  const error = useSelector(getPackError);
-  const packs = useSelector(selectAllPack);
-  const success = useSelector(getPackSuccess);
+  const extraStatus = useSelector(getExtraStatus);
+  const error = useSelector(getExtraError);
+  const extras = useSelector(selectAllExtra);
+  const success = useSelector(getExtraSuccess);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
@@ -36,28 +30,28 @@ const Pack = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/addFormule");
+    navigate("/addExtra");
   };
   const handleModify = (data) => {
-    navigate("/modifyPack", { state: { pack: data } });
+    navigate("/modifyExtra", { state: { extra: data } });
   };
   useEffect(() => {
-    dispatch(getPack());
+    dispatch(getExtra());
   }, [dispatch]);
 
   let content;
-  if (packStatus === "loading") {
+  if (extraStatus === "loading") {
     content = <Loading />;
-  } else if (packStatus === "fetchError") {
+  } else if (extraStatus === "fetchError") {
     content = <Error>{error}</Error>;
-  } else if (packStatus === "fetchData") {
-    const filteredPacks = packs?.filter((dish) =>
+  } else if (extraStatus === "fetchData") {
+    const filteredExtras = extras?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
     content = (
       <>
-        {filteredPacks && filteredPacks.length > 0 ? (
-          filteredPacks.map((card) => (
+        {filteredExtras && filteredExtras.length > 0 ? (
+          filteredExtras.map((card) => (
             <ProductCard
               key={card._id}
               data={card}
@@ -74,28 +68,28 @@ const Pack = () => {
           open={open}
           name={"produit"}
           cardId={cardId}
-          deleteData={deletePack(cardId)}
+          deleteData={deleteExtra(cardId)}
         />
       </>
     );
   }
   useEffect(() => {
-    if (packStatus === "deleteSuccess") {
+    if (extraStatus === "deleteSuccess") {
       toast.success(success);
-      dispatch(getPack());
+      dispatch(getExtra());
       dispatch(updateStatus());
-    } else if (packStatus === "deleteError") {
+    } else if (extraStatus === "deleteError") {
       toast.error(error);
     }
-  }, [packStatus, error, success, dispatch]);
+  }, [extraStatus, error, success, dispatch]);
   return (
     <div className="main-application">
       <CssBaseline />
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
-        title={"Mes formules"}
-        buttonTitle={"Ajouter un formule"}
+        title={"Mes extras"}
+        buttonTitle={"Ajouter un extra"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
@@ -108,4 +102,4 @@ const Pack = () => {
   );
 };
 
-export default Pack;
+export default Extra;

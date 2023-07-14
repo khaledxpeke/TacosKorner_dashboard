@@ -213,8 +213,8 @@ const Sidebar = () => {
                   Extra
                 </Typography>
                 <Item
-                  title="Formule"
-                  to="/formule"
+                  title="Extras"
+                  to="/extra"
                   icon={<FastfoodIcon />}
                   selected={selected}
                   setSelected={setSelected}

@@ -26,7 +26,7 @@ const ModifyCategory = () => {
   const [displayLabel, setDisplayLabel] = useState(true);
   const navigate = useNavigate();
   const productSchema = yup.object().shape({
-    name: yup.string().required("required"),
+    name: yup.string().required("Nom est requis"),
   });
   const initialValues = {
     name: data.name,
@@ -56,7 +56,7 @@ const ModifyCategory = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       <Header title="MODIFIER CATEGORY" subtitle="Modifier une catégorie" />
 
       <Formik
@@ -85,7 +85,7 @@ const ModifyCategory = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}

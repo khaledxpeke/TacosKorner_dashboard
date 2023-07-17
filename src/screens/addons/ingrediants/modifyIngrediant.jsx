@@ -22,7 +22,7 @@ import {
   getIngrediantsSuccess,
   getIngrediantsLoading,
   updateStatus,
-  modifyIngrediant
+  modifyIngrediant,
 } from "../../../features/ingrediantSlice";
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -42,12 +42,16 @@ const AddIngrediant = () => {
   const types = useSelector(selectAllTypes);
 
   const ingrediantSchema = yup.object().shape({
-    name: yup.string().required("name is required"),
+    name: yup.string().required("Nom est requis"),
+    price: yup.number().nullable(),
+    currency: yup.string().nullable(),
     // type: yup.string().required("required"),
   });
   const initialValues = {
     name: data.name,
     type: data.type._id,
+    price: data.price,
+    currency: data.currency,
   };
   const handleFormSubmit = (values) => {
     const requestBody = {
@@ -78,7 +82,7 @@ const AddIngrediant = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       <Header title="MODIFIER INGREDIANT" subtitle="Modifier un ingrediant" />
 
       <Formik
@@ -107,7 +111,7 @@ const AddIngrediant = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}
@@ -116,7 +120,7 @@ const AddIngrediant = () => {
                 helperText={touched.name && errors.name}
                 sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
               />
-
+              
               <ImageInput
                 sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
                 previewImage={previewImage}
@@ -125,10 +129,33 @@ const AddIngrediant = () => {
                 setDisplayLabel={setDisplayLabel}
                 image={data.image}
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Prix"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.price}
+                name="price"
+                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+              />
+
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Currency"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.currency}
+                name="currency"
+                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+              />
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 4", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="types">
                   Selectioner une type d'ingrédiant

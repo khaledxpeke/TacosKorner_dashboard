@@ -21,7 +21,7 @@ const AddType = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   const typeSchema = yup.object().shape({
-    name: yup.string().required("required"),
+    name: yup.string().required("Nom est requis"),
     message: yup.string(),
   });
   const initialValues = {
@@ -86,7 +86,7 @@ const AddType = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}

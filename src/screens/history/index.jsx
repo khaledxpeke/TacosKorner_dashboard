@@ -246,7 +246,7 @@ const History = () => {
                   <TableCell sx={{ fontSize: '17px',fontWeight:'bold' }} > Plus d'information </TableCell>
                   <TableCell sx={{ fontSize: '17px',fontWeight:'bold' }}>Pack</TableCell>
                   <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Total</TableCell>
-                  <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Bought At</TableCell>
+                  <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Acheté à</TableCell>
                 </TableRow>
               </TableHead>
               {!content && (

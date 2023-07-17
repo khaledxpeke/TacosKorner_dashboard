@@ -82,7 +82,7 @@ const Type = () => {
               }}
             >
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>Nom</TableCell>
                 <TableCell>Message</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>

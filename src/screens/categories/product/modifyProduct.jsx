@@ -65,14 +65,14 @@ const ModifyProduct = () => {
   const categories = useSelector(selectAllCategories);
 
   const productSchema = yup.object().shape({
-    name: yup.string().required("name is required"),
-    category: yup.string().required("required"),
+    name: yup.string().required("Nom est requis"),
+    category: yup.string().required("categorie est requis"),
     ingrediant: yup.array().default(() => []),
     supplement: yup.array().default(() => []),
-    currency: yup.string().required("required"),
-    price: yup.number().required("required"),
+    currency: yup.string().required("Currency est requis"),
+    price: yup.number().required("Prix est requis"),
     maxIngrediant: yup.number(),
-    choice: yup.string().required("required"),
+    choice: yup.string().required("Choix est requis"),
   });
   const initialValues = {
     name: data.name,
@@ -154,7 +154,7 @@ const ModifyProduct = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}
@@ -168,7 +168,7 @@ const ModifyProduct = () => {
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Price"
+                label="Prix"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.price}

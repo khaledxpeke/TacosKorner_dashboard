@@ -24,7 +24,7 @@ const AddCategory = () => {
   const [displayLabel, setDisplayLabel] = useState(true);
   const navigate = useNavigate();
   const productSchema = yup.object().shape({
-    name: yup.string().required("required"),
+    name: yup.string().required("Nom est requis"),
   });
   const initialValues = {
     name: "",
@@ -55,7 +55,7 @@ const AddCategory = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       <Header
         title="AJOUTER CATEGORY"
         subtitle="Créer une nouvelle catégorie"
@@ -87,7 +87,7 @@ const AddCategory = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}

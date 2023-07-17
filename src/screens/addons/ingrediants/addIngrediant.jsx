@@ -42,26 +42,33 @@ const AddIngrediant = () => {
   const types = useSelector(selectAllTypes);
 
   const ingrediantSchema = yup.object().shape({
-    name: yup.string().required("name is required"),
-    // type: yup.string().required("required"),
+    name: yup.string().required("Nom est requis"),
+    currency: yup.string(),
+    price: yup.number(),
   });
   const initialValues = {
     name: "",
     image: "",
     type: types.length > 0 ? types[0]._id : "",
+    price: "",
+    currency: "",
   };
   const handleFormSubmit = (values) => {
     if (!values.type) {
       setTypeError(true); 
       return;
     }
-    dispatch(
-      addIngrediant({
-        name: values.name,
-        image: previewImage,
-        typeId: values.type,
-      })
-    );
+    const formData = {
+      name: values.name,
+      image: previewImage,
+      typeId: values.type,
+    };
+  
+    if (values.price && values.currency) {
+      formData.price = values.price;
+      formData.currency = values.currency;
+    }
+    dispatch(addIngrediant(formData));
   };
   useEffect(() => {
     dispatch(getTypes());
@@ -77,7 +84,7 @@ const AddIngrediant = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       <Header title="AJOUTER INGREDIANT" subtitle="Créer une nouvelle ingrediant" />
 
       <Formik
@@ -97,7 +104,7 @@ const AddIngrediant = () => {
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
@@ -106,18 +113,39 @@ const AddIngrediant = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
+                sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
               />
-
+                <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Prix"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.price}
+                name="price"
+                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Currency"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.currency}
+                name="currency"
+                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+              />
               <ImageInput
-                sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
+                sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -126,7 +154,7 @@ const AddIngrediant = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 4", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="types">
                   Selectioner une type d'ingrédiant
@@ -141,7 +169,7 @@ const AddIngrediant = () => {
                     handleChange(e);
                     setTypeError(false);
                   }}
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ gridColumn: "span 1" }}
                 >
                   {types.map((type) => (
                     <MenuItem key={type._id} value={type._id}>

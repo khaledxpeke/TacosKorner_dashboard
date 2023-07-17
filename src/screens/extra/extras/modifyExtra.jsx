@@ -30,9 +30,9 @@ const ModifyExtra = () => {
   const navigate = useNavigate();
 
   const extraSchema = yup.object().shape({
-    name: yup.string().required("name is required"),
-    currency: yup.string().required("required"),
-    price: yup.number().required("required"),
+    name: yup.string().required("Nom est requis"),
+    currency: yup.string().required("Currency est requis"),
+    price: yup.number().required("Prix est requis"),
   });
   const initialValues = {
     name: data.name,
@@ -66,7 +66,7 @@ const ModifyExtra = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px">
+    <Box m="20px" class="main-application">
       <Header title="MODIFIER Extra" subtitle="Modifier extra" />
 
       <Formik
@@ -95,7 +95,7 @@ const ModifyExtra = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Name"
+                label="Nom"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.name}
@@ -116,7 +116,7 @@ const ModifyExtra = () => {
               fullWidth
               variant="filled"
               type="number"
-              label="Price"
+              label="Prix"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.price}

@@ -41,6 +41,8 @@ import {
   getSupplements,
 } from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
+import ReorderType from "../../../components/reorderType";
+
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -251,73 +253,75 @@ const AddProduct = () => {
                 </FormControl>
               )}
               {values.choice === "multiple" && (
-                <FormControl
-                  variant="filled"
-                  fullWidth
-                  sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
-                >
-                  <InputLabel id="ingrediants">
-                    Selectioner les ingrédiants
-                  </InputLabel>
-                  <Select
-                    name="ingrediant"
-                    labelId="ingrediants"
-                    id="ingrediant"
-                    value={values.ingrediant}
-                    multiple
-                    label="ingrediant"
-                    onChange={(event) => {
-                      handleChange(event);
-                      const selectedIngredientIds = event.target.value;
-                      const selectedMeatIngredients = ingrediants.filter(
-                        (ingredient) => {
-                          return (
-                            selectedIngredientIds.includes(ingredient._id) &&
-                            ingredient.type.name.toLowerCase() === "meat"
-                          );
-                        }
-                      );
-
-                      setSelectedMeatIngredients(selectedMeatIngredients);
-                    }}
-                    sx={{ gridColumn: "span 1" }}
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: "300px",
-                        },
-                      },
-                    }}
+                <>
+                  <FormControl
+                    variant="filled"
+                    fullWidth
+                    sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
                   >
-                    {ingrediants.map((ingrediant) => (
-                      <MenuItem key={ingrediant._id} value={ingrediant._id}>
-                        {ingrediant.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <InputLabel id="ingrediants">
+                      Selectioner les ingrédiants
+                    </InputLabel>
+                    <Select
+                      name="ingrediant"
+                      labelId="ingrediants"
+                      id="ingrediant"
+                      value={values.ingrediant}
+                      multiple
+                      label="ingrediant"
+                      onChange={(event) => {
+                        handleChange(event);
+                        const selectedIngredientIds = event.target.value;
+                        const selectedMeatIngredients = ingrediants.filter(
+                          (ingredient) => {
+                            return (
+                              selectedIngredientIds.includes(ingredient._id) &&
+                              ingredient.type.name.toLowerCase() === "meat"
+                            );
+                          }
+                        );
+
+                        setSelectedMeatIngredients(selectedMeatIngredients);
+                      }}
+                      sx={{ gridColumn: "span 1" }}
+                      MenuProps={{
+                        PaperProps: {
+                          style: {
+                            maxHeight: "300px",
+                          },
+                        },
+                      }}
+                    >
+                      {ingrediants.map((ingrediant) => (
+                        <MenuItem key={ingrediant._id} value={ingrediant._id}>
+                          {ingrediant.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
               )}
               {values.choice === "multiple" && (
-              <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Max Meat"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.maxIngrediant}
-                name="maxIngrediant"
-                error={!!touched.maxIngrediant && !!errors.maxIngrediant}
-                helperText={touched.maxIngrediant && errors.maxIngrediant}
-                sx={{
-                  gridColumn: "span 1",
-                  gridRow: "3 / span 1",
-                  display:
-                    selectedMeatIngredients.length > 0 ? "block" : "none",
-                }}
-                
-              />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="number"
+                  label="Max Meat"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.maxIngrediant}
+                  name="maxIngrediant"
+                  error={!!touched.maxIngrediant && !!errors.maxIngrediant}
+                  helperText={touched.maxIngrediant && errors.maxIngrediant}
+                  sx={{
+                    gridColumn: "span 1",
+                    gridRow: "3 / span 1",
+                    display:
+                      selectedMeatIngredients.length > 0 ? "block" : "none",
+                  }}
+                />
               )}
+              <ReorderType/>
               <FormControl
                 variant="filled"
                 fullWidth

@@ -61,7 +61,7 @@ import {
     return loading ? (
       <Loading />
     ) : (
-      <Box m="20px" class="main-application">
+      <Box m="20px" className="main-application">
         <Header title="AJOUTER DESSERT" subtitle="Créer une nouvelle dessert" />
   
         <Formik

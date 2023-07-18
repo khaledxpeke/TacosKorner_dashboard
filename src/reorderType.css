@@ -1,0 +1,15 @@
+.drag-handle {
+  /* Define the styles for the draggable elements */
+  /* For example: */
+  cursor: grab !important;
+}
+
+.table-container {
+  /* Define the styles for the table container */
+  /* For example: */
+  margin: 20px;
+}
+
+tr.drag-handle {
+  -webkit-user-drag: auto !important;
+}

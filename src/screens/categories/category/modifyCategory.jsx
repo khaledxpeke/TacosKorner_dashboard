@@ -56,7 +56,7 @@ const ModifyCategory = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px" class="main-application">
+    <Box m="20px" className="main-application">
       <Header title="MODIFIER CATEGORY" subtitle="Modifier une catégorie" />
 
       <Formik

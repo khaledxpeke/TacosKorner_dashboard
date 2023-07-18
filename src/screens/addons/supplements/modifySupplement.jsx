@@ -68,7 +68,7 @@ const ModifySupplement = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Box m="20px" class="main-application">
+    <Box m="20px" className="main-application">
       <Header
         title="AJOUTER SUPPLEMENT"
         subtitle="Créer une nouvelle supplement"

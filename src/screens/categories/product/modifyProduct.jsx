@@ -261,7 +261,7 @@ console.log("maaaaaax"+max)
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+                sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}
               >
                 <InputLabel id="ingrediants">
                   Selectioner les {typeName}
@@ -318,7 +318,7 @@ console.log("maaaaaax"+max)
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Max Meat"
+                label="Nombre de Viande"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.maxIngrediant}
@@ -327,7 +327,7 @@ console.log("maaaaaax"+max)
                 helperText={touched.maxIngrediant && errors.maxIngrediant}
                 sx={{
                   gridColumn: "span 1",
-                  gridRow: "3 / span 1",
+                  gridRow: "5 / span 1",
                   display:
                     selectedMeatIngredients.length > 0 ? "block" : "none",
                 }}
@@ -335,7 +335,7 @@ console.log("maaaaaax"+max)
               )}
               <FormControl variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}>
+                sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}>
                 <FormLabel>Choix de produit</FormLabel>
                 <RadioGroup
                   defaultValue="seul"

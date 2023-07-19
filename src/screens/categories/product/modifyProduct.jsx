@@ -335,7 +335,7 @@ console.log("maaaaaax"+max)
               )}
               <FormControl variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}>
+                sx={{ gridColumn: "span 1", gridRow: { gridRow: values.choice==="seul" ? "4 / span 1" : "6 / span 1" } }}>
                 <FormLabel>Choix de produit</FormLabel>
                 <RadioGroup
                   defaultValue="seul"

@@ -34,7 +34,7 @@ import {
 } from "../../../features/categorySlice";
 import {
   selectAllIngrediants,
-  getIngrediants,
+  getIngrediantsByType,
 } from "../../../features/ingrediantSlice";
 import {
   selectAllSupplements,
@@ -48,13 +48,12 @@ const ModifyProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const ingrediants = useSelector(selectAllIngrediants);
+  const ingrediantsByType = useSelector(selectAllIngrediants);
   const supplements = useSelector(selectAllSupplements);
-  const max = ingrediants.filter(
-    (ingredient) =>
-      data.ingrediants.includes(ingredient._id) &&
-      ingredient.type.name.toLowerCase() === "meat"
-  );
+  const meatIngredients = ingrediantsByType["meat"] || [];
+const max = meatIngredients.filter((ingredient) =>
+  data.ingrediants.includes(ingredient._id)
+);
   const [selectedMeatIngredients, setSelectedMeatIngredients] = useState(max);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
@@ -63,7 +62,7 @@ const ModifyProduct = () => {
   const success = useSelector(getProductsSuccess);
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
-
+console.log("maaaaaax"+max)
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     category: yup.string().required("categorie est requis"),
@@ -111,7 +110,7 @@ const ModifyProduct = () => {
   };
   useEffect(() => {
     dispatch(fetchCategories());
-    dispatch(getIngrediants());
+    dispatch(getIngrediantsByType());
     dispatch(getSupplements());
     if (status === "modifySuccess") {
       toast.success(success);
@@ -142,10 +141,11 @@ const ModifyProduct = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
+            
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(1fr, 1fr)"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
@@ -255,13 +255,16 @@ const ModifyProduct = () => {
               </FormControl>
               )}
                {values.choice === "multiple" &&(
+                <>
+                  {Object.entries(ingrediantsByType).map(
+                    ([typeName, ingredients]) => (
               <FormControl
                 variant="filled"
                 fullWidth
                 sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               >
                 <InputLabel id="ingrediants">
-                  Selectioner les ingrédiants
+                  Selectioner les {typeName}
                 </InputLabel>
                 <Select
                   name="ingrediant"
@@ -271,18 +274,21 @@ const ModifyProduct = () => {
                   multiple
                   label="ingrediant"
                   onChange={(event) => {
-                    handleChange(event);
                     const selectedIngredientIds = event.target.value;
-                    const selectedMeatIngredients = ingrediants.filter(
-                      (ingredient) => {
-                        return (
-                          selectedIngredientIds.includes(ingredient._id) &&
-                          ingredient.type.name.toLowerCase() === "meat"
-                        );
+                    const selectedMeatIngredients = [];
+                  
+                    Object.entries(ingrediantsByType).forEach(([typeName, ingredients]) => {
+                      const selectedIngredientsOfType = ingredients.filter((ingredient) =>
+                        selectedIngredientIds.includes(ingredient._id)
+                      );
+                  
+                      if (typeName.toLowerCase() === 'meat') {
+                        selectedMeatIngredients.push(...selectedIngredientsOfType);
                       }
-                    );
-
+                    });
+                  
                     setSelectedMeatIngredients(selectedMeatIngredients);
+                    handleChange(event);
                   }}
                   sx={{ gridColumn: "span 1" }}
                   MenuProps={{
@@ -293,13 +299,19 @@ const ModifyProduct = () => {
                     },
                   }}
                 >
-                  {ingrediants.map((ingrediant) => (
-                    <MenuItem key={ingrediant._id} value={ingrediant._id}>
-                      {ingrediant.name}
+                  {ingredients.map((ingredient) => (
+                            <MenuItem
+                              key={ingredient._id}
+                              value={ingredient._id}
+                            >
+                              {ingredient.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
+              )
+              )}
+              </>
               )}
                {values.choice === "multiple" &&(
               <TextField

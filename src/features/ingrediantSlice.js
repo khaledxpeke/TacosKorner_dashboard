@@ -21,6 +21,18 @@ export const getIngrediants = createAsyncThunk(
   }
 );
 
+export const getIngrediantsByType = createAsyncThunk(
+  "ingrediant/getIngrediantsByType",
+  async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/ingrediant/ingrediants`);
+      return response?.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 export const addIngrediant = createAsyncThunk(
   "ingrediant/addIngrediant",
   async (body) => {
@@ -107,6 +119,20 @@ const ingrediantSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(getIngrediants.rejected, (state, action) => {
+        state.status = "fetchError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getIngrediantsByType.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(getIngrediantsByType.fulfilled, (state, action) => {
+        state.status = "fetchData";
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(getIngrediantsByType.rejected, (state, action) => {
         state.status = "fetchError";
         state.loading = false;
         state.error = action.error.message;

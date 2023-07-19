@@ -13,19 +13,19 @@ import { useState } from "react";
 import "../reorderType.css";
 const ingrediantsTypes = [
   {
-    _id: "1",
+    id: "sauce",
     name: "sauce",
   },
   {
-    _id: "2",
+    id: "meat",
     name: "meat",
   },
   {
-    _id: "3",
+    id: "others",
     name: "others",
   },
   {
-    _id: "4",
+    id: "ingrediant",
     name: "Sans Ingrediant",
   },
 ];
@@ -46,50 +46,53 @@ const ReorderType = () => {
     updateTypes(updatedTypes);
   };
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="types">
-        {(provided) => (
-          <TableContainer  className="table-container" {...provided.droppableProps} ref={provided.innerRef}>
-            <Table
-              sx={{
-                backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
-              }}
-            >
-              <TableHead
-                sx={{
-                  backgroundColor: colors.primary[700],
-                }}
+    <TableContainer>
+      <Table
+        sx={{
+          backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
+        }}
+      >
+        <TableHead
+          sx={{
+            backgroundColor: colors.primary[700],
+          }}
+        >
+          <TableRow>
+            <TableCell>Nom</TableCell>
+          </TableRow>
+        </TableHead>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="types">
+            {(provided) => (
+              <TableBody
+                className="types"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
               >
-                <TableRow>
-                  <TableCell>Nom</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {types.map(({ _id, name }, index) => (
+                {types.map((type, index) => (
                   <Draggable
-                    key={_id}
-                    draggableId={_id}
+                    key={type.id}
+                    draggableId={type.id}
                     index={index}
                   >
                     {(provided) => (
                       <TableRow
-                        className="drag-handle"
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <TableCell>{name}</TableCell>
+                        <TableCell>{type.name}</TableCell>
                       </TableRow>
                     )}
                   </Draggable>
                 ))}
                 {provided.placeholder}
               </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </Droppable>
-    </DragDropContext>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Table>
+    </TableContainer>
   );
 };
 

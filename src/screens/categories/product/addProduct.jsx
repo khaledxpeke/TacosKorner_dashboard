@@ -273,17 +273,24 @@ const AddProduct = () => {
                           onChange={(event) => {
                             const selectedIngredientIds = event.target.value;
                             const selectedMeatIngredients = [];
-                          
-                            Object.entries(ingrediantsByType).forEach(([typeName, ingredients]) => {
-                              const selectedIngredientsOfType = ingredients.filter((ingredient) =>
-                                selectedIngredientIds.includes(ingredient._id)
-                              );
-                          
-                              if (typeName.toLowerCase() === 'meat') {
-                                selectedMeatIngredients.push(...selectedIngredientsOfType);
+
+                            Object.entries(ingrediantsByType).forEach(
+                              ([typeName, ingredients]) => {
+                                const selectedIngredientsOfType =
+                                  ingredients.filter((ingredient) =>
+                                    selectedIngredientIds.includes(
+                                      ingredient._id
+                                    )
+                                  );
+
+                                if (typeName.toLowerCase() === "meat") {
+                                  selectedMeatIngredients.push(
+                                    ...selectedIngredientsOfType
+                                  );
+                                }
                               }
-                            });
-                          
+                            );
+
                             setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}
@@ -334,7 +341,15 @@ const AddProduct = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 1", gridRow: { gridRow: values.choice==="seul" ? "4 / span 1" : "6 / span 1" } }}
+                sx={{
+                  gridColumn: "span 1",
+                  gridRow: {
+                    gridRow:
+                      values.choice === "seul"
+                        ? "4 / span 1"
+                        : "6 / span 1",
+                  },
+                }}
               >
                 <FormLabel>Choix de produit</FormLabel>
                 <RadioGroup

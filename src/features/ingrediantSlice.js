@@ -133,7 +133,7 @@ const ingrediantSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(getIngrediantsByType.rejected, (state, action) => {
-        state.status = "fetchError1";
+        state.status = "fetchErrorByType";
         state.loading = false;
         state.error = action.error.message;
       })

@@ -128,12 +128,12 @@ const ingrediantSlice = createSlice({
         state.loading = true;
       })
       .addCase(getIngrediantsByType.fulfilled, (state, action) => {
-        state.status = "fetchData";
+        state.status = "fetchData1";
         state.loading = false;
         state.items = action.payload;
       })
       .addCase(getIngrediantsByType.rejected, (state, action) => {
-        state.status = "fetchError";
+        state.status = "fetchError1";
         state.loading = false;
         state.error = action.error.message;
       })

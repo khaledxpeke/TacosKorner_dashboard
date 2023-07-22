@@ -128,7 +128,7 @@ const ingrediantSlice = createSlice({
         state.loading = true;
       })
       .addCase(getIngrediantsByType.fulfilled, (state, action) => {
-        state.status = "fetchData1";
+        state.status = "fetchDataByType";
         state.loading = false;
         state.items = action.payload;
       })

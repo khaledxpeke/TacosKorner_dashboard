@@ -84,6 +84,7 @@ const Type = () => {
               <TableRow>
                 <TableCell>Nom</TableCell>
                 <TableCell>Message</TableCell>
+                <TableCell>Maximum Ingrédient</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -93,6 +94,7 @@ const Type = () => {
                   <TableRow key={card._id}>
                     <TableCell>{card.name}</TableCell>
                     <TableCell>{card.message}</TableCell>
+                    <TableCell>{card.max}</TableCell>
                     <TableCell align="right">
                       <ButtonGroup
                         variant="contained"

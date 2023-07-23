@@ -367,7 +367,7 @@ const AddProduct = () => {
                   <FormControlLabel
                     value="multiple"
                     control={<Radio />}
-                    label="Multiple"
+                    label="Composée"
                   />
                 </RadioGroup>
               </FormControl>

@@ -23,10 +23,12 @@ const AddType = () => {
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
+    max: yup.number(),
   });
   const initialValues = {
     name: "",
     message: "",
+    max: 1,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -38,6 +40,7 @@ const AddType = () => {
         addType({
         name: values.name,
         message: values.message,
+        max: values.max,
       })
     );
   };
@@ -77,9 +80,9 @@ const AddType = () => {
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
               sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
               }}
             >
               <TextField
@@ -106,8 +109,22 @@ const AddType = () => {
                 name="message"
                 sx={{ gridColumn: "span 2" }}
               />
+               <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Ingrédient maximum par type"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.max}
+                name="max"
+                defaultValue={1}
+                error={!!touched.max && !!errors.max}
+                helperText={touched.max && errors.max}
+                sx={{ gridColumn: "span 2"}}
+              />
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="end" mt="20px" >
               <Button type="submit" color="secondary" variant="contained">
                 Créer une nouvelle type d'ingrédiant
               </Button>

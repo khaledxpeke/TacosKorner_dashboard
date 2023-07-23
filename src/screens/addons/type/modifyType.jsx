@@ -24,11 +24,13 @@ const ModifyType = () => {
   const navigate = useNavigate();
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    message: yup.string()
+    message: yup.string(),
+    max: yup.number()
   });
   const initialValues = {
     name: data.name,
     message: data.message,
+    max: data.max,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -39,6 +41,7 @@ const ModifyType = () => {
     const requestBody = {
       name: values.name,
       message: values.message,
+      max: values.max,
     };
     dispatch(
       modifyType({
@@ -108,6 +111,20 @@ const ModifyType = () => {
                 value={values.message}
                 name="message"
                 sx={{ gridColumn: "span 8" }}
+              />
+               <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Ingrédient maximum par type"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.max}
+                name="max"
+                defaultValue={1}
+                error={!!touched.max && !!errors.max}
+                helperText={touched.max && errors.max}
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">

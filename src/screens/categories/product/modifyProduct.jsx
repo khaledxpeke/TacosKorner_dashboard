@@ -48,7 +48,7 @@ const ModifyProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const ingrediantsByType = useSelector(selectAllIngrediants);
+  const ingrediantsByType = useSelector(selectAllIngrediants) || {};;
   const supplements = useSelector(selectAllSupplements);
   const meatIngredients = ingrediantsByType["meat"] || [];
   const max = meatIngredients.filter((ingredient) =>
@@ -62,7 +62,6 @@ const ModifyProduct = () => {
   const success = useSelector(getProductsSuccess);
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
-  console.log("maaaaaax" + max);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     category: yup.string().required("categorie est requis"),
@@ -311,7 +310,7 @@ const ModifyProduct = () => {
                             },
                           }}
                         >
-                          {ingredients.map((ingredient) => (
+                          {Array.isArray(ingredients) && ingredients.map((ingredient) => (
                             <MenuItem
                               key={ingredient._id}
                               value={ingredient._id}
@@ -372,7 +371,7 @@ const ModifyProduct = () => {
                   <FormControlLabel
                     value="multiple"
                     control={<Radio />}
-                    label="Multiple"
+                    label="Composée"
                   />
                 </RadioGroup>
               </FormControl>

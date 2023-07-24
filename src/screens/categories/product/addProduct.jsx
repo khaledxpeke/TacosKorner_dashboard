@@ -42,7 +42,6 @@ import {
 } from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
-
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
@@ -57,7 +56,6 @@ const AddProduct = () => {
   const categories = useSelector(selectAllCategories);
   const ingrediantsByType = useSelector(selectAllIngrediants);
   const supplements = useSelector(selectAllSupplements);
-  console.log(ingrediantsByType);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     category: yup.string().required("categorie est requis"),
@@ -120,6 +118,19 @@ const AddProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
+
+  const [types, updateTypes] = useState([]);
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedTypes = Array.from(types);
+    const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
+    updatedTypes.splice(result.destination.index, 0, reorderedItem);
+
+    updateTypes(updatedTypes);
+  };
 
   return loading ? (
     <Loading />
@@ -256,6 +267,7 @@ const AddProduct = () => {
                   {Object.entries(ingrediantsByType).map(
                     ([typeName, ingredients]) => (
                       <FormControl
+                        key={typeName}
                         variant="filled"
                         fullWidth
                         sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}
@@ -273,7 +285,7 @@ const AddProduct = () => {
                           onChange={(event) => {
                             const selectedIngredientIds = event.target.value;
                             const selectedMeatIngredients = [];
-
+                            const selectedTypes = [];
                             Object.entries(ingrediantsByType).forEach(
                               ([typeName, ingredients]) => {
                                 const selectedIngredientsOfType =
@@ -282,15 +294,21 @@ const AddProduct = () => {
                                       ingredient._id
                                     )
                                   );
-
                                 if (typeName.toLowerCase() === "meat") {
                                   selectedMeatIngredients.push(
                                     ...selectedIngredientsOfType
                                   );
                                 }
+                                if (
+                                  selectedIngredientIds ===
+                                  selectedIngredientsOfType
+                                ) {
+                                  selectedTypes.push(ingredients.type);
+                                }
                               }
                             );
-
+                            updateTypes(selectedTypes);
+                            console.log(selectedIngredientIds);
                             setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}
@@ -337,7 +355,7 @@ const AddProduct = () => {
                   }}
                 />
               )}
-              <ReorderType />
+              <ReorderType onDragEnd={onDragEnd} types={types} />
               <FormControl
                 variant="filled"
                 fullWidth
@@ -345,9 +363,7 @@ const AddProduct = () => {
                   gridColumn: "span 1",
                   gridRow: {
                     gridRow:
-                      values.choice === "seul"
-                        ? "4 / span 1"
-                        : "6 / span 1",
+                      values.choice === "seul" ? "4 / span 1" : "6 / span 1",
                   },
                 }}
               >

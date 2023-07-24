@@ -9,42 +9,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { tokens } from "../theme";
-import { useState } from "react";
 import "../reorderType.css";
-const ingrediantsTypes = [
-  {
-    id: "sauce",
-    name: "sauce",
-  },
-  {
-    id: "meat",
-    name: "meat",
-  },
-  {
-    id: "others",
-    name: "others",
-  },
-  {
-    id: "ingrediant",
-    name: "Sans Ingrediant",
-  },
-];
-const ReorderType = () => {
-  const [types, updateTypes] = useState(ingrediantsTypes);
+
+const ReorderType = ({onDragEnd,types}) => {
   const theme = useTheme();
   const isLightMode = theme.palette.mode === "light";
   const colors = tokens(theme.palette.mode);
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const updatedTypes = Array.from(types);
-    const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
-    updatedTypes.splice(result.destination.index, 0, reorderedItem);
-
-    updateTypes(updatedTypes);
-  };
   return (
     <TableContainer>
       <Table
@@ -71,8 +41,8 @@ const ReorderType = () => {
               >
                 {types.map((type, index) => (
                   <Draggable
-                    key={type.id}
-                    draggableId={type.id}
+                    key={type._id.toString()}
+                    draggableId={type._id.toString()}
                     index={index}
                   >
                     {(provided) => (

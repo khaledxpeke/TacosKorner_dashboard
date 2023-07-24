@@ -99,7 +99,7 @@ const Dashboard = () => {
   if (recentsStatus === "fetchRecentsData") {
   }
   return (
-    <Box m="20px" class="main-application" >
+    <Box m="20px" className="main-application" >
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Bienvenue au Tacos Korner" />

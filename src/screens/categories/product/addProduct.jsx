@@ -101,10 +101,7 @@ const AddProduct = () => {
           ingrediants,
           supplements,
           choice: values.choice,
-<<<<<<< HEAD
-=======
           type: types.map((item) => item._id),
->>>>>>> 5d731f49a4e05faa2896976f35be9767d3283006
         },
         categoryId: values.category,
       })
@@ -274,7 +271,7 @@ const AddProduct = () => {
                         key={typeName}
                         variant="filled"
                         fullWidth
-                        sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}
+                        sx={{ gridColumn: "span 1", gridRow: "5 / span 1" }}
                       >
                         <InputLabel id="ingrediants">
                           Selectioner les {typeName}
@@ -303,11 +300,11 @@ const AddProduct = () => {
                                     ...selectedIngredientsOfType
                                   );
                                 }
-                                if (
-                                  selectedIngredientIds ===
-                                  selectedIngredientsOfType
-                                ) {
-                                  selectedTypes.push(ingredients.type);
+                                if (selectedIngredientsOfType.length > 0) {
+                                  selectedTypes.push({
+                                    name: typeName,
+                                    _id: selectedIngredientsOfType[0].type._id,
+                                  });
                                 }
                               }
                             );
@@ -352,7 +349,7 @@ const AddProduct = () => {
                   helperText={touched.maxIngrediant && errors.maxIngrediant}
                   sx={{
                     gridColumn: "span 1",
-                    gridRow: "5 / span 1",
+                    gridRow: "6 / span 1",
                     display:
                       selectedMeatIngredients.length > 0 ? "block" : "none",
                   }}
@@ -368,7 +365,7 @@ const AddProduct = () => {
                   gridColumn: "span 1",
                   gridRow: {
                     gridRow:
-                      values.choice === "seul" ? "4 / span 1" : "6 / span 1",
+                      values.choice === "seul" ? "4 / span 1" : "4 / span 1",
                   },
                 }}
               >

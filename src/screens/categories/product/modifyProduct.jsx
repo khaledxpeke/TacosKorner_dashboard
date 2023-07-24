@@ -106,7 +106,9 @@ const ModifyProduct = () => {
       supplements,
       choice: values.choice,
       ...(previewImage && { image: previewImage }),
+      type: types.map((item) => item._id),
     };
+    console.log(requestBody);
     dispatch(
       modifyProduct({
         body: requestBody,
@@ -131,7 +133,6 @@ const ModifyProduct = () => {
     name: typ.name,
     _id: typ._id,
   })));
-  console.log(data)
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -276,9 +277,7 @@ const ModifyProduct = () => {
                   </Select>
                 </FormControl>
               )}
-              {values.choice === "multiple" && (
-                <ReorderType onDragEnd={onDragEnd} types={types} />
-              )}
+             
               {values.choice === "multiple" && (
                 <>
                   {Object.entries(ingrediantsByType).map(
@@ -286,7 +285,7 @@ const ModifyProduct = () => {
                       <FormControl
                         variant="filled"
                         fullWidth
-                        sx={{ gridColumn: "span 1", gridRow: "4 / span 1" }}
+                        sx={{ gridColumn: "span 1", gridRow: "5 / span 1" }}
                       >
                         <InputLabel id="ingrediants">
                           Selectioner les {typeName}
@@ -365,7 +364,7 @@ const ModifyProduct = () => {
                   helperText={touched.maxIngrediant && errors.maxIngrediant}
                   sx={{
                     gridColumn: "span 1",
-                    gridRow: "5 / span 1",
+                    gridRow: "6 / span 1",
                     display:
                       selectedMeatIngredients.length > 0 ? "block" : "none",
                   }}
@@ -378,7 +377,7 @@ const ModifyProduct = () => {
                   gridColumn: "span 1",
                   gridRow: {
                     gridRow:
-                      values.choice === "seul" ? "4 / span 1" : "6 / span 1",
+                      values.choice === "seul" ? "4 / span 1" : "4 / span 1",
                   },
                 }}
               >
@@ -402,6 +401,15 @@ const ModifyProduct = () => {
                   />
                 </RadioGroup>
               </FormControl>
+              {values.choice === "multiple" && (
+                <ReorderType onDragEnd={onDragEnd} types={types}  sx={{
+                  gridColumn: "span 1",
+                  gridRow: {
+                    gridRow:
+                      values.choice === "seul" ? "4 / span 1" : "4 / span 1",
+                  },
+                }}/>         
+              )}
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

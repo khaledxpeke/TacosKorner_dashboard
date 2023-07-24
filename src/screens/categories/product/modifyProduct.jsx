@@ -41,6 +41,7 @@ import {
   getSupplements,
 } from "../../../features/supplementSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import ReorderType from "../../../components/reorderType";
 
 const ModifyProduct = () => {
   const location = useLocation();
@@ -125,6 +126,23 @@ const ModifyProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
+
+  const [types, updateTypes] = useState(data.type.map((typ) => ({
+    name: typ.name,
+    _id: typ._id,
+  })));
+  console.log(data)
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedTypes = Array.from(types);
+    const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
+    updatedTypes.splice(result.destination.index, 0, reorderedItem);
+
+    updateTypes(updatedTypes);
+  };
 
   return loading ? (
     <Loading />
@@ -259,6 +277,9 @@ const ModifyProduct = () => {
                 </FormControl>
               )}
               {values.choice === "multiple" && (
+                <ReorderType onDragEnd={onDragEnd} types={types} />
+              )}
+              {values.choice === "multiple" && (
                 <>
                   {Object.entries(ingrediantsByType).map(
                     ([typeName, ingredients]) => (
@@ -280,7 +301,7 @@ const ModifyProduct = () => {
                           onChange={(event) => {
                             const selectedIngredientIds = event.target.value;
                             const selectedMeatIngredients = [];
-
+                            const selectedTypes = [];
                             Object.entries(ingrediantsByType).forEach(
                               ([typeName, ingredients]) => {
                                 const selectedIngredientsOfType =
@@ -295,9 +316,15 @@ const ModifyProduct = () => {
                                     ...selectedIngredientsOfType
                                   );
                                 }
+                                if (selectedIngredientsOfType.length > 0) {
+                                  selectedTypes.push({
+                                    name: typeName,
+                                    _id: selectedIngredientsOfType[0].type._id,
+                                  });
+                                }
                               }
                             );
-
+                            updateTypes(selectedTypes);
                             setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}

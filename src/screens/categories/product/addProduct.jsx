@@ -101,6 +101,10 @@ const AddProduct = () => {
           ingrediants,
           supplements,
           choice: values.choice,
+<<<<<<< HEAD
+=======
+          type: types.map((item) => item._id),
+>>>>>>> 5d731f49a4e05faa2896976f35be9767d3283006
         },
         categoryId: values.category,
       })
@@ -308,7 +312,6 @@ const AddProduct = () => {
                               }
                             );
                             updateTypes(selectedTypes);
-                            console.log(selectedIngredientIds);
                             setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}
@@ -355,7 +358,9 @@ const AddProduct = () => {
                   }}
                 />
               )}
-              <ReorderType onDragEnd={onDragEnd} types={types} />
+              {values.choice === "multiple" && (
+                <ReorderType onDragEnd={onDragEnd} types={types} />
+              )}
               <FormControl
                 variant="filled"
                 fullWidth

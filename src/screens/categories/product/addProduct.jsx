@@ -101,6 +101,7 @@ const AddProduct = () => {
           ingrediants,
           supplements,
           choice: values.choice,
+          type:types.map((item) => item._id)
         },
         categoryId: values.category,
       })
@@ -299,16 +300,16 @@ const AddProduct = () => {
                                     ...selectedIngredientsOfType
                                   );
                                 }
-                                if (
-                                  selectedIngredientIds ===
-                                  selectedIngredientsOfType
-                                ) {
-                                  selectedTypes.push(ingredients.type);
+                                if (selectedIngredientsOfType.length > 0) {
+                                  selectedTypes.push({
+                                    name: typeName,
+                                    _id: selectedIngredientsOfType[0].type._id,
+                                  });
                                 }
                               }
                             );
                             updateTypes(selectedTypes);
-                            console.log(selectedIngredientIds);
+                            console.log(selectedTypes);
                             setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}

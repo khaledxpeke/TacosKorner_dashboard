@@ -39,7 +39,7 @@ const ModifyExtra = () => {
     name: data.name,
     currency: data.currency,
     price: data.price,
-    max: data.max,
+    max: data.max || 1,
   };
   const handleFormSubmit = (values) => {
     const requestBody = {
@@ -150,7 +150,6 @@ const ModifyExtra = () => {
                 onChange={handleChange}
                 value={values.max}
                 name="max"
-                defaultValue={1}
                 error={!!touched.max && !!errors.max}
                 helperText={touched.max && errors.max}
                 sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}

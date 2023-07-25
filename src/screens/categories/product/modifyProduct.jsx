@@ -45,11 +45,11 @@ import ReorderType from "../../../components/reorderType";
 
 const ModifyProduct = () => {
   const location = useLocation();
-  const data = location.state.product;
+  const data = location.state.product|| {};
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const ingrediantsByType = useSelector(selectAllIngrediants) || {};;
+  const ingrediantsByType = useSelector(selectAllIngrediants) || {};
   const supplements = useSelector(selectAllSupplements);
   const meatIngredients = ingrediantsByType["meat"] || [];
   const max = meatIngredients.filter((ingredient) =>
@@ -75,7 +75,9 @@ const ModifyProduct = () => {
   });
   const initialValues = {
     name: data.name,
-    category: data.category || "",
+    category:categories.some((category) => category._id === data.category)
+    ? data.category
+    : "",
     ingrediant: data.ingrediants,
     supplement: data.supplements,
     currency: data.currency,
@@ -108,7 +110,6 @@ const ModifyProduct = () => {
       ...(previewImage && { image: previewImage }),
       type: types.map((item) => item._id),
     };
-    console.log(requestBody);
     dispatch(
       modifyProduct({
         body: requestBody,
@@ -129,10 +130,12 @@ const ModifyProduct = () => {
     }
   }, [status, error, dispatch, navigate, success]);
 
-  const [types, updateTypes] = useState(data.type.map((typ) => ({
-    name: typ.name,
-    _id: typ._id,
-  })));
+  const [types, updateTypes] = useState(
+    data.type.map((typ) => ({
+      name: typ.name,
+      _id: typ._id,
+    }))
+  );
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -277,12 +280,13 @@ const ModifyProduct = () => {
                   </Select>
                 </FormControl>
               )}
-             
+
               {values.choice === "multiple" && (
                 <>
                   {Object.entries(ingrediantsByType).map(
                     ([typeName, ingredients]) => (
                       <FormControl
+                        key={typeName}
                         variant="filled"
                         fullWidth
                         sx={{ gridColumn: "span 1", gridRow: "5 / span 1" }}
@@ -336,14 +340,15 @@ const ModifyProduct = () => {
                             },
                           }}
                         >
-                          {Array.isArray(ingredients) && ingredients.map((ingredient) => (
-                            <MenuItem
-                              key={ingredient._id}
-                              value={ingredient._id}
-                            >
-                              {ingredient.name}
-                            </MenuItem>
-                          ))}
+                          {Array.isArray(ingredients) &&
+                            ingredients.map((ingredient) => (
+                              <MenuItem
+                                key={ingredient._id}
+                                value={ingredient._id}
+                              >
+                                {ingredient.name}
+                              </MenuItem>
+                            ))}
                         </Select>
                       </FormControl>
                     )
@@ -402,13 +407,17 @@ const ModifyProduct = () => {
                 </RadioGroup>
               </FormControl>
               {values.choice === "multiple" && (
-                <ReorderType onDragEnd={onDragEnd} types={types}  sx={{
-                  gridColumn: "span 1",
-                  gridRow: {
-                    gridRow:
-                      values.choice === "seul" ? "4 / span 1" : "4 / span 1",
-                  },
-                }}/>         
+                <ReorderType
+                  onDragEnd={onDragEnd}
+                  types={types}
+                  sx={{
+                    gridColumn: "span 1",
+                    gridRow: {
+                      gridRow:
+                        values.choice === "seul" ? "4 / span 1" : "4 / span 1",
+                    },
+                  }}
+                />
               )}
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">

@@ -144,7 +144,6 @@ import {
                 onChange={handleChange}
                 value={values.max}
                 name="max"
-                defaultValue={1}
                 error={!!touched.max && !!errors.max}
                 helperText={touched.max && errors.max}
                 sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}

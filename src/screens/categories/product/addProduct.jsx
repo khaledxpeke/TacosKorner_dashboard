@@ -46,7 +46,6 @@ const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const [selectedMeatIngredients, setSelectedMeatIngredients] = useState([]);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
@@ -63,7 +62,6 @@ const AddProduct = () => {
     supplement: yup.array().default(() => []),
     currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
-    maxIngrediant: yup.number(),
     choice: yup.string().required("Choix est requis"),
   });
   const initialValues = {
@@ -74,7 +72,6 @@ const AddProduct = () => {
     supplement: [],
     currency: "",
     price: "",
-    maxIngrediant: "",
     choice: "seul",
   };
   const handleFormSubmit = (values) => {
@@ -97,7 +94,6 @@ const AddProduct = () => {
           image: previewImage,
           currency: values.currency,
           price: values.price,
-          maxIngrediant: Number(values.maxIngrediant),
           ingrediants,
           supplements,
           choice: values.choice,
@@ -285,7 +281,6 @@ const AddProduct = () => {
                           label="ingrediant"
                           onChange={(event) => {
                             const selectedIngredientIds = event.target.value;
-                            const selectedMeatIngredients = [];
                             const selectedTypes = [];
                             Object.entries(ingrediantsByType).forEach(
                               ([typeName, ingredients]) => {
@@ -295,11 +290,6 @@ const AddProduct = () => {
                                       ingredient._id
                                     )
                                   );
-                                if (typeName.toLowerCase() === "meat") {
-                                  selectedMeatIngredients.push(
-                                    ...selectedIngredientsOfType
-                                  );
-                                }
                                 if (selectedIngredientsOfType.length > 0) {
                                   selectedTypes.push({
                                     name: typeName,
@@ -309,7 +299,6 @@ const AddProduct = () => {
                               }
                             );
                             updateTypes(selectedTypes);
-                            setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}
                           sx={{ gridColumn: "span 1" }}
@@ -334,26 +323,6 @@ const AddProduct = () => {
                     )
                   )}
                 </>
-              )}
-              {values.choice === "multiple" && (
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="number"
-                  label="Nombre de Viande"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.maxIngrediant}
-                  name="maxIngrediant"
-                  error={!!touched.maxIngrediant && !!errors.maxIngrediant}
-                  helperText={touched.maxIngrediant && errors.maxIngrediant}
-                  sx={{
-                    gridColumn: "span 1",
-                    gridRow: "6 / span 1",
-                    display:
-                      selectedMeatIngredients.length > 0 ? "block" : "none",
-                  }}
-                />
               )}
               {values.choice === "multiple" && (
                 <ReorderType onDragEnd={onDragEnd} types={types} />

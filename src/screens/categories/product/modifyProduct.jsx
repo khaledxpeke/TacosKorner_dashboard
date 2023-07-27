@@ -51,11 +51,6 @@ const ModifyProduct = () => {
   const [displayLabel, setDisplayLabel] = useState(true);
   const ingrediantsByType = useSelector(selectAllIngrediants) || {};
   const supplements = useSelector(selectAllSupplements);
-  const meatIngredients = ingrediantsByType["meat"] || [];
-  const max = meatIngredients.filter((ingredient) =>
-    data.ingrediants.includes(ingredient._id)
-  );
-  const [selectedMeatIngredients, setSelectedMeatIngredients] = useState(max);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
@@ -70,7 +65,6 @@ const ModifyProduct = () => {
     supplement: yup.array().default(() => []),
     currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
-    maxIngrediant: yup.number(),
     choice: yup.string().required("Choix est requis"),
   });
   const initialValues = {
@@ -82,7 +76,6 @@ const ModifyProduct = () => {
     supplement: data.supplements,
     currency: data.currency,
     price: data.price,
-    maxIngrediant: data.maxIngrediant,
     choice: data.choice,
   };
   const handleFormSubmit = (values) => {
@@ -103,7 +96,6 @@ const ModifyProduct = () => {
       currency: values.currency,
       price: values.price,
       category: values.category,
-      maxIngrediant: Number(values.maxIngrediant),
       ingrediants,
       supplements,
       choice: values.choice,
@@ -303,7 +295,6 @@ const ModifyProduct = () => {
                           label="ingrediant"
                           onChange={(event) => {
                             const selectedIngredientIds = event.target.value;
-                            const selectedMeatIngredients = [];
                             const selectedTypes = [];
                             Object.entries(ingrediantsByType).forEach(
                               ([typeName, ingredients]) => {
@@ -313,12 +304,6 @@ const ModifyProduct = () => {
                                       ingredient._id
                                     )
                                   );
-
-                                if (typeName.toLowerCase() === "meat") {
-                                  selectedMeatIngredients.push(
-                                    ...selectedIngredientsOfType
-                                  );
-                                }
                                 if (selectedIngredientsOfType.length > 0) {
                                   selectedTypes.push({
                                     name: typeName,
@@ -328,7 +313,6 @@ const ModifyProduct = () => {
                               }
                             );
                             updateTypes(selectedTypes);
-                            setSelectedMeatIngredients(selectedMeatIngredients);
                             handleChange(event);
                           }}
                           sx={{ gridColumn: "span 1" }}
@@ -354,26 +338,6 @@ const ModifyProduct = () => {
                     )
                   )}
                 </>
-              )}
-              {values.choice === "multiple" && (
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="number"
-                  label="Nombre de Viande"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.maxIngrediant}
-                  name="maxIngrediant"
-                  error={!!touched.maxIngrediant && !!errors.maxIngrediant}
-                  helperText={touched.maxIngrediant && errors.maxIngrediant}
-                  sx={{
-                    gridColumn: "span 1",
-                    gridRow: "6 / span 1",
-                    display:
-                      selectedMeatIngredients.length > 0 ? "block" : "none",
-                  }}
-                />
               )}
               <FormControl
                 variant="filled"

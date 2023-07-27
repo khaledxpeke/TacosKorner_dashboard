@@ -25,12 +25,14 @@ const ModifyType = () => {
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
-    max: yup.number()
+    free: yup.number(),
+    quantity: yup.number()
   });
   const initialValues = {
     name: data.name,
     message: data.message,
-    max: data.max,
+    free: data.free,
+    quantity: data.quantity,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -41,7 +43,8 @@ const ModifyType = () => {
     const requestBody = {
       name: values.name,
       message: values.message,
-      max: values.max|| 1,
+      free: values.free|| 1,
+      quantity: values.quantity|| 1,
     };
     dispatch(
       modifyType({
@@ -116,13 +119,26 @@ const ModifyType = () => {
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Ingrédient maximum par type"
+                label="Nombre d'ingrédient gratuit"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.max}
-                name="max"
-                error={!!touched.max && !!errors.max}
-                helperText={touched.max && errors.max}
+                value={values.free}
+                name="free"
+                error={!!touched.free && !!errors.free}
+                helperText={touched.free && errors.free}
+                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Nombre d'ingrédient maximum"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.quantity}
+                name="quantity"
+                error={!!touched.quantity && !!errors.quantity}
+                helperText={touched.quantity && errors.quantity}
                 sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
               />
             </Box>

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -42,10 +43,12 @@ import {
 } from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
+
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
@@ -75,6 +78,7 @@ const AddProduct = () => {
     choice: "seul",
   };
   const handleFormSubmit = (values) => {
+    const selectedTypeIds = types.map((type) => type._id);
     const ingrediants =
       values.choice === "multiple"
         ? values.ingrediant.length > 0
@@ -87,6 +91,11 @@ const AddProduct = () => {
           ? values.supplement.join(",")
           : []
         : [];
+    const rules = types.map((type) => ({
+      type: type._id,
+      numberOfFree: type.numberOfFree || 0,
+      maxIngrediant: type.maxIngrediant || 0,
+    }));
     dispatch(
       addProduct({
         body: {
@@ -97,12 +106,14 @@ const AddProduct = () => {
           ingrediants,
           supplements,
           choice: values.choice,
-          type: types.map((item) => item._id),
+          type: selectedTypeIds,
+          rules: JSON.stringify(rules),
         },
         categoryId: values.category,
       })
     );
   };
+
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(getIngrediantsByType());
@@ -127,6 +138,40 @@ const AddProduct = () => {
     updatedTypes.splice(result.destination.index, 0, reorderedItem);
 
     updateTypes(updatedTypes);
+  };
+  const handleTypeCheckboxChange = (typeId, checked) => {
+    if (checked) {
+      // Check if the type is already in selectedTypes
+      const typeExists = selectedTypes.some((type) => type._id === typeId);
+  
+      // If the type doesn't exist in selectedTypes, add it
+      if (!typeExists) {
+        setSelectedTypes((prevSelectedTypes) => [
+          ...prevSelectedTypes,
+          { _id: typeId, numberOfFree: 1, maxIngrediant: 1 },
+        ]);
+      }
+    } else {
+      setSelectedTypes((prevSelectedTypes) =>
+        prevSelectedTypes.filter((type) => type._id !== typeId)
+      );
+    }
+  };
+
+  const handleNumberOfFreeChange = (typeId, value) => {
+    updateTypes((prevTypes) =>
+      prevTypes.map((type) =>
+        type._id === typeId ? { ...type, numberOfFree: parseInt(value) } : type
+      )
+    );
+  };
+
+  const handleMaxIngredientChange = (typeId, value) => {
+    updateTypes((prevTypes) =>
+      prevTypes.map((type) =>
+        type._id === typeId ? { ...type, maxIngrediant: parseInt(value) } : type
+      )
+    );
   };
 
   return loading ? (
@@ -269,9 +314,23 @@ const AddProduct = () => {
                         fullWidth
                         sx={{ gridColumn: "span 1", gridRow: "5 / span 1" }}
                       >
-                        <InputLabel id="ingrediants">
-                          Selectioner les {typeName}
-                        </InputLabel>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name={`type_${typeName}`}
+                              checked={types.some(
+                                (type) => type._id === ingredients[0].type._id
+                              )}
+                              onChange={(e) =>
+                                handleTypeCheckboxChange(
+                                  ingredients[0].type._id,
+                                  e.target.checked
+                                )
+                              }
+                            />
+                          }
+                          label={`Ajouter un ${typeName} et son règle`}
+                        />
                         <Select
                           name="ingrediant"
                           labelId="ingrediants"
@@ -280,7 +339,9 @@ const AddProduct = () => {
                           multiple
                           label="ingrediant"
                           onChange={(event) => {
-                            const selectedIngredientIds = event.target.value;
+                            // Update the ingrediant field in the form with the selected ingredient IDs
+                            const selectedIngredientIds =
+                              event.target.value || [];
                             const selectedTypes = [];
                             Object.entries(ingrediantsByType).forEach(
                               ([typeName, ingredients]) => {
@@ -319,6 +380,42 @@ const AddProduct = () => {
                             </MenuItem>
                           ))}
                         </Select>
+                        {types.some(
+                          (type) => type._id === ingredients[0].type._id
+                        ) && (
+                          <>
+                            <TextField
+                              label="Number of Free"
+                              type="number"
+                              value={
+                                types.find(
+                                  (type) => type._id === ingredients[0].type._id
+                                )?.numberOfFree || ""
+                              }
+                              onChange={(e) =>
+                                handleNumberOfFreeChange(
+                                  ingredients[0].type._id,
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <TextField
+                              label="Max Ingredient"
+                              type="number"
+                              value={
+                                types.find(
+                                  (type) => type._id === ingredients[0].type._id
+                                )?.maxIngrediant || ""
+                              }
+                              onChange={(e) =>
+                                handleMaxIngredientChange(
+                                  ingredients[0].type._id,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </>
+                        )}
                       </FormControl>
                     )
                   )}

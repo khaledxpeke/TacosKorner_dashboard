@@ -63,17 +63,7 @@ const Ingrediant = () => {
               data={card}
               handleModify={() => handleModify(card)}
               handleClickOpen={() => handleClickOpen(card._id)}
-              content={
-                <>
-                  Type: {card.type.name}
-                  {card.price && card.currency && (
-                    <>
-                      <br />
-                      Prix: {card.price} {card.currency}
-                    </>
-                  )}
-                </>
-              }
+              content={<>Type: {card.type.name}</>}
             />
           ))
         ) : (

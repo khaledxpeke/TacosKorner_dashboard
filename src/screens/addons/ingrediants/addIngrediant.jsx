@@ -43,15 +43,11 @@ const AddIngrediant = () => {
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    currency: yup.string(),
-    price: yup.number(),
   });
   const initialValues = {
     name: "",
     image: "",
     type: types.length > 0 ? types[0]._id : "",
-    price: "",
-    currency: "",
   };
   const handleFormSubmit = (values) => {
     if (!values.type) {
@@ -63,11 +59,6 @@ const AddIngrediant = () => {
       image: previewImage,
       typeId: values.type,
     };
-  
-    if (values.price && values.currency) {
-      formData.price = values.price;
-      formData.currency = values.currency;
-    }
     dispatch(addIngrediant(formData));
   };
   useEffect(() => {
@@ -120,29 +111,7 @@ const AddIngrediant = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
-              />
-                <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.price}
-                name="price"
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.currency}
-                name="currency"
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+                sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
               />
               <ImageInput
                 sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}

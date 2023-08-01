@@ -43,21 +43,15 @@ const AddIngrediant = () => {
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    price: yup.number().nullable(),
-    currency: yup.string().nullable(),
     // type: yup.string().required("required"),
   });
   const initialValues = {
     name: data.name,
     type: data.type._id,
-    price: data.price,
-    currency: data.currency,
   };
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
-      currency: values.currency,
-      price: values.price,
       type: values.type,
       ...(previewImage && { image: previewImage }),
     };
@@ -129,29 +123,7 @@ const AddIngrediant = () => {
                 setDisplayLabel={setDisplayLabel}
                 image={data.image}
               />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.price}
-                name="price"
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-              />
-
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.currency}
-                name="currency"
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-              />
+            
               <FormControl
                 variant="filled"
                 fullWidth

@@ -25,12 +25,16 @@ const AddType = () => {
     message: yup.string(),
     free: yup.number(),
     quantity: yup.number(),
+    price: yup.number(),
+    currency: yup.string(),
   });
   const initialValues = {
     name: "",
     message: "",
     free: 1,
     quantity: 1,
+    price: 0,
+    currency: "",
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -44,6 +48,8 @@ const AddType = () => {
         message: values.message,
         free: values.free,
         quantity: values.quantity,
+        price: values.price,
+        currency: values.currency,
       })
     );
   };
@@ -137,6 +143,32 @@ const AddType = () => {
                 error={!!touched.quantity && !!errors.quantity}
                 helperText={touched.quantity && errors.quantity}
                 sx={{ gridColumn: "span 2"}}
+              />
+                <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Prix"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.price}
+                name="price"
+                error={!!touched.price && !!errors.price}
+                helperText={touched.price && errors.price}
+                sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Currency"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.currency}
+                name="currency"
+                error={!!touched.currency && !!errors.currency}
+                helperText={touched.currency && errors.currency}
+                sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px" >

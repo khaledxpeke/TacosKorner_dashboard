@@ -90,7 +90,9 @@ const ModifyProduct = () => {
     types: typesWithRules,
     numberOfFree: 1,
     maxIngrediant: 1,
+    rules: data.rules,
   };
+  console.log(data.rules)
   // console.log(typesWithRules)
   const handleFormSubmit = (values) => {
     const ingrediants =
@@ -123,22 +125,18 @@ const ModifyProduct = () => {
       choice: values.choice,
       ...(previewImage && { image: previewImage }),
       type: types.map((item) => item._id).join(","),
-      rules: updatedTypes.map((item) => ({
-        type: item._id,
-        numberOfFree: item.numberOfFree,
-        maxIngrediant: item.maxIngrediant,
-      })),
+      rules: values.rules
     };
-    // console.log(requestBody)
-    // console.log(values)
+    console.log(requestBody)
+    console.log(values)
     // console.log(JSON.stringify(requestBody, null, 2));
     // console.log(requestBody);
-    dispatch(
-      modifyProduct({
-        body: requestBody,
-        productId: data._id,
-      })
-    );
+    // dispatch(
+    //   modifyProduct({
+    //     body: requestBody,
+    //     productId: data._id,
+    //   })
+    // );
   };
   useEffect(() => {
     dispatch(fetchCategories());
@@ -204,7 +202,6 @@ const ModifyProduct = () => {
           handleBlur,
           handleChange,
           handleSubmit,
-          setFieldValue,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -323,7 +320,7 @@ const ModifyProduct = () => {
               {values.choice === "multiple" && (
                 <>
                   {Object.entries(ingrediantsByType).map(
-                    ([typeName, ingredients]) => (
+                    ([typeName, ingredients],index) => (
                       <FormControl
                         key={typeName}
                         variant="filled"
@@ -410,7 +407,8 @@ const ModifyProduct = () => {
                                 )?.numberOfFree || 1
                               }
                               onChange={(e) =>{
-                                setFieldValue('numberOfFree', e.target.value);
+                                // console.log(values.rules[index])
+                                values.rules[index].numberOfFree = parseInt(e.target.value);
                                 handleNumberOfFreeChange(
                                   ingredients[0].type._id,
                                   e.target.value
@@ -425,12 +423,13 @@ const ModifyProduct = () => {
                                   (type) => type.type === ingredients[0].type._id
                                 )?.maxIngrediant || 1
                               }
-                              onChange={(e) =>
+                              onChange={(e) =>{
+                                values.rules[index].maxIngrediant = e.target.value;
                                 handleMaxIngredientChange(
                                   ingredients[0].type._id,
                                   e.target.value
                                 )
-                              }
+                              }}
                             />
                           </>
                         )}

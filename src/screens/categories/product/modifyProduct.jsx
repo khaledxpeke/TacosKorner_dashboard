@@ -45,7 +45,7 @@ import ReorderType from "../../../components/reorderType";
 
 const ModifyProduct = () => {
   const location = useLocation();
-  const data = location.state.product|| {};
+  const data = location.state.product || {};
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
@@ -63,34 +63,56 @@ const ModifyProduct = () => {
     category: yup.string().required("categorie est requis"),
     ingrediant: yup.array().default(() => []),
     supplement: yup.array().default(() => []),
+    types: yup.array().default(() => []),
     currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
   });
+  const typesWithRules = data.type.map((typ) => {
+    const rule = data.rules.find((rule) => rule.type === typ._id);
+    return {
+      name: typ.name,
+      _id: typ._id,
+      numberOfFree: rule?.numberOfFree || 1,
+      maxIngrediant: rule?.maxIngrediant || 1,
+    };
+  });
   const initialValues = {
     name: data.name,
-    category:categories.some((category) => category._id === data.category)
-    ? data.category
-    : "",
+    category: categories.some((category) => category._id === data.category)
+      ? data.category
+      : "",
     ingrediant: data.ingrediants,
     supplement: data.supplements,
     currency: data.currency,
     price: data.price,
     choice: data.choice,
+    types: typesWithRules,
+    numberOfFree: 1,
+    maxIngrediant: 1,
   };
+  // console.log(typesWithRules)
   const handleFormSubmit = (values) => {
     const ingrediants =
-      values.choice === "multiple"
-        ? values.ingrediant.length > 0
-          ? values.ingrediant.join(",")
-          : []
-        : [];
+    values.choice === "multiple"
+    ? values.ingrediant.length > 0
+      ? values.ingrediant.map((ingredient) => ingredient._id).join(",")
+      : []
+    : [];
     const supplements =
       values.choice === "multiple"
         ? values.supplement.length > 0
           ? values.supplement.join(",")
           : []
         : [];
+    const updatedTypes = values.types.map((type) => {
+      const rule = data.rules.find((rule) => rule.type === type._id);
+      return {
+        ...type,
+        numberOfFree: rule?.numberOfFree || 1,
+        maxIngrediant: rule?.maxIngrediant || 1,
+      };
+    });
     const requestBody = {
       name: values.name,
       currency: values.currency,
@@ -100,8 +122,17 @@ const ModifyProduct = () => {
       supplements,
       choice: values.choice,
       ...(previewImage && { image: previewImage }),
-      type: types.map((item) => item._id),
+      type: types.map((item) => item._id).join(","),
+      rules: updatedTypes.map((item) => ({
+        type: item._id,
+        numberOfFree: item.numberOfFree,
+        maxIngrediant: item.maxIngrediant,
+      })),
     };
+    // console.log(requestBody)
+    // console.log(values)
+    // console.log(JSON.stringify(requestBody, null, 2));
+    // console.log(requestBody);
     dispatch(
       modifyProduct({
         body: requestBody,
@@ -121,7 +152,7 @@ const ModifyProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
-
+  // console.log(data);
   const [types, updateTypes] = useState(
     data.type.map((typ) => ({
       name: typ.name,
@@ -139,7 +170,22 @@ const ModifyProduct = () => {
 
     updateTypes(updatedTypes);
   };
+  const handleNumberOfFreeChange = (typeId, value) => {
+    console.log(typeId, value);
+    updateTypes((prevTypes) =>
+      prevTypes.map((type) =>
+        type._id === typeId ? { ...type, numberOfFree: parseInt(value) } : type
+      )
+    );
+  };
 
+  const handleMaxIngredientChange = (typeId, value) => {
+    updateTypes((prevTypes) =>
+      prevTypes.map((type) =>
+        type._id === typeId ? { ...type, maxIngrediant: parseInt(value) } : type
+      )
+    );
+  };
   return loading ? (
     <Loading />
   ) : (
@@ -158,6 +204,7 @@ const ModifyProduct = () => {
           handleBlur,
           handleChange,
           handleSubmit,
+          setFieldValue,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -290,12 +337,15 @@ const ModifyProduct = () => {
                           name="ingrediant"
                           labelId="ingrediants"
                           id="ingrediant"
-                          value={values.ingrediant}
+                          value={values.ingrediant.map(
+                            (ingredient) => ingredient._id
+                          )}
                           multiple
                           label="ingrediant"
                           onChange={(event) => {
                             const selectedIngredientIds = event.target.value;
                             const selectedTypes = [];
+                            const selectedIngredients = [];
                             Object.entries(ingrediantsByType).forEach(
                               ([typeName, ingredients]) => {
                                 const selectedIngredientsOfType =
@@ -304,6 +354,9 @@ const ModifyProduct = () => {
                                       ingredient._id
                                     )
                                   );
+                                selectedIngredients.push(
+                                  ...selectedIngredientsOfType
+                                );
                                 if (selectedIngredientsOfType.length > 0) {
                                   selectedTypes.push({
                                     name: typeName,
@@ -313,7 +366,17 @@ const ModifyProduct = () => {
                               }
                             );
                             updateTypes(selectedTypes);
-                            handleChange(event);
+                            handleChange({
+                              target: {
+                                name: "ingrediant",
+                                value: selectedIngredients.map(
+                                  (ingredient) => ({
+                                    _id: ingredient._id,
+                                    type: ingredient.type._id,
+                                  })
+                                ),
+                              },
+                            });
                           }}
                           sx={{ gridColumn: "span 1" }}
                           MenuProps={{
@@ -334,6 +397,43 @@ const ModifyProduct = () => {
                               </MenuItem>
                             ))}
                         </Select>
+                        {types.some(
+                          (type) => type._id === ingredients[0].type._id
+                        ) && (
+                          <>
+                            <TextField
+                              label="Number of Free"
+                              type="number"
+                              defaultValue={
+                                data.rules.find(
+                                  (type) => type.type === ingredients[0].type._id
+                                )?.numberOfFree || 1
+                              }
+                              onChange={(e) =>{
+                                setFieldValue('numberOfFree', e.target.value);
+                                handleNumberOfFreeChange(
+                                  ingredients[0].type._id,
+                                  e.target.value
+                                )
+                              }}
+                            />
+                            <TextField
+                              label="Max Ingredient"
+                              type="number"
+                              defaultValue={
+                                data.rules.find(
+                                  (type) => type.type === ingredients[0].type._id
+                                )?.maxIngrediant || 1
+                              }
+                              onChange={(e) =>
+                                handleMaxIngredientChange(
+                                  ingredients[0].type._id,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </>
+                        )}
                       </FormControl>
                     )
                   )}

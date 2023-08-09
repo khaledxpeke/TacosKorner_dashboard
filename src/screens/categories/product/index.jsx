@@ -44,7 +44,6 @@ const Formule = () => {
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
-
   let content;
   if (productStatus === "loading") {
     content = <Loading />;

@@ -93,8 +93,8 @@ const AddProduct = () => {
         : [];
     const rules = types.map((type) => ({
       type: type._id,
-      numberOfFree: type.numberOfFree || 0,
-      maxIngrediant: type.maxIngrediant || 0,
+      numberOfFree: type.numberOfFree || 1,
+      maxIngrediant: type.maxIngrediant || 1,
     }));
     dispatch(
       addProduct({

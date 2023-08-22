@@ -158,6 +158,53 @@ function Row(props) {
                           </Collapse>
                         </TableCell>
                       </TableRow>
+                      <TableRow>
+                        <TableCell
+                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                          colSpan={2}
+                        >
+                          <Collapse
+                            in={addonsOpen}
+                            timeout="auto"
+                            unmountOnExit
+                            component="div"
+                          >
+                            <Box sx={{ margin: 1 }}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                component="div"
+                              >
+                                Extras
+                              </Typography>
+                              <Table size="small" aria-label="extras">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell align="right">
+                                      Price (DT)
+                                    </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {productRow.extras.map((extraRow) => (
+                                    <TableRow key={extraRow?.name}>
+                                      <TableCell component="th" scope="row">
+                                        {extraRow?.name}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {extraRow?.price
+                                          ? extraRow.price
+                                          : "Free"}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
                     </React.Fragment>
                   ))}
                 </TableBody>

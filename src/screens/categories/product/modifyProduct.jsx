@@ -73,8 +73,8 @@ const ModifyProduct = () => {
     return {
       name: typ.name,
       _id: typ._id,
-      numberOfFree: rule?.numberOfFree || 1,
-      maxIngrediant: rule?.maxIngrediant || 1,
+      free: rule?.free || 1,
+      quantity: rule?.quantity || 1,
     };
   });
   const initialValues = {
@@ -88,8 +88,8 @@ const ModifyProduct = () => {
     price: data.price,
     choice: data.choice,
     types: typesWithRules,
-    numberOfFree: 1,
-    maxIngrediant: 1,
+    free: 1,
+    quantity: 1,
     rules: data.rules,
   };
   const handleFormSubmit = (values) => {
@@ -109,8 +109,8 @@ const ModifyProduct = () => {
     //   const rule = data.rules.find((rule) => rule.type === type._id);
     //   return {
     //     ...type,
-    //     numberOfFree: rule?.numberOfFree || 1,
-    //     maxIngrediant: rule?.maxIngrediant || 1,
+    //     free: rule?.free || 1,
+    //     quantity: rule?.quantity || 1,
     //   };
     // });
     const requestBody = {
@@ -165,7 +165,7 @@ const ModifyProduct = () => {
   const handleNumberOfFreeChange = (typeId, value) => {
     updateTypes((prevTypes) =>
       prevTypes.map((type) =>
-        type._id === typeId ? { ...type, numberOfFree: parseInt(value) } : type
+        type._id === typeId ? { ...type, free: parseInt(value) } : type
       )
     );
   };
@@ -173,7 +173,7 @@ const ModifyProduct = () => {
   const handleMaxIngredientChange = (typeId, value) => {
     updateTypes((prevTypes) =>
       prevTypes.map((type) =>
-        type._id === typeId ? { ...type, maxIngrediant: parseInt(value) } : type
+        type._id === typeId ? { ...type, quantity: parseInt(value) } : type
       )
     );
   };
@@ -397,11 +397,11 @@ const ModifyProduct = () => {
                               defaultValue={
                                 data.rules.find(
                                   (type) => type.type === ingredients[0].type._id
-                                )?.numberOfFree || 1
+                                )?.free || 1
                               }
                               onChange={(e) =>{
                                 let test=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
-                                values.rules[test].numberOfFree = parseInt(e.target.value);
+                                values.rules[test].free = parseInt(e.target.value);
                                 handleNumberOfFreeChange(
                                   ingredients[0].type._id,
                                   e.target.value
@@ -414,11 +414,11 @@ const ModifyProduct = () => {
                               defaultValue={
                                 data.rules.find(
                                   (type) => type.type === ingredients[0].type._id
-                                )?.maxIngrediant || 1
+                                )?.quantity || 1
                               }
                               onChange={(e) =>{
                                 let test=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
-                                values.rules[test].maxIngrediant = e.target.value;
+                                values.rules[test].quantity = e.target.value;
                                 handleMaxIngredientChange(
                                   ingredients[0].type._id,
                                   e.target.value

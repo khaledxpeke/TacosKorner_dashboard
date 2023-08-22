@@ -93,8 +93,8 @@ const AddProduct = () => {
         : [];
     const rules = types.map((type) => ({
       type: type._id,
-      numberOfFree: type.numberOfFree || 1,
-      maxIngrediant: type.maxIngrediant || 1,
+      free: type.free || 1,
+      quantity: type.quantity || 1,
     }));
     dispatch(
       addProduct({
@@ -148,7 +148,7 @@ const AddProduct = () => {
       if (!typeExists) {
         setSelectedTypes((prevSelectedTypes) => [
           ...prevSelectedTypes,
-          { _id: typeId, numberOfFree: 1, maxIngrediant: 1 },
+          { _id: typeId, free: 1, quantity: 1 },
         ]);
       }
     } else {
@@ -161,7 +161,7 @@ const AddProduct = () => {
   const handleNumberOfFreeChange = (typeId, value) => {
     updateTypes((prevTypes) =>
       prevTypes.map((type) =>
-        type._id === typeId ? { ...type, numberOfFree: parseInt(value) } : type
+        type._id === typeId ? { ...type, free: parseInt(value) } : type
       )
     );
   };
@@ -169,7 +169,7 @@ const AddProduct = () => {
   const handleMaxIngredientChange = (typeId, value) => {
     updateTypes((prevTypes) =>
       prevTypes.map((type) =>
-        type._id === typeId ? { ...type, maxIngrediant: parseInt(value) } : type
+        type._id === typeId ? { ...type, quantity: parseInt(value) } : type
       )
     );
   };
@@ -390,7 +390,7 @@ const AddProduct = () => {
                               value={
                                 types.find(
                                   (type) => type._id === ingredients[0].type._id
-                                )?.numberOfFree || ""
+                                )?.free || ""
                               }
                               onChange={(e) =>
                                 handleNumberOfFreeChange(
@@ -405,7 +405,7 @@ const AddProduct = () => {
                               value={
                                 types.find(
                                   (type) => type._id === ingredients[0].type._id
-                                )?.maxIngrediant || ""
+                                )?.quantity || ""
                               }
                               onChange={(e) =>
                                 handleMaxIngredientChange(

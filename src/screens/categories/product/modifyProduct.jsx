@@ -92,8 +92,6 @@ const ModifyProduct = () => {
     maxIngrediant: 1,
     rules: data.rules,
   };
-  console.log(data.rules)
-  // console.log(typesWithRules)
   const handleFormSubmit = (values) => {
     const ingrediants =
     values.choice === "multiple"
@@ -107,14 +105,14 @@ const ModifyProduct = () => {
           ? values.supplement.join(",")
           : []
         : [];
-    const updatedTypes = values.types.map((type) => {
-      const rule = data.rules.find((rule) => rule.type === type._id);
-      return {
-        ...type,
-        numberOfFree: rule?.numberOfFree || 1,
-        maxIngrediant: rule?.maxIngrediant || 1,
-      };
-    });
+    // const updatedTypes = values.types.map((type) => {
+    //   const rule = data.rules.find((rule) => rule.type === type._id);
+    //   return {
+    //     ...type,
+    //     numberOfFree: rule?.numberOfFree || 1,
+    //     maxIngrediant: rule?.maxIngrediant || 1,
+    //   };
+    // });
     const requestBody = {
       name: values.name,
       currency: values.currency,
@@ -127,16 +125,13 @@ const ModifyProduct = () => {
       type: types.map((item) => item._id).join(","),
       rules: values.rules
     };
-    console.log(requestBody)
-    console.log(values)
-    // console.log(JSON.stringify(requestBody, null, 2));
-    // console.log(requestBody);
-    // dispatch(
-    //   modifyProduct({
-    //     body: requestBody,
-    //     productId: data._id,
-    //   })
-    // );
+    // console.log(requestBody)
+    dispatch(
+      modifyProduct({
+        body: requestBody,
+        productId: data._id,
+      })
+    );
   };
   useEffect(() => {
     dispatch(fetchCategories());
@@ -150,7 +145,6 @@ const ModifyProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
-  // console.log(data);
   const [types, updateTypes] = useState(
     data.type.map((typ) => ({
       name: typ.name,
@@ -169,7 +163,6 @@ const ModifyProduct = () => {
     updateTypes(updatedTypes);
   };
   const handleNumberOfFreeChange = (typeId, value) => {
-    console.log(typeId, value);
     updateTypes((prevTypes) =>
       prevTypes.map((type) =>
         type._id === typeId ? { ...type, numberOfFree: parseInt(value) } : type
@@ -407,8 +400,8 @@ const ModifyProduct = () => {
                                 )?.numberOfFree || 1
                               }
                               onChange={(e) =>{
-                                // console.log(values.rules[index])
-                                values.rules[index].numberOfFree = parseInt(e.target.value);
+                                let test=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
+                                values.rules[test].numberOfFree = parseInt(e.target.value);
                                 handleNumberOfFreeChange(
                                   ingredients[0].type._id,
                                   e.target.value
@@ -424,7 +417,8 @@ const ModifyProduct = () => {
                                 )?.maxIngrediant || 1
                               }
                               onChange={(e) =>{
-                                values.rules[index].maxIngrediant = e.target.value;
+                                let test=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
+                                values.rules[test].maxIngrediant = e.target.value;
                                 handleMaxIngredientChange(
                                   ingredients[0].type._id,
                                   e.target.value

@@ -55,6 +55,7 @@ const Dashboard = () => {
   if (historyStatus === "fetchData") {
     histories.map((history) => {
       history.product.map((prod) => {
+        if (prod.plat) {
         if (prod.plat.category.name.toLowerCase() === "burgers") {
           burger++;
         } else if (prod.plat.category.name.toLowerCase() === "pizza") {
@@ -69,7 +70,7 @@ const Dashboard = () => {
           tacos++;
         } else if (prod.plat.category.name.toLowerCase() === "deserts") {
           desert++;
-        }
+        }}
         return null;
       });
       sales = histories.reduce(

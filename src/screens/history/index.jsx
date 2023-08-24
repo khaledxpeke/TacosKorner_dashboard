@@ -53,10 +53,16 @@ function Row(props) {
   const handleOpenAddons = () => {
     setAddonsOpen(!addonsOpen);
   };
+  const displayedAddonNames = new Set();
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } ,backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],}}>
+      <TableRow
+        sx={{
+          "& > *": { borderBottom: "unset" },
+          backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
+        }}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -66,25 +72,30 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row" >
+        <TableCell component="th" scope="row">
           {row.pack}
         </TableCell>
         <TableCell align="right">{row.total}</TableCell>
         <TableCell align="right">{row.boughtAt.substring(0, 10)}</TableCell>
       </TableRow>
-      <TableRow sx={{backgroundColor:colors.primary[700]  }}>
+      <TableRow sx={{ backgroundColor: colors.primary[700] }}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Plat
               </Typography>
-              <Table size="small" aria-label="purchases" >
+              <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontSize: '12px' }} > Plus d'information </TableCell>
+                    <TableCell sx={{ fontSize: "12px" }}>
+                      {" "}
+                      Plus d'information{" "}
+                    </TableCell>
                     <TableCell>Nom</TableCell>
-                    <TableCell align="right">Prix (DT)</TableCell>
+                    <TableCell align="right">
+                      Prix ({row.product[0].plat?.currency})
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -122,39 +133,67 @@ function Row(props) {
                             unmountOnExit
                             component="div"
                           >
-                            <Box sx={{ margin: 1 }}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                component="div"
-                              >
-                                Addons
-                              </Typography>
-                              <Table size="small" aria-label="addons">
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell align="right">
-                                      Price (DT)
-                                    </TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {productRow.addons.map((addonRow) => (
-                                    <TableRow key={addonRow?.name}>
-                                      <TableCell component="th" scope="row">
-                                        {addonRow?.name}
+                            {productRow.addons.length > 0 && (
+                              <Box sx={{ margin: 1 }}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  component="div"
+                                >
+                                  Addons
+                                </Typography>
+                                <Table size="small" aria-label="addons">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Name</TableCell>
+                                      <TableCell>
+                                        Prix unitaire(
+                                        {productRow.plat?.currency})
                                       </TableCell>
                                       <TableCell align="right">
-                                        {addonRow?.price
-                                          ? addonRow.price
-                                          : "Free"}
+                                        Total ({productRow.plat?.currency})
                                       </TableCell>
                                     </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            </Box>
+                                  </TableHead>
+
+                                  <TableBody>
+                                    {productRow.addons.map((addonRow) => {
+                                      const addonName = addonRow.name;
+                                      const count = productRow.addons.filter(
+                                        (addon) => addon.name === addonName
+                                      ).length;
+
+                                      if (!displayedAddonNames.has(addonName)) {
+                                        displayedAddonNames.add(addonName);
+
+                                        return (
+                                          <TableRow key={addonRow.name}>
+                                            <TableCell
+                                              component="th"
+                                              scope="row"
+                                            >
+                                              X{count} {addonRow.name}
+                                            </TableCell>
+                                            <TableCell>
+                                              {addonRow.price
+                                                ? addonRow.price
+                                                : "Free"}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                              {addonRow.price
+                                                ? addonRow.price * count
+                                                : "Free"}
+                                            </TableCell>
+                                          </TableRow>
+                                        );
+                                      } else {
+                                        return null;
+                                      }
+                                    })}
+                                  </TableBody>
+                                </Table>
+                              </Box>
+                            )}
                           </Collapse>
                         </TableCell>
                       </TableRow>
@@ -169,39 +208,67 @@ function Row(props) {
                             unmountOnExit
                             component="div"
                           >
-                            <Box sx={{ margin: 1 }}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                component="div"
-                              >
-                                Extras
-                              </Typography>
-                              <Table size="small" aria-label="extras">
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell align="right">
-                                      Price (DT)
-                                    </TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {productRow.extras.map((extraRow) => (
-                                    <TableRow key={extraRow?.name}>
-                                      <TableCell component="th" scope="row">
-                                        {extraRow?.name}
+                            {productRow.extras.length > 0 && (
+                              <Box sx={{ margin: 1 }}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  component="div"
+                                >
+                                  Extras
+                                </Typography>
+                                <Table size="small" aria-label="extras">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Name</TableCell>
+                                      <TableCell>
+                                        Prix unitaire(
+                                        {productRow.plat?.currency})
                                       </TableCell>
                                       <TableCell align="right">
-                                        {extraRow?.price
-                                          ? extraRow.price
-                                          : "Free"}
+                                        Total ({productRow.plat?.currency})
                                       </TableCell>
                                     </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            </Box>
+                                  </TableHead>
+                                  <TableBody>
+                                    {productRow.extras.map((extraRow) => {
+                                      const extraName = extraRow.name;
+                                      const count = productRow.extras.filter(
+                                        (extra) => extra.name === extraName
+                                      ).length;
+                                      if (
+                                        !displayedAddonNames.has(extraRow.name)
+                                      ) {
+                                        displayedAddonNames.add(extraRow.name);
+                                        return (
+                                          <TableRow key={extraRow.name}>
+                                            <TableCell
+                                              component="th"
+                                              scope="row"
+                                            >
+                                              X{count}
+                                              {extraRow.name}
+                                            </TableCell>
+                                            <TableCell>
+                                              {extraRow.price
+                                                ? extraRow.price
+                                                : "Free"}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                              {extraRow.price
+                                                ? extraRow.price * count
+                                                : "Free"}
+                                            </TableCell>
+                                          </TableRow>
+                                        );
+                                      } else {
+                                        return null;
+                                      }
+                                    })}
+                                  </TableBody>
+                                </Table>
+                              </Box>
+                            )}
                           </Collapse>
                         </TableCell>
                       </TableRow>
@@ -285,15 +352,36 @@ const History = () => {
         </Toolbar>
       </AppBar>
       <main>
-        <Paper sx={{ width: "100%", overflow: "hidden",mt :2 }}>
-          <TableContainer sx={{ maxHeight: 440}}>
-            <Table aria-label="sticky table" >
-              <TableHead style={{backgroundColor: isLightMode ? colors.primary[700]: colors.primary[700] }}>
-                <TableRow >
-                  <TableCell sx={{ fontSize: '17px',fontWeight:'bold' }} > Plus d'information </TableCell>
-                  <TableCell sx={{ fontSize: '17px',fontWeight:'bold' }}>Pack</TableCell>
-                  <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Total</TableCell>
-                  <TableCell align="right" sx={{ fontSize: '17px',fontWeight:'bold' }}>Acheté à</TableCell>
+        <Paper sx={{ width: "100%", overflow: "hidden", mt: 2 }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table aria-label="sticky table">
+              <TableHead
+                style={{
+                  backgroundColor: isLightMode
+                    ? colors.primary[700]
+                    : colors.primary[700],
+                }}
+              >
+                <TableRow>
+                  <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
+                    {" "}
+                    Plus d'information{" "}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
+                    Pack
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{ fontSize: "17px", fontWeight: "bold" }}
+                  >
+                    Total
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{ fontSize: "17px", fontWeight: "bold" }}
+                  >
+                    Acheté à
+                  </TableCell>
                 </TableRow>
               </TableHead>
               {!content && (
@@ -324,7 +412,10 @@ const History = () => {
               )}
             </Table>
           </TableContainer>
-          <TablePagination sx={{backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400]}}
+          <TablePagination
+            sx={{
+              backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
+            }}
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
             count={filteredHistory.length}

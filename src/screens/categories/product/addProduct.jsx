@@ -67,6 +67,7 @@ const AddProduct = () => {
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
   });
+  console.log(selectedTypes)
   const initialValues = {
     name: "",
     image: "",
@@ -76,6 +77,19 @@ const AddProduct = () => {
     currency: "",
     price: "",
     choice: "seul",
+  };
+  const [types, updateTypes] = useState([]);
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedTypes = Array.from(types);
+    const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
+    updatedTypes.splice(result.destination.index, 0, reorderedItem);
+
+    updateTypes(updatedTypes);
+    setSelectedTypes(updatedTypes);
   };
   const handleFormSubmit = (values) => {
     const selectedTypeIds = types.map((type) => type._id);
@@ -127,18 +141,7 @@ const AddProduct = () => {
     }
   }, [status, error, dispatch, navigate, success]);
 
-  const [types, updateTypes] = useState([]);
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const updatedTypes = Array.from(types);
-    const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
-    updatedTypes.splice(result.destination.index, 0, reorderedItem);
-
-    updateTypes(updatedTypes);
-  };
+ 
   const handleTypeCheckboxChange = (typeId, checked) => {
     if (checked) {
       // Check if the type is already in selectedTypes

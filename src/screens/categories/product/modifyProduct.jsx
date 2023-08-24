@@ -105,6 +105,13 @@ const ModifyProduct = () => {
           ? values.supplement.join(",")
           : []
         : [];
+        const reorderedRules = types.map((type) => {
+          const rule = values.rules.find((rule) => rule.type === type._id);
+          return {
+            ...rule,
+            type: type._id,
+          };
+        });
     // const updatedTypes = values.types.map((type) => {
     //   const rule = data.rules.find((rule) => rule.type === type._id);
     //   return {
@@ -123,7 +130,7 @@ const ModifyProduct = () => {
       choice: values.choice,
       ...(previewImage && { image: previewImage }),
       type: types.map((item) => item._id).join(","),
-      rules: values.rules
+      rules: reorderedRules
     };
     // console.log(requestBody)
     dispatch(
@@ -399,13 +406,32 @@ const ModifyProduct = () => {
                                   (type) => type.type === ingredients[0].type._id
                                 )?.free || 1
                               }
-                              onChange={(e) =>{
-                                let test=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
-                                values.rules[test].free = parseInt(e.target.value);
-                                handleNumberOfFreeChange(
-                                  ingredients[0].type._id,
-                                  e.target.value
-                                )
+                              onChange={(e) => {
+                                const updatedRules = [...values.rules];
+                                const ruleIndex = updatedRules.findIndex(
+                                  (rule) => rule.type === ingredients[0].type._id
+                                );
+                                  console.log(values.rules)
+                                if (ruleIndex !== -1) {
+                                  updatedRules[ruleIndex] = {
+                                    ...updatedRules[ruleIndex],
+                                    free: parseInt(e.target.value),
+                                  };
+                                } else {
+                                  updatedRules.push({
+                                    _id: index,
+                                    type: ingredients[0].type._id,
+                                    free: parseInt(e.target.value),
+                                    quantity: 1,
+                                  });
+                                }
+                            
+                                handleChange({
+                                  target: {
+                                    name: "rules",
+                                    value: updatedRules,
+                                  },
+                                });
                               }}
                             />
                             <TextField
@@ -417,8 +443,8 @@ const ModifyProduct = () => {
                                 )?.quantity || 1
                               }
                               onChange={(e) =>{
-                                let test=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
-                                values.rules[test].quantity = e.target.value;
+                                let ruleIndex=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
+                                values.rules[ruleIndex].quantity = e.target.value;
                                 handleMaxIngredientChange(
                                   ingredients[0].type._id,
                                   e.target.value

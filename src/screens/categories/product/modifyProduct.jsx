@@ -42,7 +42,7 @@ import {
 } from "../../../features/supplementSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
-import * as uuid from "uuid";
+// import * as uuid from "uuid";
 
 const ModifyProduct = () => {
   const location = useLocation();
@@ -74,7 +74,7 @@ const ModifyProduct = () => {
     return {
       name: typ.name,
       _id: typ._id,
-      free: rule?.free || 1,
+      free: rule?.free || 0,
       quantity: rule?.quantity || 1,
     };
   });
@@ -89,7 +89,7 @@ const ModifyProduct = () => {
     price: data.price,
     choice: data.choice,
     types: typesWithRules,
-    free: 1,
+    free: 0,
     quantity: 1,
     rules: data.rules,
   };
@@ -405,7 +405,7 @@ const ModifyProduct = () => {
                               defaultValue={
                                 data.rules.find(
                                   (type) => type.type === ingredients[0].type._id
-                                )?.free || 1
+                                )?.free || 0
                               }
                               onChange={(e) => {
                                 const updatedRules = [...values.rules];
@@ -467,7 +467,7 @@ const ModifyProduct = () => {
                                   updatedRules.push({
                                     _id: null,
                                     type: ingredients[0].type._id,
-                                    free: 1,
+                                    free: 0,
                                     quantity: parseInt(e.target.value),                                 
                                   });
                                 }                  

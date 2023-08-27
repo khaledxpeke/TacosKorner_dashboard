@@ -24,13 +24,13 @@ const AddType = () => {
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
     price: yup.number(),
-    currency: yup.string(),
+    isRequired: yup.boolean(),
   });
   const initialValues = {
     name: "",
     message: "",
     price: 0,
-    currency: "",
+    isRequired: false,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -45,7 +45,7 @@ const AddType = () => {
         free: values.free,
         quantity: values.quantity,
         price: values.price,
-        currency: values.currency,
+        isRequired: values.isRequired,
       })
     );
   };
@@ -125,22 +125,10 @@ const AddType = () => {
                 name="price"
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.currency}
-                name="currency"
-                error={!!touched.currency && !!errors.currency}
-                helperText={touched.currency && errors.currency}
-                sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
+                sx={{ gridColumn: "span 2"}}
               />
             </Box>
+            
             <Box display="flex" justifyContent="end" mt="20px" >
               <Button type="submit" color="secondary" variant="contained">
                 Créer une nouvelle type d'ingrédiant

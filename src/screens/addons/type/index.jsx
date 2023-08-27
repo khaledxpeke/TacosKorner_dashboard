@@ -15,6 +15,9 @@ import {
   Grid,
   Container,
   Button,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import {
   deleteType,
@@ -85,6 +88,7 @@ const Type = () => {
                 <TableCell>Nom</TableCell>
                 <TableCell>Message</TableCell>
                 <TableCell>Prix d'ingrediant</TableCell>
+                <TableCell>Required</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -94,7 +98,17 @@ const Type = () => {
                   <TableRow key={card._id}>
                     <TableCell>{card.name}</TableCell>
                     <TableCell>{card.message}</TableCell>
-                    <TableCell>{card.price} {card.currency}</TableCell>
+                    <TableCell>{card.price}</TableCell>
+                    <TableCell>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Required"
+                          checked={card.isRequired}
+                          onChange={() => {}}
+                        />
+                      </FormGroup>
+                    </TableCell>
                     <TableCell align="right">
                       <ButtonGroup
                         variant="contained"

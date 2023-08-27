@@ -28,13 +28,11 @@ const ModifyType = () => {
     free: yup.number(),
     quantity: yup.number(),
     price: yup.number(),
-    currency: yup.string()
   });
   const initialValues = {
     name: data.name,
     message: data.message,
     price: data.price,
-    currency: data.currency,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -46,7 +44,6 @@ const ModifyType = () => {
       name: values.name,
       message: values.message,
       price: values.price,
-      currency: values.currency,
     };
     dispatch(
       modifyType({
@@ -128,19 +125,6 @@ const ModifyType = () => {
                 name="price"
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.currency}
-                name="currency"
-                error={!!touched.currency && !!errors.currency}
-                helperText={touched.currency && errors.currency}
                 sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
               />
             </Box>

@@ -47,6 +47,8 @@ const AddIngrediant = () => {
   const initialValues = {
     name: "",
     image: "",
+    price:0,
+    currency:"",
     type: types.length > 0 ? types[0]._id : "",
   };
   const handleFormSubmit = (values) => {
@@ -56,6 +58,8 @@ const AddIngrediant = () => {
     }
     const formData = {
       name: values.name,
+      price: values.price,
+      currency: values.currency,
       image: previewImage,
       typeId: values.type,
     };
@@ -111,7 +115,33 @@ const AddIngrediant = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
+                sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
+              />
+               <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Prix"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.price}
+                name="price"
+                error={!!touched.price && !!errors.price}
+                helperText={touched.price && errors.price}
+                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Currency"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.currency}
+                name="currency"
+                error={!!touched.currency && !!errors.currency}
+                helperText={touched.currency && errors.currency}
+                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
               />
               <ImageInput
                 sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}

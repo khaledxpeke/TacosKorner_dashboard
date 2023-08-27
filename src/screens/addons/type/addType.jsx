@@ -23,16 +23,12 @@ const AddType = () => {
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
-    free: yup.number(),
-    quantity: yup.number(),
     price: yup.number(),
     currency: yup.string(),
   });
   const initialValues = {
     name: "",
     message: "",
-    free: 1,
-    quantity: 1,
     price: 0,
     currency: "",
   };
@@ -117,32 +113,6 @@ const AddType = () => {
                 value={values.message}
                 name="message"
                 sx={{ gridColumn: "span 2" }}
-              />
-               <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Nombre d'ingrédient gratuit"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.free}
-                name="free"
-                error={!!touched.free && !!errors.free}
-                helperText={touched.free && errors.free}
-                sx={{ gridColumn: "span 2"}}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Nombre d'ingrédient maximum"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.quantity}
-                name="quantity"
-                error={!!touched.quantity && !!errors.quantity}
-                helperText={touched.quantity && errors.quantity}
-                sx={{ gridColumn: "span 2"}}
               />
                 <TextField
                 fullWidth

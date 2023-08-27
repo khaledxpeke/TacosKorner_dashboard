@@ -33,8 +33,6 @@ const ModifyType = () => {
   const initialValues = {
     name: data.name,
     message: data.message,
-    free: data.free,
-    quantity: data.quantity,
     price: data.price,
     currency: data.currency,
   };
@@ -47,8 +45,6 @@ const ModifyType = () => {
     const requestBody = {
       name: values.name,
       message: values.message,
-      free: values.free|| 1,
-      quantity: values.quantity|| 1,
       price: values.price,
       currency: values.currency,
     };
@@ -120,32 +116,6 @@ const ModifyType = () => {
                 value={values.message}
                 name="message"
                 sx={{ gridColumn: "span 8" }}
-              />
-               <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Nombre d'ingrédient gratuit"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.free}
-                name="free"
-                error={!!touched.free && !!errors.free}
-                helperText={touched.free && errors.free}
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Nombre d'ingrédient maximum"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.quantity}
-                name="quantity"
-                error={!!touched.quantity && !!errors.quantity}
-                helperText={touched.quantity && errors.quantity}
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
               />
                <TextField
                 fullWidth

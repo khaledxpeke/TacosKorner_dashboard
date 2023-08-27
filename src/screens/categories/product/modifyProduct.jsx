@@ -42,6 +42,7 @@ import {
 } from "../../../features/supplementSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
+import * as uuid from "uuid";
 
 const ModifyProduct = () => {
   const location = useLocation();
@@ -169,21 +170,21 @@ const ModifyProduct = () => {
 
     updateTypes(updatedTypes);
   };
-  const handleNumberOfFreeChange = (typeId, value) => {
-    updateTypes((prevTypes) =>
-      prevTypes.map((type) =>
-        type._id === typeId ? { ...type, free: parseInt(value) } : type
-      )
-    );
-  };
+  // const handleNumberOfFreeChange = (typeId, value) => {
+  //   updateTypes((prevTypes) =>
+  //     prevTypes.map((type) =>
+  //       type._id === typeId ? { ...type, free: parseInt(value) } : type
+  //     )
+  //   );
+  // };
 
-  const handleMaxIngredientChange = (typeId, value) => {
-    updateTypes((prevTypes) =>
-      prevTypes.map((type) =>
-        type._id === typeId ? { ...type, quantity: parseInt(value) } : type
-      )
-    );
-  };
+  // const handleMaxIngredientChange = (typeId, value) => {
+  //   updateTypes((prevTypes) =>
+  //     prevTypes.map((type) =>
+  //       type._id === typeId ? { ...type, quantity: parseInt(value) } : type
+  //     )
+  //   );
+  // };
   return loading ? (
     <Loading />
   ) : (
@@ -399,7 +400,7 @@ const ModifyProduct = () => {
                         ) && (
                           <>
                             <TextField
-                              label="Number of Free"
+                              label="Free"
                               type="number"
                               defaultValue={
                                 data.rules.find(
@@ -419,7 +420,7 @@ const ModifyProduct = () => {
                                   };
                                 } else {
                                   updatedRules.push({
-                                    _id: index,
+                                    _id: null,
                                     type: ingredients[0].type._id,
                                     free: parseInt(e.target.value),
                                     quantity: 1,
@@ -435,20 +436,47 @@ const ModifyProduct = () => {
                               }}
                             />
                             <TextField
-                              label="Max Ingredient"
+                              label="Quantité"
                               type="number"
                               defaultValue={
                                 data.rules.find(
                                   (type) => type.type === ingredients[0].type._id
                                 )?.quantity || 1
                               }
-                              onChange={(e) =>{
-                                let ruleIndex=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
-                                values.rules[ruleIndex].quantity = e.target.value;
-                                handleMaxIngredientChange(
-                                  ingredients[0].type._id,
-                                  e.target.value
-                                )
+                              // onChange={(e) =>{
+                              //   let ruleIndex=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
+                              //   values.rules[ruleIndex].quantity = e.target.value;
+                              //   handleMaxIngredientChange(
+                              //     ingredients[0].type._id,
+                              //     e.target.value
+                              //   )
+                              // }}
+                              onChange={(e) => {
+                                const updatedRules = [...values.rules];
+                                // hadhyy rule.type ta3mel f error lazem nchoofoolha 7all
+                                const ruleIndex = updatedRules.findIndex(
+                                  (rule) => rule.type === ingredients[0].type._id
+                                );
+                                  console.log(values.rules)
+                                if (ruleIndex !== -1) {
+                                  updatedRules[ruleIndex] = {
+                                    ...updatedRules[ruleIndex],
+                                    quantity: parseInt(e.target.value),
+                                  };
+                                } else {
+                                  updatedRules.push({
+                                    _id: null,
+                                    type: ingredients[0].type._id,
+                                    free: 1,
+                                    quantity: parseInt(e.target.value),                                 
+                                  });
+                                }                  
+                                handleChange({
+                                  target: {
+                                    name: "rules",
+                                    value: updatedRules,
+                                  },
+                                });
                               }}
                             />
                           </>

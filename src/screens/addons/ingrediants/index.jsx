@@ -66,7 +66,7 @@ const Ingrediant = () => {
               content={
                 <>
                   Type: {card.type.name} <br />
-                  {card.price ? `Prix: ${card.price} ${card.currency}` : null}
+                  {card.price ? `Prix: ${card.price}` : null}
                 </>
               }
             />

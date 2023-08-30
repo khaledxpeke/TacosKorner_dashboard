@@ -63,7 +63,7 @@ const Drink = () => {
               data={card}
               handleModify={() => handleModify(card)}
               handleClickOpen={() => handleClickOpen(card._id)}
-              content={card.price + " " + card.currency}
+              content={card.price}
             />
           ))
         ) : (

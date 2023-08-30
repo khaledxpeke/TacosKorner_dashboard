@@ -33,18 +33,15 @@ const ModifySupplement = () => {
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
   });
   const initialValues = {
     name: data.name,
-    currency: data.currency,
     price: data.price,
   };
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
-      currency: values.currency,
       price: values.price,
       ...(previewImage && { image: previewImage }),
     };
@@ -128,19 +125,6 @@ const ModifySupplement = () => {
                 name="price"
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.currency}
-                name="currency"
-                error={!!touched.currency && !!errors.currency}
-                helperText={touched.currency && errors.currency}
                 sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
               />
             </Box>

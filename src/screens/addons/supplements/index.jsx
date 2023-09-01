@@ -62,7 +62,7 @@ const Supplement = () => {
               data={card}
               key={card._id}
               handleModify={() => handleModify(card)}
-              content={card.price + " " + card.currency}
+              content={card.price}
               handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))

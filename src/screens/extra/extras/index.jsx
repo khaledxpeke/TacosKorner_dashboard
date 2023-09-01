@@ -56,7 +56,7 @@ const Extra = () => {
               key={card._id}
               data={card}
               handleModify={() => handleModify(card)}
-              content={card.price + " " + card.currency}
+              content={card.price}
               handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))

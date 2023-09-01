@@ -1,4 +1,11 @@
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  TextField,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -25,14 +32,12 @@ const ModifyType = () => {
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
-    free: yup.number(),
-    quantity: yup.number(),
-    price: yup.number(),
+    isRequired: yup.boolean(),
   });
   const initialValues = {
     name: data.name,
     message: data.message,
-    price: data.price,
+    isRequired: data.isRequired,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -43,7 +48,7 @@ const ModifyType = () => {
     const requestBody = {
       name: values.name,
       message: values.message,
-      price: values.price,
+      isRequired: values.isRequired,
     };
     dispatch(
       modifyType({
@@ -114,19 +119,19 @@ const ModifyType = () => {
                 name="message"
                 sx={{ gridColumn: "span 8" }}
               />
-               <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.price}
-                name="price"
-                error={!!touched.price && !!errors.price}
-                helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 2", gridRow: "2 / span 1" }}
-              />
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={values.isRequired}
+                      onChange={handleChange}
+                      name="isRequired"
+                    />
+                  }
+                  label="requis"
+                  checked={initialValues.isRequired}
+                />
+              </FormGroup>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

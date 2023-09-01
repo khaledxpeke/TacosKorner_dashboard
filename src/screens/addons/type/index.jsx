@@ -3,6 +3,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   ButtonGroup,
   Table,
@@ -15,9 +17,6 @@ import {
   Grid,
   Container,
   Button,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 import {
   deleteType,
@@ -87,8 +86,7 @@ const Type = () => {
               <TableRow>
                 <TableCell>Nom</TableCell>
                 <TableCell>Message</TableCell>
-                <TableCell>Prix d'ingrediant</TableCell>
-                <TableCell>Required</TableCell>
+                <TableCell>Requis</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -98,16 +96,9 @@ const Type = () => {
                   <TableRow key={card._id}>
                     <TableCell>{card.name}</TableCell>
                     <TableCell>{card.message}</TableCell>
-                    <TableCell>{card.price}</TableCell>
                     <TableCell>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Required"
-                          checked={card.isRequired}
-                          onChange={() => {}}
-                        />
-                      </FormGroup>
+                      {card.isRequired ? <DoneOutlineIcon/> : <CloseIcon/>}
+                      
                     </TableCell>
                     <TableCell align="right">
                       <ButtonGroup

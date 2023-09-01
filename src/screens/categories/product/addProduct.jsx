@@ -66,8 +66,11 @@ const AddProduct = () => {
     currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
+    maxExtras: yup.number(),
+    maxDessert: yup.number(),
+    maxDrink: yup.number(),
   });
-  console.log(selectedTypes)
+  console.log(selectedTypes);
   const initialValues = {
     name: "",
     image: "",
@@ -77,6 +80,9 @@ const AddProduct = () => {
     currency: "",
     price: "",
     choice: "seul",
+    maxExtras: 1,
+    maxDessert: 1,
+    maxDrink: 1,
   };
   const [types, updateTypes] = useState([]);
   const onDragEnd = (result) => {
@@ -122,6 +128,9 @@ const AddProduct = () => {
           choice: values.choice,
           type: selectedTypeIds,
           rules: JSON.stringify(rules),
+          maxExtras: values.maxExtras,
+          maxDessert: values.maxDessert,
+          maxDrink: values.maxDrink,
         },
         categoryId: values.category,
       })
@@ -141,12 +150,11 @@ const AddProduct = () => {
     }
   }, [status, error, dispatch, navigate, success]);
 
- 
   const handleTypeCheckboxChange = (typeId, checked) => {
     if (checked) {
       // Check if the type is already in selectedTypes
       const typeExists = selectedTypes.some((type) => type._id === typeId);
-  
+
       // If the type doesn't exist in selectedTypes, add it
       if (!typeExists) {
         setSelectedTypes((prevSelectedTypes) => [
@@ -422,6 +430,45 @@ const AddProduct = () => {
                       </FormControl>
                     )
                   )}
+                  <TextField
+                       fullWidth
+                       variant="filled"
+                       type="number"
+                       label="Max Extras"
+                       onBlur={handleBlur}
+                       onChange={handleChange}
+                       value={values.maxExtras}
+                       name="maxExtras"
+                       error={!!touched.maxExtras && !!errors.maxExtras}
+                       helperText={touched.maxExtras && errors.maxExtras}
+                       sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                     />
+                     <TextField
+                     fullWidth
+                     variant="filled"
+                     type="number"
+                     label="Max Dessert"
+                     onBlur={handleBlur}
+                     onChange={handleChange}
+                     value={values.maxDessert}
+                     name="maxDessert"
+                     error={!!touched.maxDessert && !!errors.maxDessert}
+                     helperText={touched.maxDessert && errors.maxDessert}
+                     sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                   />
+                   <TextField
+                   fullWidth
+                   variant="filled"
+                   type="number"
+                   label="max Drink"
+                   onBlur={handleBlur}
+                   onChange={handleChange}
+                   value={values.maxDrink}
+                   name="maxDrink"
+                   error={!!touched.maxDrink && !!errors.maxDrink}
+                   helperText={touched.maxDrink && errors.maxDrink}
+                   sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                 />
                 </>
               )}
               {values.choice === "multiple" && (

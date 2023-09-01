@@ -68,6 +68,9 @@ const ModifyProduct = () => {
     currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
+    maxExtras: yup.number(),
+    maxDessert: yup.number(),
+    maxDrink: yup.number(),
   });
   const typesWithRules = data.type.map((typ) => {
     const rule = data.rules.find((rule) => rule.type === typ._id);
@@ -92,27 +95,30 @@ const ModifyProduct = () => {
     free: 0,
     quantity: 1,
     rules: data.rules,
+    maxExtras: data.maxExtras || 1,
+    maxDessert: data.maxDessert || 1,
+    maxDrink: data.maxDrink || 1,
   };
   const handleFormSubmit = (values) => {
     const ingrediants =
-    values.choice === "multiple"
-    ? values.ingrediant.length > 0
-      ? values.ingrediant.map((ingredient) => ingredient._id).join(",")
-      : []
-    : [];
+      values.choice === "multiple"
+        ? values.ingrediant.length > 0
+          ? values.ingrediant.map((ingredient) => ingredient._id).join(",")
+          : []
+        : [];
     const supplements =
       values.choice === "multiple"
         ? values.supplement.length > 0
           ? values.supplement.join(",")
           : []
         : [];
-        const reorderedRules = types.map((type) => {
-          const rule = values.rules.find((rule) => rule.type === type._id);
-          return {
-            ...rule,
-            type: type._id,
-          };
-        });
+    const reorderedRules = types.map((type) => {
+      const rule = values.rules.find((rule) => rule.type === type._id);
+      return {
+        ...rule,
+        type: type._id,
+      };
+    });
     // const updatedTypes = values.types.map((type) => {
     //   const rule = data.rules.find((rule) => rule.type === type._id);
     //   return {
@@ -131,7 +137,10 @@ const ModifyProduct = () => {
       choice: values.choice,
       ...(previewImage && { image: previewImage }),
       type: types.map((item) => item._id).join(","),
-      rules: reorderedRules
+      rules: reorderedRules,
+      maxExtras: values.maxExtras,
+      maxDessert: values.maxDessert,
+      maxDrink: values.maxDrink,
     };
     // console.log(requestBody)
     dispatch(
@@ -321,7 +330,7 @@ const ModifyProduct = () => {
               {values.choice === "multiple" && (
                 <>
                   {Object.entries(ingrediantsByType).map(
-                    ([typeName, ingredients],index) => (
+                    ([typeName, ingredients], index) => (
                       <FormControl
                         key={typeName}
                         variant="filled"
@@ -404,15 +413,17 @@ const ModifyProduct = () => {
                               type="number"
                               defaultValue={
                                 data.rules.find(
-                                  (type) => type.type === ingredients[0].type._id
+                                  (type) =>
+                                    type.type === ingredients[0].type._id
                                 )?.free || 0
                               }
                               onChange={(e) => {
                                 const updatedRules = [...values.rules];
                                 const ruleIndex = updatedRules.findIndex(
-                                  (rule) => rule.type === ingredients[0].type._id
+                                  (rule) =>
+                                    rule.type === ingredients[0].type._id
                                 );
-                                  console.log(values.rules)
+                                console.log(values.rules);
                                 if (ruleIndex !== -1) {
                                   updatedRules[ruleIndex] = {
                                     ...updatedRules[ruleIndex],
@@ -426,7 +437,7 @@ const ModifyProduct = () => {
                                     quantity: 1,
                                   });
                                 }
-                            
+
                                 handleChange({
                                   target: {
                                     name: "rules",
@@ -440,7 +451,8 @@ const ModifyProduct = () => {
                               type="number"
                               defaultValue={
                                 data.rules.find(
-                                  (type) => type.type === ingredients[0].type._id
+                                  (type) =>
+                                    type.type === ingredients[0].type._id
                                 )?.quantity || 1
                               }
                               // onChange={(e) =>{
@@ -455,9 +467,10 @@ const ModifyProduct = () => {
                                 const updatedRules = [...values.rules];
                                 // hadhyy rule.type ta3mel f error lazem nchoofoolha 7all
                                 const ruleIndex = updatedRules.findIndex(
-                                  (rule) => rule.type === ingredients[0].type._id
+                                  (rule) =>
+                                    rule.type === ingredients[0].type._id
                                 );
-                                  console.log(values.rules)
+                                console.log(values.rules);
                                 if (ruleIndex !== -1) {
                                   updatedRules[ruleIndex] = {
                                     ...updatedRules[ruleIndex],
@@ -468,9 +481,9 @@ const ModifyProduct = () => {
                                     _id: null,
                                     type: ingredients[0].type._id,
                                     free: 0,
-                                    quantity: parseInt(e.target.value),                                 
+                                    quantity: parseInt(e.target.value),
                                   });
-                                }                  
+                                }
                                 handleChange({
                                   target: {
                                     name: "rules",
@@ -484,6 +497,45 @@ const ModifyProduct = () => {
                       </FormControl>
                     )
                   )}
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="number"
+                    label="Max Extras"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.maxExtras}
+                    name="maxExtras"
+                    error={!!touched.maxExtras && !!errors.maxExtras}
+                    helperText={touched.maxExtras && errors.maxExtras}
+                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="number"
+                    label="Max Dessert"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.maxDessert}
+                    name="maxDessert"
+                    error={!!touched.maxDessert && !!errors.maxDessert}
+                    helperText={touched.maxDessert && errors.maxDessert}
+                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="number"
+                    label="max Drink"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.maxDrink}
+                    name="maxDrink"
+                    error={!!touched.maxDrink && !!errors.maxDrink}
+                    helperText={touched.maxDrink && errors.maxDrink}
+                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                  />
                 </>
               )}
               <FormControl

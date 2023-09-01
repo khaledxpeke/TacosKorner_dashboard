@@ -295,6 +295,7 @@ const History = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
   const isLightMode = theme.palette.mode === "light";
+  console.log(histories);
   let content;
   let filteredHistory = [];
   if (historyStatus === "loading") {

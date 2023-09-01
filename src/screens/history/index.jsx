@@ -155,14 +155,20 @@ function Row(props) {
                                       </TableCell>
                                     </TableRow>
                                   </TableHead>
-
                                   <TableBody>
                                     {productRow.addons.map((addonRow) => {
                                       const addonName = addonRow.name;
                                       const count = productRow.addons.filter(
                                         (addon) => addon.name === addonName
                                       ).length;
-
+                                      // const totalPrice = 0.0;
+                                      // console.log(productRow);
+                                      // if(addonRow.type!=null){
+                                      //   const startIndex = productRow.plat?.['rules'].find(
+                                      //     (type) => type['type']['name'] === addonRow.type['name']
+                                      //   );
+                                      //   console.log(startIndex);
+                                      // }
                                       if (!displayedAddonNames.has(addonName)) {
                                         displayedAddonNames.add(addonName);
 

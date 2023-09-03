@@ -155,40 +155,23 @@ function Row(props) {
                                       </TableCell>
                                     </TableRow>
                                   </TableHead>
-
                                   <TableBody>
                                     {productRow.addons.map((addonRow) => {
-                                      const addonName = addonRow.name;
-                                      const count = productRow.addons.filter(
-                                        (addon) => addon.name === addonName
-                                      ).length;
-
-                                      if (!displayedAddonNames.has(addonName)) {
-                                        displayedAddonNames.add(addonName);
-
-                                        return (
-                                          <TableRow key={addonRow.name}>
-                                            <TableCell
-                                              component="th"
-                                              scope="row"
-                                            >
-                                              X{count} {addonRow.name}
-                                            </TableCell>
-                                            <TableCell>
-                                              {addonRow.price
-                                                ? addonRow.price
-                                                : "Free"}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              {addonRow.price
-                                                ? addonRow.price * count
-                                                : "Free"}
-                                            </TableCell>
-                                          </TableRow>
-                                        );
-                                      } else {
-                                        return null;
-                                      }
+                                      return (
+                                        <TableRow key={addonRow.name}>
+                                          <TableCell component="th" scope="row">
+                                            X{addonRow.count} {addonRow.name}
+                                          </TableCell>
+                                          <TableCell>
+                                            {addonRow.pu ? addonRow.pu : "Free"}
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            {addonRow.total
+                                              ? addonRow.total
+                                              : "Free"}
+                                          </TableCell>
+                                        </TableRow>
+                                      );
                                     })}
                                   </TableBody>
                                 </Table>
@@ -246,8 +229,7 @@ function Row(props) {
                                               component="th"
                                               scope="row"
                                             >
-                                              X{count}
-                                              {extraRow.name}
+                                              X{count} {extraRow.name}
                                             </TableCell>
                                             <TableCell>
                                               {extraRow.price

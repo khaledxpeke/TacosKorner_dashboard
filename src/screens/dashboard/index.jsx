@@ -184,7 +184,7 @@ const Dashboard = () => {
                 title={surPlace}
                 subtitle=" Sur place"
                 progress={surPlacePercentage / 100}
-                increase={surPlacePercentage + " %"}
+                increase={surPlacePercentage.toFixed(2) + " %"}
                 icon={
                   <TrafficIcon
                     sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -203,7 +203,7 @@ const Dashboard = () => {
                 title={importer}
                 subtitle="Impoter"
                 progress={importerPercentage / 100}
-                increase={importerPercentage + " %"}
+                increase={importerPercentage.toFixed(2) + " %"}
                 icon={
                   <TrafficIcon
                     sx={{ color: colors.greenAccent[600], fontSize: "26px" }}

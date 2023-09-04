@@ -9,6 +9,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Stack,
   TextField,
 } from "@mui/material";
 import { Formik } from "formik";
@@ -72,8 +73,8 @@ const ModifyProduct = () => {
     maxDessert: yup.number(),
     maxDrink: yup.number(),
   });
-  const typesWithRules = data.type.map((typ) => {
-    const rule = data.rules.find((rule) => rule.type === typ._id);
+  const typesWithRules = data?.type.map((typ) => {
+    const rule = data?.rules.find((rule) => rule?.type === typ._id);
     return {
       name: typ.name,
       _id: typ._id,
@@ -119,14 +120,6 @@ const ModifyProduct = () => {
         type: type._id,
       };
     });
-    // const updatedTypes = values.types.map((type) => {
-    //   const rule = data.rules.find((rule) => rule.type === type._id);
-    //   return {
-    //     ...type,
-    //     free: rule?.free || 1,
-    //     quantity: rule?.quantity || 1,
-    //   };
-    // });
     const requestBody = {
       name: values.name,
       currency: values.currency,
@@ -142,7 +135,6 @@ const ModifyProduct = () => {
       maxDessert: values.maxDessert,
       maxDrink: values.maxDrink,
     };
-    // console.log(requestBody)
     dispatch(
       modifyProduct({
         body: requestBody,
@@ -179,21 +171,6 @@ const ModifyProduct = () => {
 
     updateTypes(updatedTypes);
   };
-  // const handleNumberOfFreeChange = (typeId, value) => {
-  //   updateTypes((prevTypes) =>
-  //     prevTypes.map((type) =>
-  //       type._id === typeId ? { ...type, free: parseInt(value) } : type
-  //     )
-  //   );
-  // };
-
-  // const handleMaxIngredientChange = (typeId, value) => {
-  //   updateTypes((prevTypes) =>
-  //     prevTypes.map((type) =>
-  //       type._id === typeId ? { ...type, quantity: parseInt(value) } : type
-  //     )
-  //   );
-  // };
   return loading ? (
     <Loading />
   ) : (
@@ -263,7 +240,6 @@ const ModifyProduct = () => {
                 sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
               />
               <ImageInput
-                sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -329,13 +305,21 @@ const ModifyProduct = () => {
 
               {values.choice === "multiple" && (
                 <>
+                <Stack
+                    flexWrap="wrap"
+                    flexDirection="row"
+                    sx={{
+                      gridColumn: "span 4",
+                      gridRow: "5 / span 1",
+                      gap: "30px",
+                    }}
+                  >
                   {Object.entries(ingrediantsByType).map(
                     ([typeName, ingredients], index) => (
                       <FormControl
                         key={typeName}
                         variant="filled"
-                        fullWidth
-                        sx={{ gridColumn: "span 1", gridRow: "5 / span 1" }}
+                        sx={{ minWidth: "200px" }}
                       >
                         <InputLabel id="ingrediants">
                           Selectioner les {typeName}
@@ -455,20 +439,12 @@ const ModifyProduct = () => {
                                     type.type === ingredients[0].type._id
                                 )?.quantity || 1
                               }
-                              // onChange={(e) =>{
-                              //   let ruleIndex=data.rules.findIndex((type)=>type.type===ingredients[0].type._id);
-                              //   values.rules[ruleIndex].quantity = e.target.value;
-                              //   handleMaxIngredientChange(
-                              //     ingredients[0].type._id,
-                              //     e.target.value
-                              //   )
-                              // }}
                               onChange={(e) => {
                                 const updatedRules = [...values.rules];
                                 // hadhyy rule.type ta3mel f error lazem nchoofoolha 7all
                                 const ruleIndex = updatedRules.findIndex(
                                   (rule) =>
-                                    rule.type === ingredients[0].type._id
+                                    rule?.type === ingredients?.[0]?.type._id
                                 );
                                 console.log(values.rules);
                                 if (ruleIndex !== -1) {
@@ -497,8 +473,17 @@ const ModifyProduct = () => {
                       </FormControl>
                     )
                   )}
+                  </Stack>
+                  <Stack
+                    flexDirection="row"
+                    flexWrap="wrap"
+                    sx={{
+                      gridColumn: "span 4",
+                      gridRow: "6 / span 1",
+                      gap: "30px",
+                    }}
+                  >
                   <TextField
-                    fullWidth
                     variant="filled"
                     type="number"
                     label="Max Extras"
@@ -508,10 +493,9 @@ const ModifyProduct = () => {
                     name="maxExtras"
                     error={!!touched.maxExtras && !!errors.maxExtras}
                     helperText={touched.maxExtras && errors.maxExtras}
-                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                    sx={{ minWidth: "200px" }}
                   />
                   <TextField
-                    fullWidth
                     variant="filled"
                     type="number"
                     label="Max Dessert"
@@ -521,10 +505,9 @@ const ModifyProduct = () => {
                     name="maxDessert"
                     error={!!touched.maxDessert && !!errors.maxDessert}
                     helperText={touched.maxDessert && errors.maxDessert}
-                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                    sx={{ minWidth: "200px" }}
                   />
                   <TextField
-                    fullWidth
                     variant="filled"
                     type="number"
                     label="max Drink"
@@ -534,8 +517,9 @@ const ModifyProduct = () => {
                     name="maxDrink"
                     error={!!touched.maxDrink && !!errors.maxDrink}
                     helperText={touched.maxDrink && errors.maxDrink}
-                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                    sx={{ minWidth: "200px" }}
                   />
+                  </Stack>
                 </>
               )}
               <FormControl

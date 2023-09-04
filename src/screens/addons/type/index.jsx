@@ -3,7 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   ButtonGroup,
@@ -97,7 +97,7 @@ const Type = () => {
                     <TableCell>{card.name}</TableCell>
                     <TableCell>{card.message}</TableCell>
                     <TableCell>
-                      {card.isRequired ? <DoneOutlineIcon/> : <CloseIcon/>}
+                      {card.isRequired ? <DoneIcon/> : <CloseIcon/>}
                       
                     </TableCell>
                     <TableCell align="right">

@@ -1,5 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
+  FormControlLabel,
   Table,
   TableBody,
   TableCell,
@@ -17,6 +18,7 @@ const ReorderType = ({onDragEnd,types}) => {
   const colors = tokens(theme.palette.mode);
   return (
     <TableContainer>
+      Réorganiser les ingrédients:
       <Table
         sx={{
           backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],

@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -10,6 +9,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Stack,
   TextField,
 } from "@mui/material";
 import { Formik } from "formik";
@@ -150,25 +150,6 @@ const AddProduct = () => {
     }
   }, [status, error, dispatch, navigate, success]);
 
-  const handleTypeCheckboxChange = (typeId, checked) => {
-    if (checked) {
-      // Check if the type is already in selectedTypes
-      const typeExists = selectedTypes.some((type) => type._id === typeId);
-
-      // If the type doesn't exist in selectedTypes, add it
-      if (!typeExists) {
-        setSelectedTypes((prevSelectedTypes) => [
-          ...prevSelectedTypes,
-          { _id: typeId, free: 1, quantity: 1 },
-        ]);
-      }
-    } else {
-      setSelectedTypes((prevSelectedTypes) =>
-        prevSelectedTypes.filter((type) => type._id !== typeId)
-      );
-    }
-  };
-
   const handleNumberOfFreeChange = (typeId, value) => {
     updateTypes((prevTypes) =>
       prevTypes.map((type) =>
@@ -252,7 +233,6 @@ const AddProduct = () => {
                 sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
               />
               <ImageInput
-                sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -316,144 +296,162 @@ const AddProduct = () => {
               )}
               {values.choice === "multiple" && (
                 <>
-                  {Object.entries(ingrediantsByType).map(
-                    ([typeName, ingredients]) => (
-                      <FormControl
-                        key={typeName}
-                        variant="filled"
-                        fullWidth
-                        sx={{ gridColumn: "span 1", gridRow: "5 / span 1"}}
-                      >
-                        <InputLabel id="ingrediant">{typeName}</InputLabel>
-
-                        <Select
-                          name="ingrediant"
-                          labelId="ingrediants"
-                          id="ingrediant"
-                          value={values.ingrediant}
-                          multiple
-                          label="ingrediant"
-                          onChange={(event) => {
-                            // Update the ingrediant field in the form with the selected ingredient IDs
-                            const selectedIngredientIds =
-                              event.target.value || [];
-                            const selectedTypes = [];
-                            Object.entries(ingrediantsByType).forEach(
-                              ([typeName, ingredients]) => {
-                                const selectedIngredientsOfType =
-                                  ingredients.filter((ingredient) =>
-                                    selectedIngredientIds.includes(
-                                      ingredient._id
-                                    )
-                                  );
-                                if (selectedIngredientsOfType.length > 0) {
-                                  selectedTypes.push({
-                                    name: typeName,
-                                    _id: selectedIngredientsOfType[0].type._id,
-                                  });
-                                }
-                              }
-                            );
-                            updateTypes(selectedTypes);
-                            handleChange(event);
-                          }}
-                          sx={{ gridColumn: "span 1" }}
-                          MenuProps={{
-                            PaperProps: {
-                              style: {
-                                maxHeight: "300px",
-                              },
-                            },
-                          }}
+                  <Stack
+                    flexWrap="wrap"
+                    flexDirection="row"
+                    sx={{
+                      gridColumn: "span 4",
+                      gridRow: "5 / span 1",
+                      gap: "30px",
+                    }}
+                  >
+                    {Object.entries(ingrediantsByType).map(
+                      ([typeName, ingredients]) => (
+                        <FormControl
+                          key={typeName}
+                          variant="filled"
+                          sx={{ minWidth: "200px" }}
                         >
-                          {ingredients.map((ingredient) => (
-                            <MenuItem
-                              key={ingredient._id}
-                              value={ingredient._id}
-                            >
-                              {ingredient.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                          <InputLabel id="ingrediant">{typeName}</InputLabel>
+                          <Select
+                            name="ingrediant"
+                            labelId="ingrediants"
+                            id="ingrediant"
+                            value={values.ingrediant}
+                            multiple
+                            label="ingrediant"
+                            onChange={(event) => {
+                              // Update the ingrediant field in the form with the selected ingredient IDs
+                              const selectedIngredientIds =
+                                event.target.value || [];
+                              const selectedTypes = [];
+                              Object.entries(ingrediantsByType).forEach(
+                                ([typeName, ingredients]) => {
+                                  const selectedIngredientsOfType =
+                                    ingredients.filter((ingredient) =>
+                                      selectedIngredientIds.includes(
+                                        ingredient._id
+                                      )
+                                    );
+                                  if (selectedIngredientsOfType.length > 0) {
+                                    selectedTypes.push({
+                                      name: typeName,
+                                      _id: selectedIngredientsOfType[0].type
+                                        ._id,
+                                    });
+                                  }
+                                }
+                              );
+                              updateTypes(selectedTypes);
+                              handleChange(event);
+                            }}
+                            sx={{ gridColumn: "span 1" }}
+                            MenuProps={{
+                              PaperProps: {
+                                style: {
+                                  maxHeight: "300px",
+                                },
+                              },
+                            }}
+                          >
+                            {ingredients.map((ingredient) => (
+                              <MenuItem
+                                key={ingredient._id}
+                                value={ingredient._id}
+                              >
+                                {ingredient.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
 
-                        {types.some(
-                          (type) => type._id === ingredients[0].type._id
-                        ) && (
-                          <>
-                            <TextField
-                              label="Number of Free"
-                              type="number"
-                              value={
-                                types.find(
-                                  (type) => type._id === ingredients[0].type._id
-                                )?.free || ""
-                              }
-                              onChange={(e) =>
-                                handleNumberOfFreeChange(
-                                  ingredients[0].type._id,
-                                  e.target.value
-                                )
-                              }
-                            />
-                            <TextField
-                              label="Max Ingredient"
-                              type="number"
-                              value={
-                                types.find(
-                                  (type) => type._id === ingredients[0].type._id
-                                )?.quantity || ""
-                              }
-                              onChange={(e) =>
-                                handleMaxIngredientChange(
-                                  ingredients[0].type._id,
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </>
-                        )}
-                      </FormControl>
-                    )
-                  )}
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Max Extras"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.maxExtras}
-                    name="maxExtras"
-                    error={!!touched.maxExtras && !!errors.maxExtras}
-                    helperText={touched.maxExtras && errors.maxExtras}
-                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Max Dessert"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.maxDessert}
-                    name="maxDessert"
-                    error={!!touched.maxDessert && !!errors.maxDessert}
-                    helperText={touched.maxDessert && errors.maxDessert}
-                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="max Drink"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.maxDrink}
-                    name="maxDrink"
-                    error={!!touched.maxDrink && !!errors.maxDrink}
-                    helperText={touched.maxDrink && errors.maxDrink}
-                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
-                  />
+                          {types.some(
+                            (type) => type._id === ingredients[0].type._id
+                          ) && (
+                            <>
+                              <TextField
+                                label="Number of Free"
+                                type="number"
+                                value={
+                                  types.find(
+                                    (type) =>
+                                      type._id === ingredients[0].type._id
+                                  )?.free || ""
+                                }
+                                onChange={(e) =>
+                                  handleNumberOfFreeChange(
+                                    ingredients[0].type._id,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <TextField
+                                label="Max Ingredient"
+                                type="number"
+                                value={
+                                  types.find(
+                                    (type) =>
+                                      type._id === ingredients[0].type._id
+                                  )?.quantity || ""
+                                }
+                                onChange={(e) =>
+                                  handleMaxIngredientChange(
+                                    ingredients[0].type._id,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </>
+                          )}
+                        </FormControl>
+                      )
+                    )}
+                  </Stack>
+                  <Stack
+                    flexDirection="row"
+                    flexWrap="wrap"
+                    sx={{
+                      gridColumn: "span 4",
+                      gridRow: "6 / span 1",
+                      gap: "30px",
+                    }}
+                  >
+                    <TextField
+                      variant="filled"
+                      type="number"
+                      label="Max Extras"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.maxExtras}
+                      name="maxExtras"
+                      error={!!touched.maxExtras && !!errors.maxExtras}
+                      helperText={touched.maxExtras && errors.maxExtras}
+                      sx={{ minWidth: "200px" }}
+                    />
+                    <TextField
+                      variant="filled"
+                      type="number"
+                      label="Max Dessert"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.maxDessert}
+                      name="maxDessert"
+                      error={!!touched.maxDessert && !!errors.maxDessert}
+                      helperText={touched.maxDessert && errors.maxDessert}
+                      sx={{ minWidth: "200px" }}
+                    />
+                    <TextField
+                      variant="filled"
+                      type="number"
+                      label="max Drink"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.maxDrink}
+                      name="maxDrink"
+                      error={!!touched.maxDrink && !!errors.maxDrink}
+                      helperText={touched.maxDrink && errors.maxDrink}
+                      sx={{ minWidth: "200px" }}
+                    />
+                  </Stack>
                 </>
               )}
               {values.choice === "multiple" && (

@@ -32,7 +32,7 @@ const Dashboard = () => {
   const recents = useSelector(selectRecentHistory);
   const recentsError = useSelector(getRecentHistoryError);
   const recentsStatus = useSelector(getRecentHistoryStatus);
-
+console.log(histories);
   let content;
   let content2;
   let sales=0;

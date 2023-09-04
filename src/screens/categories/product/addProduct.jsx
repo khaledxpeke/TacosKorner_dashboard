@@ -208,7 +208,6 @@ const AddProduct = () => {
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
@@ -323,25 +322,10 @@ const AddProduct = () => {
                         key={typeName}
                         variant="filled"
                         fullWidth
-                        sx={{ gridColumn: "span 1", gridRow: "5 / span 1" }}
+                        sx={{ gridColumn: "span 1", gridRow: "5 / span 1"}}
                       >
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name={`type_${typeName}`}
-                              checked={types.some(
-                                (type) => type._id === ingredients[0].type._id
-                              )}
-                              onChange={(e) =>
-                                handleTypeCheckboxChange(
-                                  ingredients[0].type._id,
-                                  e.target.checked
-                                )
-                              }
-                            />
-                          }
-                          label={`Ajouter un ${typeName} et son règle`}
-                        />
+                        <InputLabel id="ingrediant">{typeName}</InputLabel>
+
                         <Select
                           name="ingrediant"
                           labelId="ingrediants"
@@ -391,6 +375,7 @@ const AddProduct = () => {
                             </MenuItem>
                           ))}
                         </Select>
+
                         {types.some(
                           (type) => type._id === ingredients[0].type._id
                         ) && (
@@ -431,44 +416,44 @@ const AddProduct = () => {
                     )
                   )}
                   <TextField
-                       fullWidth
-                       variant="filled"
-                       type="number"
-                       label="Max Extras"
-                       onBlur={handleBlur}
-                       onChange={handleChange}
-                       value={values.maxExtras}
-                       name="maxExtras"
-                       error={!!touched.maxExtras && !!errors.maxExtras}
-                       helperText={touched.maxExtras && errors.maxExtras}
-                       sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
-                     />
-                     <TextField
-                     fullWidth
-                     variant="filled"
-                     type="number"
-                     label="Max Dessert"
-                     onBlur={handleBlur}
-                     onChange={handleChange}
-                     value={values.maxDessert}
-                     name="maxDessert"
-                     error={!!touched.maxDessert && !!errors.maxDessert}
-                     helperText={touched.maxDessert && errors.maxDessert}
-                     sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
-                   />
-                   <TextField
-                   fullWidth
-                   variant="filled"
-                   type="number"
-                   label="max Drink"
-                   onBlur={handleBlur}
-                   onChange={handleChange}
-                   value={values.maxDrink}
-                   name="maxDrink"
-                   error={!!touched.maxDrink && !!errors.maxDrink}
-                   helperText={touched.maxDrink && errors.maxDrink}
-                   sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
-                 />
+                    fullWidth
+                    variant="filled"
+                    type="number"
+                    label="Max Extras"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.maxExtras}
+                    name="maxExtras"
+                    error={!!touched.maxExtras && !!errors.maxExtras}
+                    helperText={touched.maxExtras && errors.maxExtras}
+                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="number"
+                    label="Max Dessert"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.maxDessert}
+                    name="maxDessert"
+                    error={!!touched.maxDessert && !!errors.maxDessert}
+                    helperText={touched.maxDessert && errors.maxDessert}
+                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="number"
+                    label="max Drink"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.maxDrink}
+                    name="maxDrink"
+                    error={!!touched.maxDrink && !!errors.maxDrink}
+                    helperText={touched.maxDrink && errors.maxDrink}
+                    sx={{ gridColumn: "span 1", gridRow: "6 / span 1" }}
+                  />
                 </>
               )}
               {values.choice === "multiple" && (

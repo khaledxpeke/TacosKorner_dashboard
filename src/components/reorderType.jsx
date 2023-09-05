@@ -1,6 +1,5 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
-  FormControlLabel,
   Table,
   TableBody,
   TableCell,

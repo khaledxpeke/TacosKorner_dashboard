@@ -369,7 +369,7 @@ const AddProduct = () => {
                           ) && (
                             <>
                               <TextField
-                                label="Number of Free"
+                                label="Nombre d'ingrediant gratuit"
                                 type="number"
                                 value={
                                   types.find(
@@ -385,7 +385,7 @@ const AddProduct = () => {
                                 }
                               />
                               <TextField
-                                label="Max Ingredient"
+                                label="Quantité d'ingrediant"
                                 type="number"
                                 value={
                                   types.find(

@@ -393,7 +393,7 @@ const ModifyProduct = () => {
                         ) && (
                           <>
                             <TextField
-                              label="Free"
+                              label="Nombre d'ingrediant gratuit"
                               type="number"
                               defaultValue={
                                 data.rules.find(
@@ -431,7 +431,7 @@ const ModifyProduct = () => {
                               }}
                             />
                             <TextField
-                              label="Quantité"
+                              label="Quantité d'ingrediant"
                               type="number"
                               defaultValue={
                                 data.rules.find(

@@ -53,7 +53,6 @@ function Row(props) {
   const handleOpenAddons = () => {
     setAddonsOpen(!addonsOpen);
   };
-  const displayedAddonNames = new Set();
 
   return (
     <React.Fragment>
@@ -163,12 +162,12 @@ function Row(props) {
                                             X{addonRow.count} {addonRow.name}
                                           </TableCell>
                                           <TableCell>
-                                            {addonRow.pu ? addonRow.pu : "Free"}
+                                            {addonRow.total ? addonRow.pu : "--"}
                                           </TableCell>
                                           <TableCell align="right">
                                             {addonRow.total
                                               ? addonRow.total
-                                              : "Free"}
+                                              : "Gratuit"}
                                           </TableCell>
                                         </TableRow>
                                       );
@@ -215,37 +214,25 @@ function Row(props) {
                                   </TableHead>
                                   <TableBody>
                                     {productRow.extras.map((extraRow) => {
-                                      const extraName = extraRow.name;
-                                      const count = productRow.extras.filter(
-                                        (extra) => extra.name === extraName
-                                      ).length;
-                                      if (
-                                        !displayedAddonNames.has(extraRow.name)
-                                      ) {
-                                        displayedAddonNames.add(extraRow.name);
                                         return (
                                           <TableRow key={extraRow.name}>
                                             <TableCell
                                               component="th"
                                               scope="row"
                                             >
-                                              X{count} {extraRow.name}
+                                              X{extraRow.count} {extraRow.name}
                                             </TableCell>
                                             <TableCell>
-                                              {extraRow.price
-                                                ? extraRow.price
-                                                : "Free"}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              {extraRow.price
-                                                ? extraRow.price * count
-                                                : "Free"}
-                                            </TableCell>
+                                            {extraRow.pu ? extraRow.pu : "Gratuit"}
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            {extraRow.total
+                                              ? extraRow.total
+                                              : "Gratuit"}
+                                          </TableCell>
                                           </TableRow>
                                         );
-                                      } else {
-                                        return null;
-                                      }
+                                      
                                     })}
                                   </TableBody>
                                 </Table>

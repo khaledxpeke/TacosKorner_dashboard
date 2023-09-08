@@ -429,6 +429,7 @@ const ModifyProduct = () => {
                                   },
                                 });
                               }}
+                              inputProps={{ min: 0 }}
                             />
                             <TextField
                               label="Quantité d'ingrediant"
@@ -467,6 +468,7 @@ const ModifyProduct = () => {
                                   },
                                 });
                               }}
+                              inputProps={{ min: 1 }}
                             />
                           </>
                         )}
@@ -494,6 +496,7 @@ const ModifyProduct = () => {
                     error={!!touched.maxExtras && !!errors.maxExtras}
                     helperText={touched.maxExtras && errors.maxExtras}
                     sx={{ minWidth: "200px" }}
+                    inputProps={{ min: 1 }}
                   />
                   <TextField
                     variant="filled"
@@ -506,6 +509,7 @@ const ModifyProduct = () => {
                     error={!!touched.maxDessert && !!errors.maxDessert}
                     helperText={touched.maxDessert && errors.maxDessert}
                     sx={{ minWidth: "200px" }}
+                    inputProps={{ min: 1 }}
                   />
                   <TextField
                     variant="filled"
@@ -518,6 +522,7 @@ const ModifyProduct = () => {
                     error={!!touched.maxDrink && !!errors.maxDrink}
                     helperText={touched.maxDrink && errors.maxDrink}
                     sx={{ minWidth: "200px" }}
+                    inputProps={{ min: 1 }}
                   />
                   </Stack>
                 </>

@@ -213,11 +213,12 @@ const AddProduct = () => {
                 label="Prix"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.price}
+                value={values.price||0}
                 name="price"
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
                 sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+                inputProps={{ min: 0 }}
               />
               <TextField
                 fullWidth
@@ -375,7 +376,7 @@ const AddProduct = () => {
                                   types.find(
                                     (type) =>
                                       type._id === ingredients[0].type._id
-                                  )?.free || ""
+                                  )?.free || 0
                                 }
                                 onChange={(e) =>
                                   handleNumberOfFreeChange(
@@ -383,6 +384,7 @@ const AddProduct = () => {
                                     e.target.value
                                   )
                                 }
+                                inputProps={{ min: 0 }}
                               />
                               <TextField
                                 label="Quantité d'ingrediant"
@@ -391,7 +393,7 @@ const AddProduct = () => {
                                   types.find(
                                     (type) =>
                                       type._id === ingredients[0].type._id
-                                  )?.quantity || ""
+                                  )?.quantity || 1
                                 }
                                 onChange={(e) =>
                                   handleMaxIngredientChange(
@@ -399,6 +401,7 @@ const AddProduct = () => {
                                     e.target.value
                                   )
                                 }
+                                inputProps={{ min: 1 }}
                               />
                             </>
                           )}
@@ -426,6 +429,7 @@ const AddProduct = () => {
                       error={!!touched.maxExtras && !!errors.maxExtras}
                       helperText={touched.maxExtras && errors.maxExtras}
                       sx={{ minWidth: "200px" }}
+                      inputProps={{ min: 1 }}
                     />
                     <TextField
                       variant="filled"
@@ -438,6 +442,7 @@ const AddProduct = () => {
                       error={!!touched.maxDessert && !!errors.maxDessert}
                       helperText={touched.maxDessert && errors.maxDessert}
                       sx={{ minWidth: "200px" }}
+                      inputProps={{ min: 1 }}
                     />
                     <TextField
                       variant="filled"
@@ -450,6 +455,7 @@ const AddProduct = () => {
                       error={!!touched.maxDrink && !!errors.maxDrink}
                       helperText={touched.maxDrink && errors.maxDrink}
                       sx={{ minWidth: "200px" }}
+                      inputProps={{ min: 1 }}
                     />
                   </Stack>
                 </>

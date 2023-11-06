@@ -126,7 +126,7 @@ const ModifySupplement = () => {
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
                 sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-                inputProps={{ min: 1 }}
+                // inputProps={{ min: 1 }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">

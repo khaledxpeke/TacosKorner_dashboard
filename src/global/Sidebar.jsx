@@ -199,7 +199,7 @@ const Sidebar = () => {
                   setSelected={setSelected}
                 />
                 <Item
-                  title="Type"
+                  title="Etapes"
                   to="/type"
                   icon={<ChecklistIcon />}
                   selected={selected}

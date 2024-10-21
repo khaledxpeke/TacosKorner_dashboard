@@ -38,7 +38,7 @@ export const addIngrediant = createAsyncThunk(
   async (body) => {
     try {
       const response = await axios.post(
-        'http://localhost:3300/api/ingrediant',
+        `${apiUrl}/ingrediant`,
         body,
         {
           headers: {

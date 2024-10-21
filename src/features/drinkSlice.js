@@ -20,7 +20,7 @@ export const getDrinks = createAsyncThunk("drink/getDrinks", async () => {
 
 export const addDrink = createAsyncThunk("drink/addDrink", async (body) => {
   try {
-    const response = await axios.post("http://localhost:3300/api/drink", body, {
+    const response = await axios.post(`${apiUrl}/drink`, body, {
       headers: {
         Authorization: `Bearer ${localStorage
           .getItem("token")

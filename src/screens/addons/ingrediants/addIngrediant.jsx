@@ -47,12 +47,12 @@ const AddIngrediant = () => {
   const initialValues = {
     name: "",
     image: "",
-    price:0,
+    price: 0,
     type: types.length > 0 ? types[0]._id : "",
   };
   const handleFormSubmit = (values) => {
     if (!values.type) {
-      setTypeError(true); 
+      setTypeError(true);
       return;
     }
     const formData = {
@@ -65,6 +65,9 @@ const AddIngrediant = () => {
   };
   useEffect(() => {
     dispatch(getTypes());
+  }, [dispatch]);
+  
+  useEffect(() => {
     if (status === "addSuccess") {
       toast.success(success);
       navigate("/ingrediants");
@@ -78,7 +81,10 @@ const AddIngrediant = () => {
     <Loading />
   ) : (
     <Box m="20px" className="main-application">
-      <Header title="AJOUTER INGREDIANT" subtitle="Créer une nouvelle ingrediant" />
+      <Header
+        title="AJOUTER INGREDIANT"
+        subtitle="Créer une nouvelle ingrediant"
+      />
 
       <Formik
         onSubmit={handleFormSubmit}
@@ -115,7 +121,7 @@ const AddIngrediant = () => {
                 helperText={touched.name && errors.name}
                 sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
               />
-               <TextField
+              <TextField
                 fullWidth
                 variant="filled"
                 type="number"
@@ -162,7 +168,11 @@ const AddIngrediant = () => {
                   ))}
                 </Select>
                 {typeError && (
-                  <FormHelperText sx={{color:"red" ,mt: "8px",fontSize:"14px"}}>Sélectionnez un type</FormHelperText>
+                  <FormHelperText
+                    sx={{ color: "red", mt: "8px", fontSize: "14px" }}
+                  >
+                    Sélectionnez un type
+                  </FormHelperText>
                 )}
               </FormControl>
             </Box>

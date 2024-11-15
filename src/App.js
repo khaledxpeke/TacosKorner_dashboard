@@ -35,6 +35,7 @@ import Drink from "./screens/extra/drinks";
 import AddDrink from "./screens/extra/drinks/addDrink";
 import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
+import CurrencyManagement from "./global/curreny";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -68,6 +69,7 @@ function App() {
             {!isSignInPage && (
               <>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/currency" element={<CurrencyManagement />} />
                 <Route path="/category" element={<Category />} />
                 <Route path="/addCategory" element={<AddCategory />} />
                 <Route path="/modifyCategory" element={<ModifyCategory />} />

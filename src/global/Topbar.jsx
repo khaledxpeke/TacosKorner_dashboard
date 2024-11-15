@@ -19,6 +19,10 @@ const Topbar = () => {
       dispatch(logOut());
       navigate("/signin");
   };
+  const handleCurrency = (e) => {
+    e.preventDefault();
+      navigate("/currency");
+  };
 
   return (
     <Box display="flex" justifyContent="space-between" p={2} className="topbar">
@@ -40,7 +44,7 @@ const Topbar = () => {
               <LightModeOutlinedIcon />
             )}
           </IconButton>
-          <IconButton>
+          <IconButton  onClick={handleCurrency}>
             <LanguageIcon />
           </IconButton>
 

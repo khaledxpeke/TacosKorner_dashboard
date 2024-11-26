@@ -4,11 +4,8 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Stack,
   TextField,
 } from "@mui/material";
@@ -271,7 +268,7 @@ const AddProduct = () => {
                           variant="filled"
                           sx={{ minWidth: "200px" }}
                         >
-                          <InputLabel id="ingrediant">{typeName}</InputLabel>
+                          {/* <InputLabel id="ingrediant">{typeName}</InputLabel>
                           <Select
                             name="ingrediant"
                             labelId="ingrediants"
@@ -312,7 +309,7 @@ const AddProduct = () => {
                               },
                             }}
                           >
-                            {ingredients.map((ingredient) => (
+                          {ingredients.map((ingredient) => (
                               <MenuItem
                                 key={ingredient._id}
                                 value={ingredient._id}
@@ -337,7 +334,36 @@ const AddProduct = () => {
                                 {ingredient.name}
                               </MenuItem>
                             ))}
-                          </Select>
+                          </Select> */}
+                          <MultipleSelectComponent
+                            change={(event) => {
+                              const selectedIngredientIds =
+                                event.target.value || [];
+                              const selectedTypes = [];
+                              Object.entries(ingrediantsByType).forEach(
+                                ([typeName, ingredients]) => {
+                                  const selectedIngredientsOfType =
+                                    ingredients.filter((ingredient) =>
+                                      selectedIngredientIds.includes(
+                                        ingredient._id
+                                      )
+                                    );
+                                  if (selectedIngredientsOfType.length > 0) {
+                                    selectedTypes.push({
+                                      name: typeName,
+                                      _id: selectedIngredientsOfType[0].type
+                                        ._id,
+                                    });
+                                  }
+                                }
+                              );
+                              updateTypes(selectedTypes);
+                              handleChange(event);
+                            }}
+                            items={ingredients}
+                            name="ingrediant"
+                            value={values.ingrediant}
+                          />
 
                           {types.some(
                             (type) => type._id === ingredients[0].type._id

@@ -43,6 +43,7 @@ import {
 } from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
+import SelectComponent from "../../../components/Select";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -239,28 +240,12 @@ const AddProduct = () => {
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
-              >
-                <InputLabel id="category">Selectioner une categorie</InputLabel>
-                <Select
+                <SelectComponent
                   name="category"
-                  labelId="category"
-                  id="category"
+                  items={categories}
                   value={values.category}
-                  label="Category"
-                  onChange={handleChange}
-                  sx={{ gridColumn: "span 1" }}
-                >
-                  {categories.map((category) => (
-                    <MenuItem key={category._id} value={category._id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  change={handleChange}
+                />
               {values.choice === "multiple" && (
                 <FormControl
                   variant="filled"
@@ -288,7 +273,15 @@ const AddProduct = () => {
                     }}
                   >
                     {supplements.map((supplement) => (
-                      <MenuItem key={supplement._id} value={supplement._id}>
+                      <MenuItem key={supplement._id} value={supplement._id} sx={{
+                        opacity: values.supplement.includes(supplement._id) ? 1 : 0.6,
+                        backgroundColor: values.supplement.includes(supplement._id)
+                          ? "black !important"
+                          : "transparent", 
+                        color: values.supplement.includes(supplement._id)
+                          ? "white"
+                          : "inherit", 
+                      }} >
                         {supplement.name}
                       </MenuItem>
                     ))}

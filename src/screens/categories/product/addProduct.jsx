@@ -248,15 +248,13 @@ const AddProduct = () => {
                 change={handleChange}
               />
               {values.choice === "multiple" && (
-                <MultipleSelectComponent
-                  change={handleChange}
-                  items={supplements}
-                  name="supplement"
-                  value={values.supplement}
-                />
-              )}
-              {values.choice === "multiple" && (
                 <>
+                  <MultipleSelectComponent
+                    change={handleChange}
+                    items={supplements}
+                    name="supplement"
+                    value={values.supplement}
+                  />
                   <Stack
                     flexWrap="wrap"
                     flexDirection="row"
@@ -282,7 +280,6 @@ const AddProduct = () => {
                             multiple
                             label="ingrediant"
                             onChange={(event) => {
-                              // Update the ingrediant field in the form with the selected ingredient IDs
                               const selectedIngredientIds =
                                 event.target.value || [];
                               const selectedTypes = [];
@@ -319,6 +316,23 @@ const AddProduct = () => {
                               <MenuItem
                                 key={ingredient._id}
                                 value={ingredient._id}
+                                sx={{
+                                  opacity: values.ingrediant.includes(
+                                    ingredient._id
+                                  )
+                                    ? 1
+                                    : 0.6,
+                                  backgroundColor: values.ingrediant.includes(
+                                    ingredient._id
+                                  )
+                                    ? "black !important"
+                                    : "transparent",
+                                  color: values.ingrediant.includes(
+                                    ingredient._id
+                                  )
+                                    ? "white"
+                                    : "inherit",
+                                }}
                               >
                                 {ingredient.name}
                               </MenuItem>
@@ -332,6 +346,7 @@ const AddProduct = () => {
                               <TextField
                                 label="Nombre d'ingrediant gratuit"
                                 type="number"
+                                sx={{ my: 2 }}
                                 value={
                                   types.find(
                                     (type) =>
@@ -418,10 +433,8 @@ const AddProduct = () => {
                       inputProps={{ min: 1 }}
                     />
                   </Stack>
+                  <ReorderType onDragEnd={onDragEnd} types={types} />
                 </>
-              )}
-              {values.choice === "multiple" && (
-                <ReorderType onDragEnd={onDragEnd} types={types} />
               )}
               <FormControl
                 variant="filled"
@@ -458,7 +471,7 @@ const AddProduct = () => {
 
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Créer une nouvelle produit
+                Ajouter
               </Button>
             </Box>
           </form>

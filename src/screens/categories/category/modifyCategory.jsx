@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../../components/loading";
 import { useLocation, useNavigate } from "react-router-dom";
+import TextFieldCompnent from "../../../components/textFieldComponent";
 
 const ModifyCategory = () => {
   const location = useLocation();
@@ -81,18 +82,17 @@ const ModifyCategory = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
+             <TextFieldCompnent
                 type="text"
                 label="Nom"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.name}
                 name="name"
-                error={!!touched.name && !!errors.name}
-                helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 8" }}
+                blur={handleBlur}
+                touched={touched.name}
+                error={errors.name}
+                colum="span 8"
+                row="1 / span 1"
               />
               <ImageInput
                 previewImage={previewImage}

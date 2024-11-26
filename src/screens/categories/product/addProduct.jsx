@@ -44,6 +44,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
+import TextFieldCompnent from "../../../components/textFieldComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddProduct = () => {
@@ -195,46 +196,44 @@ const AddProduct = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
+              <TextFieldCompnent
                 type="text"
                 label="Nom"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.name}
                 name="name"
-                error={!!touched.name && !!errors.name}
-                helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 2", gridRow: "1 / span 1" }}
+                blur={handleBlur}
+                touched={touched.name}
+                error={errors.name}
+                colum="span 2"
+                row="1 / span 1"
               />
-              <TextField
-                fullWidth
-                variant="filled"
+              <TextFieldCompnent
                 type="number"
                 label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.price || 0}
                 name="price"
-                error={!!touched.price && !!errors.price}
-                helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-                inputProps={{ min: 0 }}
+                blur={handleBlur}
+                touched={touched.price}
+                error={errors.price}
+                colum="span 1"
+                row="1 / span 1"
+                num={0}
               />
-              <TextField
-                fullWidth
-                variant="filled"
+              <TextFieldCompnent
                 type="text"
                 label="Currency"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.currency}
                 name="currency"
-                error={!!touched.currency && !!errors.currency}
-                helperText={touched.currency && errors.currency}
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+                blur={handleBlur}
+                touched={touched.currency}
+                error={errors.currency}
+                colum="span 1"
+                row="1 / span 1"
               />
+
               <ImageInput
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
@@ -393,44 +392,41 @@ const AddProduct = () => {
                       gap: "30px",
                     }}
                   >
-                    <TextField
-                      variant="filled"
+                    <TextFieldCompnent
                       type="number"
                       label="Max Extras"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      change={handleChange}
                       value={values.maxExtras}
                       name="maxExtras"
-                      error={!!touched.maxExtras && !!errors.maxExtras}
-                      helperText={touched.maxExtras && errors.maxExtras}
-                      sx={{ minWidth: "200px" }}
-                      inputProps={{ min: 1 }}
+                      blur={handleBlur}
+                      touched={touched.maxExtras}
+                      error={errors.maxExtras}
+                      // sx={{ minWidth: "200px" }}
+                      num={1}
                     />
-                    <TextField
-                      variant="filled"
+                    <TextFieldCompnent
                       type="number"
                       label="Max Dessert"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      change={handleChange}
                       value={values.maxDessert}
                       name="maxDessert"
-                      error={!!touched.maxDessert && !!errors.maxDessert}
-                      helperText={touched.maxDessert && errors.maxDessert}
-                      sx={{ minWidth: "200px" }}
-                      inputProps={{ min: 1 }}
+                      blur={handleBlur}
+                      touched={touched.maxDessert}
+                      error={errors.maxDessert}
+                      // sx={{ minWidth: "200px" }}
+                      num={1}
                     />
-                    <TextField
-                      variant="filled"
+                    <TextFieldCompnent
                       type="number"
-                      label="max Drink"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      label="Max Drink"
+                      change={handleChange}
                       value={values.maxDrink}
                       name="maxDrink"
-                      error={!!touched.maxDrink && !!errors.maxDrink}
-                      helperText={touched.maxDrink && errors.maxDrink}
-                      sx={{ minWidth: "200px" }}
-                      inputProps={{ min: 1 }}
+                      blur={handleBlur}
+                      touched={touched.maxDrink}
+                      error={errors.maxDrink}
+                      // sx={{ minWidth: "200px" }}
+                      num={1}
                     />
                   </Stack>
                   <Stack

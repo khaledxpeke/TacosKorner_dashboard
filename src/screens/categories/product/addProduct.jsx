@@ -43,7 +43,7 @@ import {
 } from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
-import SelectComponent from "../../../components/Select";
+import SelectComponent from "../../../components/selectComponent";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -214,7 +214,7 @@ const AddProduct = () => {
                 label="Prix"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.price||0}
+                value={values.price || 0}
                 name="price"
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
@@ -240,12 +240,12 @@ const AddProduct = () => {
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-                <SelectComponent
-                  name="category"
-                  items={categories}
-                  value={values.category}
-                  change={handleChange}
-                />
+              <SelectComponent
+                name="category"
+                items={categories}
+                value={values.category}
+                change={handleChange}
+              />
               {values.choice === "multiple" && (
                 <FormControl
                   variant="filled"
@@ -273,15 +273,23 @@ const AddProduct = () => {
                     }}
                   >
                     {supplements.map((supplement) => (
-                      <MenuItem key={supplement._id} value={supplement._id} sx={{
-                        opacity: values.supplement.includes(supplement._id) ? 1 : 0.6,
-                        backgroundColor: values.supplement.includes(supplement._id)
-                          ? "black !important"
-                          : "transparent", 
-                        color: values.supplement.includes(supplement._id)
-                          ? "white"
-                          : "inherit", 
-                      }} >
+                      <MenuItem
+                        key={supplement._id}
+                        value={supplement._id}
+                        sx={{
+                          opacity: values.supplement.includes(supplement._id)
+                            ? 1
+                            : 0.6,
+                          backgroundColor: values.supplement.includes(
+                            supplement._id
+                          )
+                            ? "black !important"
+                            : "transparent",
+                          color: values.supplement.includes(supplement._id)
+                            ? "white"
+                            : "inherit",
+                        }}
+                      >
                         {supplement.name}
                       </MenuItem>
                     ))}

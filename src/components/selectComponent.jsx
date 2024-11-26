@@ -14,6 +14,7 @@ const SelectComponent = ({name,items,value,change}) => {
         id={name}
         value={value}
         label={name}
+        // multiple
         onChange={change}
         sx={{ gridColumn: "span 1" }}
       >

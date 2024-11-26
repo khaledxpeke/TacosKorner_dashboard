@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -27,6 +18,7 @@ import {
 } from "../../../features/ingrediantSlice";
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
 import { useNavigate } from "react-router-dom";
+import SelectComponent from "../../../components/selectComponent";
 
 const AddIngrediant = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -66,7 +58,7 @@ const AddIngrediant = () => {
   useEffect(() => {
     dispatch(getTypes());
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (status === "addSuccess") {
       toast.success(success);
@@ -141,40 +133,16 @@ const AddIngrediant = () => {
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
-              >
-                <InputLabel id="types">
-                  Selectioner une type d'ingrédiant
-                </InputLabel>
-                <Select
-                  name="type"
-                  labelId="types"
-                  id="type"
-                  value={values.type}
-                  label="Type"
-                  onChange={(e) => {
-                    handleChange(e);
-                    setTypeError(false);
-                  }}
-                  sx={{ gridColumn: "span 1" }}
-                >
-                  {types.map((type) => (
-                    <MenuItem key={type._id} value={type._id}>
-                      {type.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {typeError && (
-                  <FormHelperText
-                    sx={{ color: "red", mt: "8px", fontSize: "14px" }}
-                  >
-                    Sélectionnez un type
-                  </FormHelperText>
-                )}
-              </FormControl>
+              <SelectComponent
+                name="type"
+                items={types}
+                value={values.type}
+                change={(e) => {
+                  handleChange(e);
+                  setTypeError(false);
+                }}
+                error={typeError}
+              />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

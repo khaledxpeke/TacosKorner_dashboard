@@ -44,7 +44,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
-import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -248,12 +247,54 @@ const AddProduct = () => {
                 change={handleChange}
               />
               {values.choice === "multiple" && (
-                <MultipleSelectComponent
-                  change={handleChange}
-                  items={supplements}
-                  name="supplement"
-                  value={values.supplement}
-                />
+                <FormControl
+                  variant="filled"
+                  fullWidth
+                  sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+                >
+                  <InputLabel id="supplements">
+                    Selectioner les supplement
+                  </InputLabel>
+                  <Select
+                    name="supplement"
+                    labelId="supplements"
+                    id="supplement"
+                    value={values.supplement}
+                    multiple
+                    label="supplement"
+                    onChange={handleChange}
+                    sx={{ gridColumn: "span 1" }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: "300px",
+                        },
+                      },
+                    }}
+                  >
+                    {supplements.map((supplement) => (
+                      <MenuItem
+                        key={supplement._id}
+                        value={supplement._id}
+                        sx={{
+                          opacity: values.supplement.includes(supplement._id)
+                            ? 1
+                            : 0.6,
+                          backgroundColor: values.supplement.includes(
+                            supplement._id
+                          )
+                            ? "black !important"
+                            : "transparent",
+                          color: values.supplement.includes(supplement._id)
+                            ? "white"
+                            : "inherit",
+                        }}
+                      >
+                        {supplement.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
               {values.choice === "multiple" && (
                 <>
@@ -273,7 +314,7 @@ const AddProduct = () => {
                           variant="filled"
                           sx={{ minWidth: "200px" }}
                         >
-                          {/* <InputLabel id="ingrediant">{typeName}</InputLabel>
+                          <InputLabel id="ingrediant">{typeName}</InputLabel>
                           <Select
                             name="ingrediant"
                             labelId="ingrediants"
@@ -315,7 +356,7 @@ const AddProduct = () => {
                               },
                             }}
                           >
-                          {ingredients.map((ingredient) => (
+                            {ingredients.map((ingredient) => (
                               <MenuItem
                                 key={ingredient._id}
                                 value={ingredient._id}
@@ -323,36 +364,7 @@ const AddProduct = () => {
                                 {ingredient.name}
                               </MenuItem>
                             ))}
-                          </Select> */}
-                          <MultipleSelectComponent
-                            change={(event) => {
-                              const selectedIngredientIds =
-                                event.target.value || [];
-                              const selectedTypes = [];
-                              Object.entries(ingrediantsByType).forEach(
-                                ([typeName, ingredients]) => {
-                                  const selectedIngredientsOfType =
-                                    ingredients.filter((ingredient) =>
-                                      selectedIngredientIds.includes(
-                                        ingredient._id
-                                      )
-                                    );
-                                  if (selectedIngredientsOfType.length > 0) {
-                                    selectedTypes.push({
-                                      name: typeName,
-                                      _id: selectedIngredientsOfType[0].type
-                                        ._id,
-                                    });
-                                  }
-                                }
-                              );
-                              updateTypes(selectedTypes);
-                              handleChange(event);
-                            }}
-                            items={ingredients}
-                            name="ingrediant"
-                            value={values.ingrediant}
-                          />
+                          </Select>
 
                           {types.some(
                             (type) => type._id === ingredients[0].type._id

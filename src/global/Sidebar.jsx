@@ -15,7 +15,8 @@ import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import IcecreamIcon from "@mui/icons-material/Icecream";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import jwtDecode from "jwt-decode";
-import LiquorIcon from '@mui/icons-material/Liquor';
+import LiquorIcon from "@mui/icons-material/Liquor";
+import { useResponsive } from "../hooks/uiHook";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -37,9 +38,16 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const Sidebar = () => {
+  const { isSmallScreen } = useResponsive();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(isSmallScreen);
+  console.log(isCollapsed);
+  console.log("small"+isSmallScreen);
+  useEffect(() => {
+    setIsCollapsed(isSmallScreen);
+    
+  }, [isSmallScreen]);
   const [selected, setSelected] = useState("Dashboard");
   const [sidebarHeight, setSidebarHeight] = useState("100vh");
   const output = window.localStorage.getItem("token");
@@ -92,7 +100,9 @@ const Sidebar = () => {
             <Menu iconShape="square">
               {/* LOGO AND MENU ICON */}
               <MenuItem
-                onClick={() => setIsCollapsed(!isCollapsed)}
+                onClick={() =>
+                  setIsCollapsed(isSmallScreen ? true : !isCollapsed)
+                }
                 icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
                 style={{
                   margin: "10px 0 20px 0",

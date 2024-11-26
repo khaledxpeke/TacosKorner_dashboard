@@ -24,8 +24,8 @@ body,
     "sidebar main-application main-application"
     "sidebar main-application main-application"
     "sidebar main-application main-application";
-    grid-template-rows: 100px 1fr 1fr 1fr;
-    grid-template-columns: 280px 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr 1fr;
+    grid-template-columns: auto 1fr 1fr;
 }
 .app-signin {
   background-image: url("./assets/login-backgound.jpg");

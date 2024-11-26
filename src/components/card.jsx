@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
+import { useResponsive } from "../hooks/uiHook";
 const apiUrl=process.env.REACT_APP_API_URL
 const ProductCard = ({
   data,
@@ -21,9 +22,10 @@ const ProductCard = ({
 }) => {
   const theme = useTheme();
   const isLightMode = theme.palette.mode === "light";
+  const { isSmallScreen } = useResponsive();
 
   return (
-    <Grid item xs={12} sm={6} md={3}>
+    <Grid item xs={isSmallScreen ? 9 : 12} sm={isSmallScreen ? 6 : 6} md={isSmallScreen ? 1 : 3}>
       <Card
         sx={{
           height: "100%",
@@ -66,7 +68,7 @@ const ProductCard = ({
             variant="contained"
             color="error"
             size="small"
-            startIcon={<DeleteForeverIcon />}
+            startIcon={!isSmallScreen && <DeleteForeverIcon />}
             style={{ color: "white" }}
             onClick={handleClickOpen}
           >
@@ -77,11 +79,11 @@ const ProductCard = ({
               variant="contained"
               color="warning"
               size="small"
-              startIcon={<EditIcon />}
+              startIcon={!isSmallScreen &&<EditIcon />}
               style={{ color: "white" }}
               onClick={handleModify}
             >
-              Modifier
+               Modifier
             </Button>
           )}
         </CardActions>

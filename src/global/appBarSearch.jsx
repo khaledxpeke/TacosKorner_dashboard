@@ -10,10 +10,11 @@ import { tokens } from "../theme";
 import { useTheme } from "@emotion/react";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-
-const AppBarSearch = ({ handleSubmit, handleSearch ,title,buttonTitle}) => {
+import { useResponsive } from "../hooks/uiHook";
+const AppBarSearch = ({ handleSubmit, handleSearch, title, buttonTitle }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { isSmallScreen } = useResponsive();
   return (
     <AppBar position="relative">
       <Toolbar>
@@ -30,22 +31,35 @@ const AppBarSearch = ({ handleSubmit, handleSearch ,title,buttonTitle}) => {
             type="text"
             placeholder="Search"
             className="search-input pl-2"
-            style={{ paddingLeft: "10px", width: "300px" }}
+            style={{ paddingLeft: "10px", maxWidth: "300px" }}
             onChange={handleSearch}
           />
-          <IconButton type="button" sx={{ p: 1 }}>
-            <SearchIcon />
-          </IconButton>
+          {!isSmallScreen ? (
+            <IconButton type="button" sx={{ p: 1 }}>
+              <SearchIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              // color="success"
+              type="button"
+              onClick={handleSubmit}
+              sx={{ backgroundColor: "#469c4a", borderRadius: 1, p: 1 }}
+            >
+              <AddIcon />
+            </IconButton>
+          )}
         </Box>
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<AddIcon />}
-          style={{ marginLeft: "auto" }}
-          onClick={handleSubmit}
-        >
-          {buttonTitle}
-        </Button>
+        {!isSmallScreen && (
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<AddIcon />}
+            style={{ marginLeft: "auto" }}
+            onClick={handleSubmit}
+          >
+            {buttonTitle}
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );

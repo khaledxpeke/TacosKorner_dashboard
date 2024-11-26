@@ -6,6 +6,8 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from "react-redux";
 import store from "./store";
+import { ResponsiveProvider } from './hooks/uiHook';
+
 
 
 
@@ -26,7 +28,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
+      <ResponsiveProvider>
         <App />
+        </ResponsiveProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

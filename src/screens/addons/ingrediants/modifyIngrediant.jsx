@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -26,6 +18,7 @@ import {
 } from "../../../features/ingrediantSlice";
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import SelectComponent from "../../../components/selectComponent";
 
 const AddIngrediant = () => {
   const location = useLocation();
@@ -137,33 +130,12 @@ const AddIngrediant = () => {
                 setDisplayLabel={setDisplayLabel}
                 image={data.image}
               />
-            
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 2", gridRow: "3 / span 1" }}
-              >
-                <InputLabel id="types">
-                  Selectioner une type d'ingrédiant
-                </InputLabel>
-                <Select
-                  name="type"
-                  labelId="types"
-                  id="type"
-                  value={values.type}
-                  label="Type"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
-                  sx={{ gridColumn: "span 2" }}
-                >
-                  {types.map((type) => (
-                    <MenuItem key={type._id} value={type._id}>
-                      {type.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <SelectComponent
+                name="type"
+                items={types}
+                value={values.type}
+                change={handleChange}
+              />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

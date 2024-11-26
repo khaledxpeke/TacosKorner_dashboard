@@ -1,6 +1,6 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 
-const SelectComponent = ({name,items,value,change}) => {
+const SelectComponent = ({name,items,value,change,error}) => {
   return (
     <FormControl
       variant="filled"
@@ -14,7 +14,6 @@ const SelectComponent = ({name,items,value,change}) => {
         id={name}
         value={value}
         label={name}
-        // multiple
         onChange={change}
         sx={{ gridColumn: "span 1" }}
       >
@@ -25,9 +24,7 @@ const SelectComponent = ({name,items,value,change}) => {
             sx={{
               opacity: value === item._id ? 1 : 0.5,
               backgroundColor:
-              value === item._id
-                  ? "black !important"
-                  : "transparent",
+                value === item._id ? "black !important" : "transparent",
               color: value === item._id ? "white" : "inherit",
             }}
           >
@@ -35,6 +32,11 @@ const SelectComponent = ({name,items,value,change}) => {
           </MenuItem>
         ))}
       </Select>
+      {error && (
+        <FormHelperText sx={{ color: "red", mt: "8px", fontSize: "14px" }}>
+          Sélectionnez un {name}
+        </FormHelperText>
+      )}
     </FormControl>
   );
 };

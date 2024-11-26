@@ -259,7 +259,7 @@ const AddProduct = () => {
                     flexWrap="wrap"
                     flexDirection="row"
                     sx={{
-                      gridColumn: "span 4",
+                      gridColumn: "span 2",
                       gridRow: "5 / span 1",
                       gap: "30px",
                     }}
@@ -433,7 +433,16 @@ const AddProduct = () => {
                       inputProps={{ min: 1 }}
                     />
                   </Stack>
-                  <ReorderType onDragEnd={onDragEnd} types={types} />
+                  <Stack
+                    flexWrap="wrap"
+                    flexDirection="row"
+                    sx={{
+                      gridColumn: "span 1",
+                      gridRow: "5 / span 1",
+                    }}
+                  >
+                    <ReorderType onDragEnd={onDragEnd} types={types} />
+                  </Stack>
                 </>
               )}
               <FormControl

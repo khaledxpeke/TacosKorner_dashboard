@@ -44,6 +44,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
+import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -247,54 +248,12 @@ const AddProduct = () => {
                 change={handleChange}
               />
               {values.choice === "multiple" && (
-                <FormControl
-                  variant="filled"
-                  fullWidth
-                  sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
-                >
-                  <InputLabel id="supplements">
-                    Selectioner les supplement
-                  </InputLabel>
-                  <Select
-                    name="supplement"
-                    labelId="supplements"
-                    id="supplement"
-                    value={values.supplement}
-                    multiple
-                    label="supplement"
-                    onChange={handleChange}
-                    sx={{ gridColumn: "span 1" }}
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: "300px",
-                        },
-                      },
-                    }}
-                  >
-                    {supplements.map((supplement) => (
-                      <MenuItem
-                        key={supplement._id}
-                        value={supplement._id}
-                        sx={{
-                          opacity: values.supplement.includes(supplement._id)
-                            ? 1
-                            : 0.6,
-                          backgroundColor: values.supplement.includes(
-                            supplement._id
-                          )
-                            ? "black !important"
-                            : "transparent",
-                          color: values.supplement.includes(supplement._id)
-                            ? "white"
-                            : "inherit",
-                        }}
-                      >
-                        {supplement.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <MultipleSelectComponent
+                  change={handleChange}
+                  items={supplements}
+                  name="supplement"
+                  value={values.supplement}
+                />
               )}
               {values.choice === "multiple" && (
                 <>

@@ -60,7 +60,7 @@ import {
     ) : (
       <Box m="20px" className="main-application">
         <Header title="AJOUTER BOISSON" subtitle="Créer une nouvelle boisson" />
-  
+
         <Formik
           onSubmit={handleFormSubmit}
           initialValues={initialValues}
@@ -103,24 +103,24 @@ import {
                   displayLabel={displayLabel}
                   setDisplayLabel={setDisplayLabel}
                 />
-                 <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.price||0}
-                name="price"
-                error={!!touched.price && !!errors.price}
-                helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-                inputProps={{ min: 1 }}
-              />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="number"
+                  label="Prix"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.price || 0}
+                  name="price"
+                  error={!!touched.price && !!errors.price}
+                  helperText={touched.price && errors.price}
+                  sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+                  inputProps={{ min: 1 }}
+                />
               </Box>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
-                  Créer une nouvelle boisson
+                  Soumettre
                 </Button>
               </Box>
             </form>

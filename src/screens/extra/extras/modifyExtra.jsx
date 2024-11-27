@@ -126,7 +126,7 @@ const ModifyExtra = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier le extra
+                Modifier
               </Button>
             </Box>
           </form>

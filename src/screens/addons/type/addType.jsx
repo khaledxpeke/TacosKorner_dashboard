@@ -132,7 +132,7 @@ const AddType = () => {
 
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Créer une nouvelle type d'ingrédiant
+                Soumettre
               </Button>
             </Box>
           </form>

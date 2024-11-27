@@ -19,9 +19,12 @@ import {
   selectAllHistory,
 } from "../../features/historySlice";
 import Error from "../../components/Error";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../components/loading";
+import { debounce } from "lodash";
+import { useResponsive } from "../../hooks/uiHook";
 const Dashboard = () => {
+  const { isSmallScreen } = useResponsive();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
@@ -32,6 +35,7 @@ const Dashboard = () => {
   const recents = useSelector(selectRecentHistory);
   const recentsError = useSelector(getRecentHistoryError);
   const recentsStatus = useSelector(getRecentHistoryStatus);
+  const [windowSize, setWindowSize] = useState(window.innerWidth);
 console.log(histories);
   let content;
   let content2;
@@ -92,6 +96,14 @@ console.log(histories);
     dispatch(fetchHistory());
     dispatch(fetchRecentHistories());
   }, [dispatch]);
+  useEffect(() => {
+    const handleResize = debounce(() => {
+      setWindowSize(window.innerWidth);
+    }, 300); // Adjust debounce interval as needed
+  
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   if (recentsStatus === "loading") {
     content2 = <Loading />;
   } else if (recentsStatus === "fetchRecentsError") {
@@ -109,7 +121,7 @@ console.log(histories);
 
       <Box
         display="grid"
-        gridTemplateColumns="repeat(12, 1fr)"
+        gridTemplateColumns={isSmallScreen ? "1fr" : "repeat(12, 1fr)"}
         gridAutoRows="140px"
         gap="20px"
       >
@@ -117,12 +129,12 @@ console.log(histories);
         {!content && (
           <>
             <Box
-              gridColumn="span 2"
-              backgroundColor={colors.primary[400]}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
+          gridColumn={isSmallScreen ? "span 12" : "span 2"}
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
               <StatBox
                 title={sales + " DT"}
                 subtitle="Ventes obtenues"

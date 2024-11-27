@@ -60,8 +60,11 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
       <Loading />
     ) : (
       <Box m="20px" className="main-application">
-        <Header title="AJOUTER SUPPLEMENT" subtitle="Créer une nouvelle supplement" />
-  
+        <Header
+          title="AJOUTER SUPPLEMENT"
+          subtitle="Créer une nouvelle supplement"
+        />
+
         <Formik
           onSubmit={handleFormSubmit}
           initialValues={initialValues}
@@ -85,30 +88,30 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
                 }}
               >
                 <TextFieldCompnent
-                type="text"
-                label="Nom"
-                change={handleChange}
-                value={values.name}
-                name="name"
-                blur={handleBlur}
-                touched={touched.name}
-                error={errors.name}
-                colum="span 4"
-                row="1 / span 1"
-              />
-              <TextFieldCompnent
-                type="number"
-                label="Prix"
-                change={handleChange}
-                value={values.price || 0}
-                name="price"
-                blur={handleBlur}
-                touched={touched.price}
-                error={errors.price}
-                colum="span 1"
-                row="1 / span 1"
-                // num={0}
-              />
+                  type="text"
+                  label="Nom"
+                  change={handleChange}
+                  value={values.name}
+                  name="name"
+                  blur={handleBlur}
+                  touched={touched.name}
+                  error={errors.name}
+                  colum="span 4"
+                  row="1 / span 1"
+                />
+                <TextFieldCompnent
+                  type="number"
+                  label="Prix"
+                  change={handleChange}
+                  value={values.price || 0}
+                  name="price"
+                  blur={handleBlur}
+                  touched={touched.price}
+                  error={errors.price}
+                  colum="span 1"
+                  row="1 / span 1"
+                  // num={0}
+                />
                 <ImageInput
                   sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
                   previewImage={previewImage}
@@ -116,11 +119,24 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
                   displayLabel={displayLabel}
                   setDisplayLabel={setDisplayLabel}
                 />
-                
+                <TextFieldCompnent
+                  fullWidth
+                  variant="filled"
+                  type="number"
+                  label="Prix"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.price || 0}
+                  name="price"
+                  error={!!touched.price && !!errors.price}
+                  helperText={touched.price && errors.price}
+                  sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+                  // inputProps={{ min: 0 }}
+                />
               </Box>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
-                  Créer une nouvelle supplement
+                  Soumettre
                 </Button>
               </Box>
             </form>

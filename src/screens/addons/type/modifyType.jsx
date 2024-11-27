@@ -135,7 +135,7 @@ const ModifyType = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier le type d'ingrédiant
+                Modifier
               </Button>
             </Box>
           </form>

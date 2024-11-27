@@ -311,7 +311,7 @@ const History = () => {
               type="text"
               placeholder="Search"
               className="search-input pl-2"
-              style={{ paddingLeft: "10px", width: "300px" }}
+              style={{ paddingLeft: "10px", maxWidth: "300px" }}
               onChange={(e) => setSearch(e.target.value)}
             />
             <IconButton type="button" sx={{ p: 1 }}>

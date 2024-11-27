@@ -139,7 +139,7 @@ const AddIngrediant = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier un ingrediant
+                Modifier
               </Button>
             </Box>
           </form>

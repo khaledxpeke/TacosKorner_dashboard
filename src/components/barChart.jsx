@@ -2,11 +2,13 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@emotion/react";
 import { tokens } from "../theme";
 import React from "react";
+import { useResponsive } from "../hooks/uiHook";
 
 const BarChart = React.memo(({data}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isLightMode = theme.palette.mode === "light";
+  const { isSmallScreen } = useResponsive();
   return (
     <ResponsiveBar 
       data={data}
@@ -40,7 +42,7 @@ const BarChart = React.memo(({data}) => {
       }}
       keys={["quantity"]}
       indexBy="category"
-      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      margin={isSmallScreen ? { top: 20, right: 20, bottom: 40, left: 50 } : { top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}

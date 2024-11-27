@@ -19,7 +19,7 @@ import {
   selectAllHistory,
 } from "../../features/historySlice";
 import Error from "../../components/Error";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Loading from "../../components/loading";
 import { debounce } from "lodash";
 import { useResponsive } from "../../hooks/uiHook";
@@ -36,10 +36,9 @@ const Dashboard = () => {
   const recentsError = useSelector(getRecentHistoryError);
   const recentsStatus = useSelector(getRecentHistoryStatus);
   const [windowSize, setWindowSize] = useState(window.innerWidth);
-console.log(histories);
   let content;
   let content2;
-  let sales=0;
+  let sales = 0;
   let commands = histories.length;
   let plats = 0;
   let importer = 0;
@@ -60,21 +59,22 @@ console.log(histories);
     histories.map((history) => {
       history.product.map((prod) => {
         if (prod.plat) {
-        if (prod.plat.category.name.toLowerCase() === "burgers") {
-          burger++;
-        } else if (prod.plat.category.name.toLowerCase() === "pizza") {
-          pizza++;
-        } else if (prod.plat.category.name.toLowerCase() === "panini") {
-          panini++;
-        } else if (prod.plat.category.name.toLowerCase() === "drinks") {
-          drinks++;
-        } else if (prod.plat.category.name.toLowerCase() === "chiken") {
-          chiken++;
-        } else if (prod.plat.category.name.toLowerCase() === "tacos") {
-          tacos++;
-        } else if (prod.plat.category.name.toLowerCase() === "deserts") {
-          desert++;
-        }}
+          if (prod.plat.category.name.toLowerCase() === "burgers") {
+            burger++;
+          } else if (prod.plat.category.name.toLowerCase() === "pizza") {
+            pizza++;
+          } else if (prod.plat.category.name.toLowerCase() === "panini") {
+            panini++;
+          } else if (prod.plat.category.name.toLowerCase() === "drinks") {
+            drinks++;
+          } else if (prod.plat.category.name.toLowerCase() === "chiken") {
+            chiken++;
+          } else if (prod.plat.category.name.toLowerCase() === "tacos") {
+            tacos++;
+          } else if (prod.plat.category.name.toLowerCase() === "deserts") {
+            desert++;
+          }
+        }
         return null;
       });
       sales = histories.reduce(
@@ -92,18 +92,18 @@ console.log(histories);
   }
   let surPlacePercentage = (surPlace / commands) * 100;
   let importerPercentage = (importer / commands) * 100;
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(fetchHistory());
     dispatch(fetchRecentHistories());
   }, [dispatch]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = debounce(() => {
       setWindowSize(window.innerWidth);
     }, 300); // Adjust debounce interval as needed
-  
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [windowSize]);
   if (recentsStatus === "loading") {
     content2 = <Loading />;
   } else if (recentsStatus === "fetchRecentsError") {
@@ -112,7 +112,7 @@ console.log(histories);
   if (recentsStatus === "fetchRecentsData") {
   }
   return (
-    <Box m="20px" className="main-application" >
+    <Box m="20px" className="main-application">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Bienvenue au Tacos Korner" />
@@ -129,12 +129,12 @@ console.log(histories);
         {!content && (
           <>
             <Box
-          gridColumn={isSmallScreen ? "span 12" : "span 2"}
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+              gridColumn={isSmallScreen ? "span 10" : "span 2"}
+              backgroundColor={colors.primary[400]}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
               <StatBox
                 title={sales + " DT"}
                 subtitle="Ventes obtenues"
@@ -148,7 +148,7 @@ console.log(histories);
               />
             </Box>
             <Box
-              gridColumn="span 3"
+              gridColumn={isSmallScreen ? "span 10" : "span 3"}
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -167,7 +167,7 @@ console.log(histories);
               />
             </Box>
             <Box
-              gridColumn="span 2"
+              gridColumn={isSmallScreen ? "span 10" : "span 2"}
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -186,7 +186,7 @@ console.log(histories);
               />
             </Box>
             <Box
-              gridColumn="span 3"
+              gridColumn={isSmallScreen ? "span 10" : "span 3"}
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -205,7 +205,7 @@ console.log(histories);
               />
             </Box>
             <Box
-              gridColumn="span 2"
+              gridColumn={isSmallScreen ? "span 10" : "span 2"}
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -229,14 +229,14 @@ console.log(histories);
         {!content && (
           <>
             <Box
-              gridColumn="span 8"
+              gridColumn={isSmallScreen ? "span 10" : "span 8"}
               gridRow="span 2"
               backgroundColor={colors.primary[400]}
             >
               <Typography
                 variant="h5"
                 fontWeight="600"
-                sx={{ padding: "30px 30px 0 30px" }}
+                sx={{ padding: "30px 30px 10px 30px" }}
               >
                 Quantité de vente
               </Typography>
@@ -280,7 +280,7 @@ console.log(histories);
         {!content2 && (
           <>
             <Box
-              gridColumn="span 4"
+              gridColumn={isSmallScreen ? "span 10" : "span 4"}
               gridRow="span 2"
               backgroundColor={colors.primary[400]}
               overflow="auto"

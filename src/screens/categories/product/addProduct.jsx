@@ -73,7 +73,6 @@ const AddProduct = () => {
     maxDessert: yup.number(),
     maxDrink: yup.number(),
   });
-  console.log(selectedTypes);
   const initialValues = {
     name: "",
     image: "",
@@ -281,7 +280,6 @@ const AddProduct = () => {
                             onChange={(event) => {
                               const selectedIngredientIds =
                                 event.target.value || [];
-                              const selectedTypes = [];
                               Object.entries(ingrediantsByType).forEach(
                                 ([typeName, ingredients]) => {
                                   const selectedIngredientsOfType =

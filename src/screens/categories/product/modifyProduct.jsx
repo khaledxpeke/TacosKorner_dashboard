@@ -365,7 +365,6 @@ const ModifyProduct = () => {
                                     (rule) =>
                                       rule.type === ingredients[0].type._id
                                   );
-                                  console.log(values.rules);
                                   if (ruleIndex !== -1) {
                                     updatedRules[ruleIndex] = {
                                       ...updatedRules[ruleIndex],
@@ -405,7 +404,6 @@ const ModifyProduct = () => {
                                     (rule) =>
                                       rule?.type === ingredients?.[0]?.type._id
                                   );
-                                  console.log(values.rules);
                                   if (ruleIndex !== -1) {
                                     updatedRules[ruleIndex] = {
                                       ...updatedRules[ruleIndex],

@@ -112,7 +112,6 @@ const CurrencyManagement = () => {
          currency?.defaultCurrency?.toLowerCase().includes(search?.toLowerCase());
 });
 
-  console.log(filteredCurrencies);
 
   return (
     <div className="main-application">

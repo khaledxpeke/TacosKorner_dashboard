@@ -42,8 +42,6 @@ const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(isSmallScreen);
-  console.log(isCollapsed);
-  console.log("small"+isSmallScreen);
   useEffect(() => {
     setIsCollapsed(isSmallScreen);
     

@@ -4,7 +4,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  TextField,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -23,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../../components/loading";
 import { useLocation, useNavigate } from "react-router-dom";
+import TextFieldCompnent from "../../../components/textFieldComponent";
 
 const ModifyType = () => {
   const location = useLocation();
@@ -95,29 +95,29 @@ const ModifyType = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
+               <TextFieldCompnent
                 type="text"
                 label="Nom"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.name}
                 name="name"
-                error={!!touched.name && !!errors.name}
-                helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 8" }}
+                blur={handleBlur}
+                touched={touched.name}
+                error={errors.name}
+                colum="span 8"
+                // row="1 / span 1"
               />
-              <TextField
-                fullWidth
-                variant="filled"
+              <TextFieldCompnent
                 type="text"
                 label="Message"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.message}
                 name="message"
-                sx={{ gridColumn: "span 8" }}
+                blur={handleBlur}
+                touched={touched.message}
+                error={errors.message}
+                colum="span 8"
+                // row="1 / span 1"
               />
               <FormGroup>
                 <FormControlLabel

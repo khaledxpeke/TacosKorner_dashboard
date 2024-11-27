@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -19,6 +19,7 @@ import {
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import SelectComponent from "../../../components/selectComponent";
+import TextFieldCompnent from "../../../components/textFieldComponent";
 
 const AddIngrediant = () => {
   const location = useLocation();
@@ -96,31 +97,30 @@ const AddIngrediant = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
+               <TextFieldCompnent
                 type="text"
                 label="Nom"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.name}
                 name="name"
-                error={!!touched.name && !!errors.name}
-                helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 3", gridRow: "1 / span 1" }}
+                blur={handleBlur}
+                touched={touched.name}
+                error={errors.name}
+                colum="span 4"
+                row="1 / span 1"
               />
-              <TextField
-                fullWidth
-                variant="filled"
+              <TextFieldCompnent
                 type="number"
                 label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
+                change={handleChange}
                 value={values.price}
                 name="price"
-                error={!!touched.price && !!errors.price}
-                helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
+                blur={handleBlur}
+                touched={touched.price}
+                error={errors.price}
+                colum="span 1"
+                row="1 / span 1"
+                // num={0}
               />
               <ImageInput
                 sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}

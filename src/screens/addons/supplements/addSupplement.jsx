@@ -1,7 +1,6 @@
 import {
     Box,
-    Button,
-    TextField,
+    Button
   } from "@mui/material";
   import { Formik } from "formik";
   import * as yup from "yup";
@@ -16,6 +15,7 @@ import {
 addSupplement,getSupplementsError,getSupplementsStatus,getSupplementsSuccess,updateStatus,getSupplementsLoading
   } from "../../../features/supplementSlice";
   import { useNavigate } from "react-router-dom";
+import TextFieldCompnent from "../../../components/textFieldComponent";
   
   const AddSupplement = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -84,19 +84,31 @@ addSupplement,getSupplementsError,getSupplementsStatus,getSupplementsSuccess,upd
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Nom"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.name}
-                  name="name"
-                  error={!!touched.name && !!errors.name}
-                  helperText={touched.name && errors.name}
-                  sx={{ gridColumn: "span 4", gridRow: "1 / span 1" }}
-                />
+                <TextFieldCompnent
+                type="text"
+                label="Nom"
+                change={handleChange}
+                value={values.name}
+                name="name"
+                blur={handleBlur}
+                touched={touched.name}
+                error={errors.name}
+                colum="span 4"
+                row="1 / span 1"
+              />
+              <TextFieldCompnent
+                type="number"
+                label="Prix"
+                change={handleChange}
+                value={values.price || 0}
+                name="price"
+                blur={handleBlur}
+                touched={touched.price}
+                error={errors.price}
+                colum="span 1"
+                row="1 / span 1"
+                // num={0}
+              />
                 <ImageInput
                   sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
                   previewImage={previewImage}
@@ -104,20 +116,7 @@ addSupplement,getSupplementsError,getSupplementsStatus,getSupplementsSuccess,upd
                   displayLabel={displayLabel}
                   setDisplayLabel={setDisplayLabel}
                 />
-                 <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label="Prix"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.price||0}
-                name="price"
-                error={!!touched.price && !!errors.price}
-                helperText={touched.price && errors.price}
-                sx={{ gridColumn: "span 1", gridRow: "1 / span 1" }}
-                // inputProps={{ min: 0 }}
-              />
+                
               </Box>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">

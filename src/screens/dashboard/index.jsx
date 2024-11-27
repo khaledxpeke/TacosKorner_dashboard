@@ -36,6 +36,7 @@ const Dashboard = () => {
   const recentsError = useSelector(getRecentHistoryError);
   const recentsStatus = useSelector(getRecentHistoryStatus);
   const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const categoryCounts = {};
   let content;
   let content2;
   let sales = 0;
@@ -43,53 +44,33 @@ const Dashboard = () => {
   let plats = 0;
   let importer = 0;
   let surPlace = 0;
-  let burger = 0;
-  let pizza = 0;
-  let panini = 0;
-  let drinks = 0;
-  let chiken = 0;
-  let tacos = 0;
-  let desert = 0;
   if (historyStatus === "loading") {
     content = <Loading />;
   } else if (historyStatus === "fetchError") {
     content = <Error>{error}</Error>;
   }
   if (historyStatus === "fetchData") {
-    histories.map((history) => {
-      history.product.map((prod) => {
-        if (prod.plat) {
-          if (prod.plat.category.name.toLowerCase() === "burgers") {
-            burger++;
-          } else if (prod.plat.category.name.toLowerCase() === "pizza") {
-            pizza++;
-          } else if (prod.plat.category.name.toLowerCase() === "panini") {
-            panini++;
-          } else if (prod.plat.category.name.toLowerCase() === "drinks") {
-            drinks++;
-          } else if (prod.plat.category.name.toLowerCase() === "chiken") {
-            chiken++;
-          } else if (prod.plat.category.name.toLowerCase() === "tacos") {
-            tacos++;
-          } else if (prod.plat.category.name.toLowerCase() === "deserts") {
-            desert++;
-          }
-        }
-        return null;
-      });
-      sales = histories.reduce(
-        (total, history) => total + parseFloat(history.total),
-        0
-      );
+    sales = 0;
+    plats = 0;
+    importer = 0;
+    surPlace = 0;
+    histories.forEach((history) => {
+      sales += parseFloat(history.total);
       plats += history.product.length;
+      history.product.forEach((prod) => {
+        if (prod.plat) {
+          const category = prod.plat.category.name.toLowerCase();
+          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        }
+      });
       if (history.pack === "Importer") {
         importer += 1;
       } else {
         surPlace += 1;
       }
-      return null;
     });
   }
+
   let surPlacePercentage = (surPlace / commands) * 100;
   let importerPercentage = (importer / commands) * 100;
   useLayoutEffect(() => {
@@ -236,42 +217,17 @@ const Dashboard = () => {
               <Typography
                 variant="h5"
                 fontWeight="600"
-                sx={{ padding: "30px 30px 10px 30px" }}
+                sx={{ padding: "10px" }}
               >
                 Quantité de vente
               </Typography>
-              <Box height="250px" mt="-20px">
+              <Box height="250px" >
                 <BarChart
-                  data={[
-                    {
-                      category: "Burgers",
-                      quantity: burger,
-                    },
-                    {
-                      category: "Tacos",
-                      quantity: tacos,
-                    },
-                    {
-                      category: "Panini",
-                      quantity: panini,
-                    },
-                    {
-                      category: "Chiken",
-                      quantity: chiken,
-                    },
-                    {
-                      category: "Drinks",
-                      quantity: drinks,
-                    },
-                    {
-                      category: "Desert",
-                      quantity: desert,
-                    },
-                    {
-                      category: "Pizza",
-                      quantity: pizza,
-                    },
-                  ]}
+                  data={Object.keys(categoryCounts).map((category) => ({
+                    category:
+                      category.charAt(0).toUpperCase() + category.slice(1),
+                    quantity: categoryCounts[category],
+                  }))}
                 />
               </Box>
             </Box>

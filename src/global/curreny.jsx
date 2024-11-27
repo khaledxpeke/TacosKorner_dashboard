@@ -103,12 +103,11 @@ const CurrencyManagement = () => {
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
-
   const filteredCurrencies = currencies.filter((currency) => {
     if (!search) {
       return true;
     }
-    return currency.currencies?.some(curr => curr?.toLowerCase().includes(search?.toLowerCase())) || 
+    return currency.toLowerCase().includes(search?.toLowerCase()) || 
          currency?.defaultCurrency?.toLowerCase().includes(search?.toLowerCase());
 });
 
@@ -117,8 +116,8 @@ const CurrencyManagement = () => {
     <div className="main-application">
       <AppBarSearch
         handleSearch={handleSearch}
-        title="Currency Management"
-        buttonTitle="Add Currency"
+        title="Gestion des devises"
+        buttonTitle="Ajouter une devise"
         handleSubmit={() => {}}
       />
 
@@ -130,8 +129,8 @@ const CurrencyManagement = () => {
                 <Table sx={{ backgroundColor: colors.primary[400] }}>
                   <TableHead sx={{ backgroundColor: colors.primary[700] }}>
                     <TableRow>
-                      <TableCell>Currency</TableCell>
-                      <TableCell align="right">Actions</TableCell>
+                      <TableCell>Devise</TableCell>
+                      <TableCell align="right">Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -146,14 +145,14 @@ const CurrencyManagement = () => {
                                 color={currency === defaultCurrency ? "success" : "info" }
                                 onClick={() => handleUpdate(currency)}
                               >
-                                Default
+                                Défaut
                               </Button>
                               <Button
                                 variant="contained"
                                 color="error"
                                 onClick={() => handleClickOpen(currency._id)}
                               >
-                                Delete
+                                Supprimer
                               </Button>
                             </ButtonGroup>
                           </TableCell>

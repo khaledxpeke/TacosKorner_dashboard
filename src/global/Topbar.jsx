@@ -1,9 +1,9 @@
-import { Box, IconButton, useTheme, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Box, IconButton, useTheme, Typography, List, ListItem, ListItemText, Collapse } from "@mui/material";
+import { useContext, useState } from "react";
 import { ColorModeContext } from "../theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import LanguageIcon from "@mui/icons-material/Language";
+import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -14,6 +14,8 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [isParameterListOpen, setIsParameterListOpen] = useState(false);
   const handleLogout = (e) => {
     e.preventDefault();
       dispatch(logOut());
@@ -22,6 +24,10 @@ const Topbar = () => {
   const handleCurrency = (e) => {
     e.preventDefault();
       navigate("/currency");
+  };
+
+  const toggleParameterList = () => {
+    setIsParameterListOpen((prev) => !prev);
   };
 
   return (
@@ -44,9 +50,37 @@ const Topbar = () => {
               <LightModeOutlinedIcon />
             )}
           </IconButton>
-          <IconButton  onClick={handleCurrency}>
-            <LanguageIcon />
-          </IconButton>
+          <Box position="relative" zIndex={4}>
+            <IconButton onClick={toggleParameterList}>
+              <SettingsIcon />
+            </IconButton>
+            <Collapse
+              in={isParameterListOpen}
+              timeout="auto"
+              unmountOnExit
+              sx={{
+                position: "absolute",
+                right: 0,
+                top: "40px",
+                backgroundColor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
+                borderRadius: "4px",
+                boxShadow: theme.shadows[3],
+              }}
+            >
+              <List>
+                <ListItem button onClick={() => navigate("/currency")}>
+                  <ListItemText primary="Devise" />
+                </ListItem>
+                <ListItem button onClick={() => navigate("/tva")}>
+                  <ListItemText primary="TVA" />
+                </ListItem>
+                <ListItem button onClick={() => navigate("/images")}>
+                  <ListItemText primary="Photo" />
+                </ListItem>
+              </List>
+            </Collapse>
+          </Box>
 
           <IconButton onClick={handleLogout}>
             <LogoutIcon />

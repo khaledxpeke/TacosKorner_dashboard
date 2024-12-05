@@ -36,6 +36,7 @@ import AddDrink from "./screens/extra/drinks/addDrink";
 import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
 import SettingsManagement from "./screens/settings/settings";
+import AddSettings from "./screens/settings/addSettings";
 import CarouselMedia from "./screens/settings/CarouselMedia";
 import AddToCarousel from "./screens/settings/CarouselMedia/addToCarousel";
 

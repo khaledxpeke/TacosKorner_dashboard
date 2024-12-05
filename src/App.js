@@ -37,6 +37,7 @@ import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
 import SettingsManagement from "./screens/settings/settings";
 import CarouselImages from "./screens/settings/images";
+import AddSettings from "./screens/settings/addSettings";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -71,6 +72,7 @@ function App() {
               <>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/settings" element={<SettingsManagement />} />
+                <Route path="/addSettings" element={< AddSettings/>} />
                 <Route path="/category" element={<Category />} />
                 <Route path="/addCategory" element={<AddCategory />} />
                 <Route path="/modifyCategory" element={<ModifyCategory />} />

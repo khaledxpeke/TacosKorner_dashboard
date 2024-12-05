@@ -9,6 +9,7 @@ import typeReducer from "./features/typeSlice";
 import extraReducer from "./features/extraSlice";
 import desertReducer from "./features/desertSlice";
 import historyReducer from "./features/historySlice";
+import settingReducer from "./features/settingSlice";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     user: userReducer,
     categories: categoriesReducer,
     history: historyReducer,
+    settings: settingReducer,
   },
 });
 

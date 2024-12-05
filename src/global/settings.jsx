@@ -4,15 +4,16 @@ import { Button, Grid, Container, Table, TableBody, TableCell, TableContainer, T
 import { toast } from "react-toastify";
 import NoData from "../components/no_data";
 import AlertDialog from "../components/dialog";
-import AppBarSearch from "../global/appBarSearch";
+import AppBarSearch from "./appBarSearch";
 import { useTheme } from "@mui/material/styles";
 import { tokens } from "../theme";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-const CurrencyManagement = () => {
+const SettingsManagement = () => {
   const [currencies, setCurrencies] = useState([]);
   const [defaultCurrency, setDefaultCurrency] = useState("");
+  const [tva, setTva] = useState(0);
   const [search, setSearch] = useState("");
 //   const [newCurrency, setNewCurrency] = useState("");
   const [open, setOpen] = useState(false);
@@ -22,7 +23,7 @@ const CurrencyManagement = () => {
 
   useEffect(() => {
     axios
-      .get(`${apiUrl}/currency`, {
+      .get(`${apiUrl}/settings`, {
         headers: {
             Authorization: `Bearer ${localStorage
                 .getItem("token")
@@ -32,6 +33,7 @@ const CurrencyManagement = () => {
       .then((response) => {
         setCurrencies(response.data.currencies);
         setDefaultCurrency(response.data.defaultCurrency);
+        setTva(response.data.tva);
       })
       .catch((error) => {
         console.error("Error fetching currencies:", error);
@@ -62,7 +64,7 @@ const CurrencyManagement = () => {
 
   const handleDeleteCurrency = (currencyId) => {
     axios
-      .delete(`${apiUrl}/currency/${currencyId}`, {
+      .delete(`${apiUrl}/settings/${currencyId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -78,7 +80,7 @@ const CurrencyManagement = () => {
   };
   const handleUpdate = (currency) => {
     axios
-      .put(`${apiUrl}/currency/update`, { defaultCurrency: currency },{
+      .put(`${apiUrl}/settings/currency/update`, { defaultCurrency: currency },{
         headers: {
             Authorization: `Bearer ${localStorage
                 .getItem("token")
@@ -111,6 +113,7 @@ const CurrencyManagement = () => {
          currency?.defaultCurrency?.toLowerCase().includes(search?.toLowerCase());
 });
 
+console.log(currencies);
 
   return (
     <div className="main-application">
@@ -130,6 +133,7 @@ const CurrencyManagement = () => {
                   <TableHead sx={{ backgroundColor: colors.primary[700] }}>
                     <TableRow>
                       <TableCell>Devise</TableCell>
+                      <TableCell>TVA</TableCell>
                       <TableCell align="right">Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -138,6 +142,7 @@ const CurrencyManagement = () => {
                       filteredCurrencies.map((currency,index) => (
                         <TableRow key={index}>
                           <TableCell>{currency} </TableCell>
+                          <TableCell>{tva}</TableCell>
                           <TableCell align="right">
                             <ButtonGroup variant="contained" aria-label="outlined primary button group">
                             <Button
@@ -173,7 +178,7 @@ const CurrencyManagement = () => {
       <AlertDialog
         open={open}
         handleClose={() => setOpen(false)}
-        name="currency"
+        name="settings"
         cardId={cardId}
         deleteData={() => handleDeleteCurrency(cardId)}
       />
@@ -181,4 +186,4 @@ const CurrencyManagement = () => {
   );
 };
 
-export default CurrencyManagement;
+export default SettingsManagement;

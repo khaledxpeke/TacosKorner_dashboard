@@ -21,10 +21,10 @@ const Topbar = () => {
       dispatch(logOut());
       navigate("/signin");
   };
-  const handleCurrency = (e) => {
-    e.preventDefault();
-      navigate("/currency");
-  };
+  // const handleCurrency = (e) => {
+  //   e.preventDefault();
+  //     navigate("/currency");
+  // };
 
   const toggleParameterList = () => {
     setIsParameterListOpen((prev) => !prev);
@@ -69,7 +69,7 @@ const Topbar = () => {
               }}
             >
               <List>
-                <ListItem button onClick={() => navigate("/currency")}>
+                <ListItem button onClick={() => navigate("/settings")}>
                   <ListItemText primary="Devise" />
                 </ListItem>
                 <ListItem button onClick={() => navigate("/tva")}>

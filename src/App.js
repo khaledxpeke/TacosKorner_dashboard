@@ -36,7 +36,8 @@ import AddDrink from "./screens/extra/drinks/addDrink";
 import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
 import SettingsManagement from "./screens/settings/settings";
-import CarouselImages from "./screens/settings/images";
+import CarouselMedia from "./screens/settings/CarouselMedia";
+import AddToCarousel from "./screens/settings/CarouselMedia/addToCarousel";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -103,7 +104,8 @@ function App() {
                 <Route path="/addDesert" element={<AddDesert />} />
                 <Route path="/modifyDesert" element={<ModifyDesert />} />
                 <Route path="/history" element={<History />} />
-                <Route path="/images" element={<CarouselImages />} />
+                <Route path="/carousel" element={<CarouselMedia />} />
+                <Route path="/addToCarousel" element={<AddToCarousel />} />
               </>
             )}
           </Routes>

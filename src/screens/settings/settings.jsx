@@ -13,11 +13,11 @@ import {
   ButtonGroup,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import NoData from "../components/no_data";
-import AlertDialog from "../components/dialog";
-import AppBarSearch from "./appBarSearch";
+import NoData from "../../components/no_data";
+import AlertDialog from "../../components/dialog";
+import AppBarSearch from "../../global/appBarSearch";
 import { useTheme } from "@mui/material/styles";
-import { tokens } from "../theme";
+import { tokens } from "../../theme";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -194,36 +194,36 @@ const SettingsManagement = () => {
                 </Table>
               </TableContainer>
             </Grid>
-          <Grid
-            item
-            xs={2}
-            sx={{
-              display: "flex",
-              alignItems: "start",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                textAlign: "center",
-                padding: "1rem",
-                backgroundColor: colors.primary[400],
-                borderRadius: "8px",
+            <Grid
+              item
+              xs={2}
+              sx={{
+                display: "flex",
+                alignItems: "start",
+                justifyContent: "center",
               }}
             >
-              <h2 style={{ margin: 0, color: colors.primary[700] }}>TVA :</h2>
-              <p
+              <div
                 style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  margin: 0,
-                  color: colors.primary[900],
+                  textAlign: "center",
+                  padding: "1rem",
+                  backgroundColor: colors.primary[400],
+                  borderRadius: "8px",
                 }}
               >
-                {tva}%
-              </p>
-            </div>
-          </Grid>
+                <h2 style={{ margin: 0, color: colors.primary[700] }}>TVA :</h2>
+                <p
+                  style={{
+                    fontSize: "1.5rem",
+                    fontWeight: "bold",
+                    margin: 0,
+                    color: colors.primary[900],
+                  }}
+                >
+                  {tva}%
+                </p>
+              </div>
+            </Grid>
           </Grid>
         </Container>
       </main>

@@ -1,9 +1,19 @@
-import { Box, IconButton, useTheme, Typography, List, ListItem, ListItemText, Collapse } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  useTheme,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
+  ButtonBase,
+} from "@mui/material";
 import { useContext, useState } from "react";
-import { ColorModeContext } from "../theme";
+import { ColorModeContext, tokens } from "../theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -14,17 +24,13 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const colors = tokens(theme.palette.mode);
   const [isParameterListOpen, setIsParameterListOpen] = useState(false);
   const handleLogout = (e) => {
     e.preventDefault();
-      dispatch(logOut());
-      navigate("/signin");
+    dispatch(logOut());
+    navigate("/signin");
   };
-  // const handleCurrency = (e) => {
-  //   e.preventDefault();
-  //     navigate("/currency");
-  // };
 
   const toggleParameterList = () => {
     setIsParameterListOpen((prev) => !prev);
@@ -69,15 +75,66 @@ const Topbar = () => {
               }}
             >
               <List>
-                <ListItem button onClick={() => navigate("/settings")}>
-                  <ListItemText primary="Devise" />
-                </ListItem>
-                <ListItem button onClick={() => navigate("/tva")}>
-                  <ListItemText primary="TVA" />
-                </ListItem>
-                <ListItem button onClick={() => navigate("/images")}>
-                  <ListItemText primary="Photo" />
-                </ListItem>
+                <ButtonBase
+                  component="div"
+                  onClick={() => {
+                    navigate("/settings");
+                    toggleParameterList();
+                  }}
+                  style={{ width: "100%" }}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    textAlign: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ListItem>
+                    <ListItemText primary="Devise" />
+                  </ListItem>
+                </ButtonBase>
+                <ButtonBase
+                  component="div"
+                  onClick={() => {
+                    navigate("/tva");
+                    toggleParameterList();
+                  }}
+                  style={{ width: "100%" }}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    textAlign: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ListItem>
+                    <ListItemText primary="TVA" />
+                  </ListItem>
+                </ButtonBase>
+                <ButtonBase
+                  component="div"
+                  onClick={() => {
+                    navigate("/images");
+                    toggleParameterList();
+                  }}
+                  style={{ width: "100%" }}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    textAlign: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ListItem>
+                    <ListItemText primary="Photo" />
+                  </ListItem>
+                </ButtonBase>
               </List>
             </Collapse>
           </Box>

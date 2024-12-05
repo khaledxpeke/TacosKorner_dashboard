@@ -118,7 +118,7 @@ const Topbar = () => {
                 <ButtonBase
                   component="div"
                   onClick={() => {
-                    navigate("/images");
+                    navigate("/carousel");
                     toggleParameterList();
                   }}
                   style={{ width: "100%" }}

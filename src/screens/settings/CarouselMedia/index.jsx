@@ -1,14 +1,18 @@
 import * as React from "react";
 import {
   AppBar,
+  Button,
   CssBaseline,
   ImageList,
   ImageListItem,
   Toolbar,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const CarouselMedia = () => {
+    const navigate = useNavigate();
   const itemData = [
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrTPjHOG0LBJKLlx35kYcK4hpx5xRdGNQ4tQ&s",
     "https://www.w3schools.com/html/mov_bbb.mp4",
@@ -50,6 +54,15 @@ const CarouselMedia = () => {
           <Typography variant="h3" color="inherit" noWrap>
             Carousel
           </Typography>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<AddIcon />}
+            style={{ marginLeft: "auto" }}
+            onClick={() => navigate("/addToCarousel")}
+          >
+            Ajouter
+          </Button>
         </Toolbar>
       </AppBar>
       <main>

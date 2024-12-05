@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ButtonGroup } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  ButtonGroup,
+} from "@mui/material";
 import { toast } from "react-toastify";
 import NoData from "../components/no_data";
 import AlertDialog from "../components/dialog";
@@ -15,7 +26,7 @@ const SettingsManagement = () => {
   const [defaultCurrency, setDefaultCurrency] = useState("");
   const [tva, setTva] = useState(0);
   const [search, setSearch] = useState("");
-//   const [newCurrency, setNewCurrency] = useState("");
+  //   const [newCurrency, setNewCurrency] = useState("");
   const [open, setOpen] = useState(false);
   const [cardId, setCardId] = useState(null);
   const theme = useTheme();
@@ -25,9 +36,9 @@ const SettingsManagement = () => {
     axios
       .get(`${apiUrl}/settings`, {
         headers: {
-            Authorization: `Bearer ${localStorage
-                .getItem("token")
-                .replace(/^"|"$/g, "")}`,
+          Authorization: `Bearer ${localStorage
+            .getItem("token")
+            .replace(/^"|"$/g, "")}`,
         },
       })
       .then((response) => {
@@ -40,27 +51,27 @@ const SettingsManagement = () => {
       });
   }, []);
 
-//   const handleAddCurrency = () => {
-//     if (!newCurrency) {
-//       toast.error("Currency name cannot be empty!");
-//       return;
-//     }
-//     axios
-//       .post(`${apiUrl}/currency/add`, { name: newCurrency }, {
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem("token")}`,
-//         },
-//       })
-//       .then((response) => {
-//         setNewCurrency(""); // Reset input field
-//         toast.success("Currency added successfully");
-//         setCurrencies([...currencies, response.data]);
-//       })
-//       .catch((error) => {
-//         console.error("Error adding currency:", error);
-//         toast.error("Error adding currency");
-//       });
-//   };
+  //   const handleAddCurrency = () => {
+  //     if (!newCurrency) {
+  //       toast.error("Currency name cannot be empty!");
+  //       return;
+  //     }
+  //     axios
+  //       .post(`${apiUrl}/currency/add`, { name: newCurrency }, {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         setNewCurrency(""); // Reset input field
+  //         toast.success("Currency added successfully");
+  //         setCurrencies([...currencies, response.data]);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error adding currency:", error);
+  //         toast.error("Error adding currency");
+  //       });
+  //   };
 
   const handleDeleteCurrency = (currencyId) => {
     axios
@@ -71,7 +82,9 @@ const SettingsManagement = () => {
       })
       .then(() => {
         toast.success("Currency deleted successfully");
-        setCurrencies(currencies.filter((currency) => currency._id !== currencyId));
+        setCurrencies(
+          currencies.filter((currency) => currency._id !== currencyId)
+        );
       })
       .catch((error) => {
         console.error("Error deleting currency:", error);
@@ -80,13 +93,17 @@ const SettingsManagement = () => {
   };
   const handleUpdate = (currency) => {
     axios
-      .put(`${apiUrl}/settings/currency/update`, { defaultCurrency: currency },{
-        headers: {
+      .put(
+        `${apiUrl}/settings/currency/update`,
+        { defaultCurrency: currency },
+        {
+          headers: {
             Authorization: `Bearer ${localStorage
-                .getItem("token")
-                .replace(/^"|"$/g, "")}`,
-        },
-      })
+              .getItem("token")
+              .replace(/^"|"$/g, "")}`,
+          },
+        }
+      )
       .then((response) => {
         toast.success("Currency updated successfully");
         setDefaultCurrency(response.data.defaultCurrency);
@@ -109,11 +126,13 @@ const SettingsManagement = () => {
     if (!search) {
       return true;
     }
-    return currency.toLowerCase().includes(search?.toLowerCase()) || 
-         currency?.defaultCurrency?.toLowerCase().includes(search?.toLowerCase());
-});
+    return (
+      currency.toLowerCase().includes(search?.toLowerCase()) ||
+      currency?.defaultCurrency?.toLowerCase().includes(search?.toLowerCase())
+    );
+  });
 
-console.log(currencies);
+  console.log(currencies);
 
   return (
     <div className="main-application">
@@ -127,27 +146,32 @@ console.log(currencies);
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <TableContainer>
                 <Table sx={{ backgroundColor: colors.primary[400] }}>
                   <TableHead sx={{ backgroundColor: colors.primary[700] }}>
                     <TableRow>
                       <TableCell>Devise</TableCell>
-                      <TableCell>TVA</TableCell>
-                      <TableCell align="right">Action</TableCell>
+                      <TableCell align="center">Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {filteredCurrencies.length > 0 ? (
-                      filteredCurrencies.map((currency,index) => (
+                      filteredCurrencies.map((currency, index) => (
                         <TableRow key={index}>
                           <TableCell>{currency} </TableCell>
-                          <TableCell>{tva}</TableCell>
                           <TableCell align="right">
-                            <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                            <Button
+                            <ButtonGroup
+                              variant="contained"
+                              aria-label="outlined primary button group"
+                            >
+                              <Button
                                 variant="contained"
-                                color={currency === defaultCurrency ? "success" : "info" }
+                                color={
+                                  currency === defaultCurrency
+                                    ? "success"
+                                    : "info"
+                                }
                                 onClick={() => handleUpdate(currency)}
                               >
                                 Défaut
@@ -170,11 +194,39 @@ console.log(currencies);
                 </Table>
               </TableContainer>
             </Grid>
+          <Grid
+            item
+            xs={2}
+            sx={{
+              display: "flex",
+              alignItems: "start",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                textAlign: "center",
+                padding: "1rem",
+                backgroundColor: colors.primary[400],
+                borderRadius: "8px",
+              }}
+            >
+              <h2 style={{ margin: 0, color: colors.primary[700] }}>TVA :</h2>
+              <p
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  margin: 0,
+                  color: colors.primary[900],
+                }}
+              >
+                {tva}%
+              </p>
+            </div>
+          </Grid>
           </Grid>
         </Container>
       </main>
-
-      {/* Dialog for Delete Confirmation */}
       <AlertDialog
         open={open}
         handleClose={() => setOpen(false)}

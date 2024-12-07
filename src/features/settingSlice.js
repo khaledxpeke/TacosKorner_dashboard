@@ -62,12 +62,12 @@ export const updateCurrency = createAsyncThunk(
   }
 );
 
-export const modifySettings = createAsyncThunk(
-  "settings/modifySettings",
-  async ({ body, settingId }) => {
+export const updateCurrencyOrTva = createAsyncThunk(
+  "settings/updateCurrencyOrTva",
+  async (body) => {
     try {
       const response = await axios.put(
-        `${apiUrl}/settings/update/${settingId}`,
+        `${apiUrl}/settings`,
         body,
         {
           headers: {
@@ -154,16 +154,16 @@ const settingSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(modifySettings.pending, (state, action) => {
+      .addCase(updateCurrencyOrTva.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
       })
-      .addCase(modifySettings.fulfilled, (state, action) => {
+      .addCase(updateCurrencyOrTva.fulfilled, (state, action) => {
         state.status = "modifySuccess";
         state.loading = false;
         state.success = action.payload.message;
       })
-      .addCase(modifySettings.rejected, (state, action) => {
+      .addCase(updateCurrencyOrTva.rejected, (state, action) => {
         state.status = "modifyError";
         state.loading = false;
         state.error = action.error.message;

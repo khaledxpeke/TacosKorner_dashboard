@@ -10,6 +10,11 @@ import {
   TableHead,
   TableRow,
   ButtonGroup,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import NoData from "../../components/no_data";
@@ -27,6 +32,7 @@ import {
   deleteSettings,
   updateCurrency,
   selectAllSettings,
+  updateCurrencyOrTva,
 } from "../../features/settingSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -40,15 +46,29 @@ const SettingsManagement = () => {
   const error = useSelector(getSettingsError);
   const success = useSelector(getSettingsSuccess);
   const settingStatus = useSelector(getSettingsStatus);
+  const [oldCurrency, setOldCurrency] = useState("");
+  const [newCurrency, setNewCurrency] = useState("");
+  const [openDelete, setOpenDelete] = useState(false);
+  const [editType, setEditType] = useState("");
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [cardId, setCardId] = useState(null);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const handleClickOpen = (currency) => {
+  const handleClickOpen = (type, value) => {
+    setEditType(type);
+    if (type === "currency") {
+      setOldCurrency(value);
+    } else if (type === "tva") {
+      setNewCurrency(value);
+    }
     setOpen(true);
-    setCardId(currency);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setOldCurrency("");
+    setNewCurrency("");
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,6 +80,33 @@ const SettingsManagement = () => {
   const handleUpdate = (currency) => {
     dispatch(updateCurrency({ defaultCurrency: currency }));
   };
+  const handleUpdateCurrency = () => {
+    if (!newCurrency.trim()) {
+      toast.error("New currency name cannot be empty!");
+      return;
+    }
+    dispatch(updateCurrencyOrTva({ oldCurrency, newCurrency }));
+    setOpen(false);
+  };
+  const handleUpdateTva = () => {
+    if (!newCurrency.trim() || isNaN(newCurrency) || Number(newCurrency) < 0) {
+      toast.error("Please enter a valid TVA value.");
+      return;
+    }
+    dispatch(updateCurrencyOrTva({ tva: newCurrency }));
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (settingStatus === "modifySuccess") {
+      toast.success("Settings updated successfully!");
+      dispatch(getSettings());
+      dispatch(updateStatus());
+    } else if (settingStatus === "modifyError") {
+      toast.error(error || "Failed to update currency.");
+      dispatch(updateStatus());
+    }
+  }, [settingStatus, error, dispatch]);
   useEffect(() => {
     if (settingStatus === "updateSuccess") {
       dispatch(getSettings());
@@ -127,8 +174,20 @@ const SettingsManagement = () => {
                           </Button>
                           <Button
                             variant="contained"
+                            color="warning"
+                            onClick={() =>
+                              handleClickOpen("currency", currency)
+                            }
+                          >
+                            Modifier
+                          </Button>
+                          <Button
+                            variant="contained"
                             color="error"
-                            onClick={() => handleClickOpen(currency)}
+                            onClick={() => {
+                              setCardId(currency); 
+                              handleClickOpen("currency", currency);
+                            }}
                           >
                             Supprimer
                           </Button>
@@ -163,6 +222,15 @@ const SettingsManagement = () => {
             <h2 style={{ margin: 0, color: colors.primary[700] }}>
               TVA : {settings.tva}%
             </h2>
+            <Button
+              size="small"
+              variant="contained"
+              color="secondary"
+              onClick={() => handleClickOpen("tva", settings.tva)}
+              style={{ marginTop: "0.5rem" }}
+            >
+              Modify
+            </Button>
           </div>
         </Grid>
       </>
@@ -199,8 +267,59 @@ const SettingsManagement = () => {
         handleClose={() => setOpen(false)}
         name="settings"
         cardId={cardId}
-        deleteData={() => dispatch(deleteSettings({currency:cardId}))}
+        deleteData={() => dispatch(deleteSettings({ currency: cardId }))}
       />
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          {editType === "currency" ? "Modifier la Devise" : "Modifier la TVA"}
+        </DialogTitle>
+        <DialogContent>
+          {editType === "currency" ? (
+            <>
+              <TextField
+                label="Ancienne Devise"
+                fullWidth
+                margin="normal"
+                value={oldCurrency}
+                disabled
+              />
+              <TextField
+                label="Nouvelle Devise"
+                fullWidth
+                margin="normal"
+                value={newCurrency}
+                onChange={(e) => setNewCurrency(e.target.value)}
+              />
+            </>
+          ) : (
+            <TextField
+              label="Nouvelle TVA"
+              fullWidth
+              margin="normal"
+              type="number"
+              value={newCurrency}
+              onChange={(e) => setNewCurrency(e.target.value)}
+            />
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="error">
+            Annuler
+          </Button>
+          <Button
+            onClick={() => {
+              if (editType === "currency") {
+                handleUpdateCurrency();
+              } else if (editType === "tva") {
+                handleUpdateTva(); // Function to update TVA
+              }
+            }}
+            color="secondary"
+          >
+            Confirmer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

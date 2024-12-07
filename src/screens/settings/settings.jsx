@@ -65,6 +65,13 @@ const SettingsManagement = () => {
     }
     setOpen(true);
   };
+  const handleDeleteOpen = (currency) => {
+    setCardId(currency);
+    setOpenDelete(true);
+  };
+  const handleDeleteClose = () => {
+    setOpenDelete(false);
+  };
   const handleClose = () => {
     setOpen(false);
     setOldCurrency("");
@@ -185,8 +192,8 @@ const SettingsManagement = () => {
                             variant="contained"
                             color="error"
                             onClick={() => {
-                              setCardId(currency); 
-                              handleClickOpen("currency", currency);
+                              setCardId(currency);
+                              handleDeleteOpen(currency);
                             }}
                           >
                             Supprimer
@@ -229,7 +236,7 @@ const SettingsManagement = () => {
               onClick={() => handleClickOpen("tva", settings.tva)}
               style={{ marginTop: "0.5rem" }}
             >
-              Modify
+              Modifier
             </Button>
           </div>
         </Grid>
@@ -262,13 +269,6 @@ const SettingsManagement = () => {
           </Grid>
         </Container>
       </main>
-      <AlertDialog
-        open={open}
-        handleClose={() => setOpen(false)}
-        name="settings"
-        cardId={cardId}
-        deleteData={() => dispatch(deleteSettings({ currency: cardId }))}
-      />
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           {editType === "currency" ? "Modifier la Devise" : "Modifier la TVA"}
@@ -320,6 +320,16 @@ const SettingsManagement = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <AlertDialog
+        open={openDelete}
+        handleClose={handleDeleteClose}
+        name="settings"
+        cardId={cardId}
+        deleteData={() => {
+          dispatch(deleteSettings({ currency: cardId }));
+          setOpenDelete(false); // Close dialog after deletion
+        }}
+      />
     </div>
   );
 };

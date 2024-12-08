@@ -226,7 +226,7 @@ const SettingsManagement = () => {
               borderRadius: "8px",
             }}
           >
-            <h2 style={{ margin: 0, color: colors.primary[700] }}>
+            <h2 style={{ margin: 0, color: colors.primary[100] }}>
               TVA : {settings.tva}%
             </h2>
             <Button

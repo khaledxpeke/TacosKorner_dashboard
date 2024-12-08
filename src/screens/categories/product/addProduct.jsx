@@ -297,7 +297,10 @@ const AddProduct = () => {
                                   }
                                 }
                               );
-                              updateTypes(selectedTypes);
+                              const uniqueTypes = Array.from(
+                                new Map(selectedTypes.map((type) => [type._id, type])).values()
+                              );
+                              updateTypes(uniqueTypes);
                               handleChange(event);
                             }}
                             sx={{ gridColumn: "span 1" }}

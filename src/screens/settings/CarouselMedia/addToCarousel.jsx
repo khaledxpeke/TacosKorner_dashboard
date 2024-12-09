@@ -3,7 +3,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageVideoInput from "../../../components/imageVideoInput";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Add";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const apiUrl = process.env.REACT_APP_API_URL;

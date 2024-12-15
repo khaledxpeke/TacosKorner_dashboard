@@ -7,7 +7,6 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  TextField,
   InputLabel,
   MenuItem,
   Select,
@@ -34,7 +33,6 @@ import {
   fetchCategories,
 } from "../../../features/categorySlice";
 import {
-  selectAllIngrediants,
   getIngrediantsByType,
 } from "../../../features/ingrediantSlice";
 import {
@@ -46,6 +44,7 @@ import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
+import { getTypes, selectAllTypes } from "../../../features/typeSlice";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -59,7 +58,7 @@ const AddProduct = () => {
   const success = useSelector(getProductsSuccess);
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
-  const ingrediantsByType = useSelector(selectAllIngrediants);
+  const typesWithIngrediants = useSelector(selectAllTypes);
   const supplements = useSelector(selectAllSupplements);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
@@ -79,6 +78,7 @@ const AddProduct = () => {
     category: categories.length > 0 ? categories[0]._id : "",
     ingrediant: [],
     supplement: [],
+    type: [],
     currency: "",
     price: "",
     choice: "seul",
@@ -92,11 +92,11 @@ const AddProduct = () => {
       return;
     }
 
-    const updatedTypes = Array.from(types);
+    const updatedTypes = Array.from(selectedTypes);
     const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
+
     updatedTypes.splice(result.destination.index, 0, reorderedItem);
 
-    updateTypes(updatedTypes);
     setSelectedTypes(updatedTypes);
   };
   const handleFormSubmit = (values) => {
@@ -118,6 +118,7 @@ const AddProduct = () => {
       free: type.free || 1,
       quantity: type.quantity || 1,
     }));
+
     dispatch(
       addProduct({
         body: {
@@ -139,7 +140,16 @@ const AddProduct = () => {
     );
   };
 
+  const handleTypeSelect = (event) => {
+    const selectedTypeIds = event.target.value; 
+    setSelectedTypes((prevTypes) => {
+      return typesWithIngrediants.filter((type) =>
+        selectedTypeIds.includes(type._id)
+      );
+    });
+  };
   useEffect(() => {
+    dispatch(getTypes());
     dispatch(fetchCategories());
     dispatch(getIngrediantsByType());
     dispatch(getSupplements());
@@ -151,22 +161,6 @@ const AddProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
-
-  const handleNumberOfFreeChange = (typeId, value) => {
-    updateTypes((prevTypes) =>
-      prevTypes.map((type) =>
-        type._id === typeId ? { ...type, free: parseInt(value) } : type
-      )
-    );
-  };
-
-  const handleMaxIngredientChange = (typeId, value) => {
-    updateTypes((prevTypes) =>
-      prevTypes.map((type) =>
-        type._id === typeId ? { ...type, quantity: parseInt(value) } : type
-      )
-    );
-  };
 
   return loading ? (
     <Loading />
@@ -262,127 +256,41 @@ const AddProduct = () => {
                       gap: "30px",
                     }}
                   >
-                    {Object.entries(ingrediantsByType).map(
-                      ([typeName, ingredients]) => (
-                        <FormControl
-                          key={typeName}
-                          variant="filled"
-                          sx={{ minWidth: "200px" }}
-                        >
-                          <InputLabel id="ingrediant">{typeName}</InputLabel>
-                          <Select
-                            name="ingrediant"
-                            labelId="ingrediants"
-                            id="ingrediant"
-                            value={values.ingrediant}
-                            multiple
-                            label="ingrediant"
-                            onChange={(event) => {
-                              const selectedIngredientIds =
-                                event.target.value || [];
-                              Object.entries(ingrediantsByType).forEach(
-                                ([typeName, ingredients]) => {
-                                  const selectedIngredientsOfType =
-                                    ingredients.filter((ingredient) =>
-                                      selectedIngredientIds.includes(
-                                        ingredient._id
-                                      )
-                                    );
-                                  if (selectedIngredientsOfType.length > 0) {
-                                    selectedTypes.push({
-                                      name: typeName,
-                                      _id: selectedIngredientsOfType[0].type
-                                        ._id,
-                                    });
-                                  }
-                                }
-                              );
-                              const uniqueTypes = Array.from(
-                                new Map(selectedTypes.map((type) => [type._id, type])).values()
-                              );
-                              updateTypes(uniqueTypes);
-                              handleChange(event);
-                            }}
-                            sx={{ gridColumn: "span 1" }}
-                            MenuProps={{
-                              PaperProps: {
-                                style: {
-                                  maxHeight: "300px",
-                                },
-                              },
+                    <FormControl fullWidth  variant="filled">
+                      <InputLabel id="type-select-label">
+                        Select Types
+                      </InputLabel>
+                      <Select
+                        labelId="type-select-label"
+                        multiple
+                        value={selectedTypes.map((type) => type._id)}
+                        onChange={handleTypeSelect}
+                      >
+                        {typesWithIngrediants.map((type) => (
+                          <MenuItem
+                            key={type._id}
+                            value={type._id}
+                            sx={{
+                              opacity: selectedTypes.some(
+                                (selectedType) => selectedType._id === type._id
+                              )
+                                ? 1
+                                : 0.6,
+                              backgroundColor: selectedTypes.some(
+                                (selectedType) => selectedType._id === type._id
+                              )
+                                ? "black !important"
+                                : "transparent",
+                              color: selectedTypes.includes(type._id)
+                                ? "white"
+                                : "inherit",
                             }}
                           >
-                            {ingredients.map((ingredient) => (
-                              <MenuItem
-                                key={ingredient._id}
-                                value={ingredient._id}
-                                sx={{
-                                  opacity: values.ingrediant.includes(
-                                    ingredient._id
-                                  )
-                                    ? 1
-                                    : 0.6,
-                                  backgroundColor: values.ingrediant.includes(
-                                    ingredient._id
-                                  )
-                                    ? "black !important"
-                                    : "transparent",
-                                  color: values.ingrediant.includes(
-                                    ingredient._id
-                                  )
-                                    ? "white"
-                                    : "inherit",
-                                }}
-                              >
-                                {ingredient.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-
-                          {types.some(
-                            (type) => type._id === ingredients[0].type._id
-                          ) && (
-                            <>
-                              <TextField
-                                label="Nombre d'ingrediant gratuit"
-                                type="number"
-                                sx={{ my: 2 }}
-                                value={
-                                  types.find(
-                                    (type) =>
-                                      type._id === ingredients[0].type._id
-                                  )?.free || 0
-                                }
-                                onChange={(e) =>
-                                  handleNumberOfFreeChange(
-                                    ingredients[0].type._id,
-                                    e.target.value
-                                  )
-                                }
-                                inputProps={{ min: 0 }}
-                              />
-                              <TextField
-                                label="Quantité d'ingrediant"
-                                type="number"
-                                value={
-                                  types.find(
-                                    (type) =>
-                                      type._id === ingredients[0].type._id
-                                  )?.quantity || 1
-                                }
-                                onChange={(e) =>
-                                  handleMaxIngredientChange(
-                                    ingredients[0].type._id,
-                                    e.target.value
-                                  )
-                                }
-                                inputProps={{ min: 1 }}
-                              />
-                            </>
-                          )}
-                        </FormControl>
-                      )
-                    )}
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Stack>
                   <Stack
                     flexDirection="row"
@@ -438,7 +346,7 @@ const AddProduct = () => {
                       gridRow: "5 / span 1",
                     }}
                   >
-                    <ReorderType onDragEnd={onDragEnd} types={types} />
+                    <ReorderType onDragEnd={onDragEnd} types={selectedTypes} />
                   </Stack>
                 </>
               )}

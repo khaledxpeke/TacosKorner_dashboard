@@ -18,8 +18,8 @@ import {
 } from "../../../features/ingrediantSlice";
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
 import { useNavigate } from "react-router-dom";
-import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
+import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddIngrediant = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -41,10 +41,10 @@ const AddIngrediant = () => {
     name: "",
     image: "",
     price: 0,
-    type: types.length > 0 ? types[0]._id : "",
+    types: [],
   };
   const handleFormSubmit = (values) => {
-    if (!values.type) {
+    if (values.types.length === 0) {
       setTypeError(true);
       return;
     }
@@ -52,7 +52,7 @@ const AddIngrediant = () => {
       name: values.name,
       price: values.price,
       image: previewImage,
-      typeId: values.type,
+      typeIds: values.types,
     };
     dispatch(addIngrediant(formData));
   };
@@ -133,10 +133,10 @@ const AddIngrediant = () => {
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-              <SelectComponent
-                name="type"
+              <MultipleSelectComponent
+                name="types"
                 items={types}
-                value={values.type}
+                value={values.types}
                 change={(e) => {
                   handleChange(e);
                   setTypeError(false);

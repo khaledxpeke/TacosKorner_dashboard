@@ -18,10 +18,10 @@ import {
 } from "../../../features/ingrediantSlice";
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
+import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
-const AddIngrediant = () => {
+const ModifyIngrediant = () => {
   const location = useLocation();
   const data = location.state.ingrediant;
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -42,13 +42,14 @@ const AddIngrediant = () => {
   const initialValues = {
     name: data.name,
     price: data.price,
-    type: data.type._id,
+    types: data.types.map((type) => type._id)|| [],
   };
+
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
       price: values.price,
-      type: values.type,
+      types: values.types,
       ...(previewImage && { image: previewImage }),
     };
     dispatch(
@@ -60,6 +61,8 @@ const AddIngrediant = () => {
   };
   useEffect(() => {
     dispatch(getTypes());
+  }, [dispatch]);
+  useEffect(() => {
     if (status === "modifySuccess") {
       toast.success(success);
       dispatch(updateStatus());
@@ -130,11 +133,19 @@ const AddIngrediant = () => {
                 setDisplayLabel={setDisplayLabel}
                 image={data.image}
               />
-              <SelectComponent
-                name="type"
+              <MultipleSelectComponent
+                name="types"
                 items={types}
-                value={values.type}
-                change={handleChange}
+                value={Array.isArray(values.types) ? values.types : []}
+                change={(event) => {
+                  const { value } = event.target;
+                  handleChange({
+                    target: {
+                      name: "types",  
+                      value: Array.isArray(value) ? value : value.split(","), 
+                    },
+                  });
+                }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
@@ -149,4 +160,4 @@ const AddIngrediant = () => {
   );
 };
 
-export default AddIngrediant;
+export default ModifyIngrediant;

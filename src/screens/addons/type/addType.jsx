@@ -2,8 +2,11 @@ import {
   Box,
   Button,
   Checkbox,
+  FormControl,
   FormControlLabel,
-  FormGroup,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -30,11 +33,20 @@ const AddType = () => {
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
+    quantity: yup
+      .number()
+      .required("Quantité d'ingrédiant est requis")
+      .min(1, "La quantité minimal est 1"),
+    payment: yup.boolean(),
+    selection: yup.boolean(),
     isRequired: yup.boolean(),
   });
   const initialValues = {
     name: "",
     message: "",
+    quantity: 1,
+    payment: false,
+    selection: false,
     isRequired: false,
   };
   const dispatch = useDispatch();
@@ -47,6 +59,9 @@ const AddType = () => {
       addType({
         name: values.name,
         message: values.message,
+        quantity: values.quantity,
+        payment: values.payment,
+        selection: values.selection,
         isRequired: values.isRequired,
       })
     );
@@ -69,7 +84,6 @@ const AddType = () => {
         title="AJOUTER TYPE"
         subtitle="Créer une nouvelle type d'ingrédiant"
       />
-
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -102,11 +116,10 @@ const AddType = () => {
                 touched={touched.name}
                 error={errors.name}
                 colum="span 8"
-                // row="1 / span 1"
               />
               <TextFieldCompnent
                 type="text"
-                label="Message"
+                label="Description"
                 change={handleChange}
                 value={values.message}
                 name="message"
@@ -114,22 +127,79 @@ const AddType = () => {
                 touched={touched.message}
                 error={errors.message}
                 colum="span 8"
-                // row="1 / span 1"
               />
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={values.isRequired}
-                      onChange={handleChange}
-                      name="isRequired"
-                    />
-                  }
-                  label="Requis"
-                />
-              </FormGroup>
+              <TextFieldCompnent
+                label="Quantité d'ingrédients"
+                type="number"
+                change={handleChange}
+                value={values.quantity}
+                name="quantity"
+                blur={handleBlur}
+                touched={touched.quantity}
+                error={errors.quantity}
+                colum="span 8"
+                inputProps={{ min: 1 }}
+              />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 8" }}
+              >
+                <FormLabel>Tous les ingrédients sont payants :</FormLabel>
+                <RadioGroup
+                  name="payment"
+                  value={values.payment}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 8" }}
+              >
+                <FormLabel>Type de sélection :</FormLabel>
+                <RadioGroup
+                  name="selection"
+                  value={values.selection}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Seul"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Multiple"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={values.isRequired}
+                    onChange={handleChange}
+                    name="isRequired"
+                  />
+                }
+                sx={{ gridColumn: "span 6" }}
+                label="Requis (Il faut choisir au moins un ingrédient pour continuer)"
+              />
             </Box>
-
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Soumettre

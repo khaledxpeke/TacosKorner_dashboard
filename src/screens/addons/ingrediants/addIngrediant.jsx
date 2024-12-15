@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -36,12 +36,23 @@ const AddIngrediant = () => {
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
+    price: yup
+      .number()
+      .required("Le prix est requis")
+      .min(0, "La prix minimal est 0"),
+    suppPrice: yup
+      .number()
+      .required("Le prix est requis")
+      .min(0, "La prix minimal est 0"),
+    inStock: yup.boolean(),
   });
   const initialValues = {
     name: "",
     image: "",
     price: 0,
+    suppPrice: 0,
     types: [],
+    inStock: false,
   };
   const handleFormSubmit = (values) => {
     if (values.types.length === 0) {
@@ -110,7 +121,7 @@ const AddIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 4"
+                colum="span 2"
                 row="1 / span 1"
               />
               <TextFieldCompnent
@@ -122,9 +133,22 @@ const AddIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.price}
                 error={errors.price}
-                colum="span 1"
+                colum="span 2"
                 row="1 / span 1"
-                // num={0}
+                inputProps={{ min: 0 }}
+              />
+              <TextFieldCompnent
+                type="number"
+                label="Prix supplémentaire"
+                change={handleChange}
+                value={values.suppPrice}
+                name="price"
+                blur={handleBlur}
+                touched={touched.suppPrice}
+                error={errors.suppPrice}
+                colum="span 2"
+                row="1 / span 1"
+                inputProps={{ min: 0 }}
               />
               <ImageInput
                 sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
@@ -143,6 +167,30 @@ const AddIngrediant = () => {
                 }}
                 error={typeError}
               />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 8" }}
+              >
+                <FormLabel>On repture de stock :</FormLabel>
+                <RadioGroup
+                  name="inStock"
+                  value={values.inStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/authSlice";
 import productReducer from "./features/productSlice";
-import supplementReducer from "./features/supplementSlice";
 import categoriesReducer from "./features/categorySlice";
 import ingrediantReducer from "./features/ingrediantSlice";
 import drinkReducer from "./features/drinkSlice";
@@ -14,7 +13,6 @@ import settingReducer from "./features/settingSlice";
 const store = configureStore({
   reducer: {
     product: productReducer,
-    supplement: supplementReducer,
     ingrediant: ingrediantReducer,
     drink: drinkReducer,
     extra: extraReducer,

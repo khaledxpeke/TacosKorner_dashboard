@@ -154,8 +154,8 @@ const Type = () => {
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
-        title={"Mes étapes"}
-        buttonTitle={"Ajouter un étape d'ingrédiants"}
+        title={"Mes options"}
+        buttonTitle={"Ajouter une option"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

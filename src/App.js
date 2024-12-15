@@ -12,7 +12,6 @@ import AddCategory from "./screens/categories/category/addCategory";
 import AddProduct from "./screens/categories/product/addProduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Supplement from "./screens/addons/supplements";
 import Ingrediant from "./screens/addons/ingrediants";
 import Type from "./screens/addons/type";
 import Extra from "./screens/extra/extras";
@@ -21,8 +20,6 @@ import History from "./screens/history";
 import AddType from "./screens/addons/type/addType";
 import AddIngrediant from "./screens/addons/ingrediants/addIngrediant";
 import ModifyIngrediant from "./screens/addons/ingrediants/modifyIngrediant";
-import AddSupplement from "./screens/addons/supplements/addSupplement";
-import ModifySupplement from "./screens/addons/supplements/modifySupplement";
 import AddExtra from "./screens/extra/extras/addExtra";
 import AddDesert from "./screens/extra/desserts/addDessert";
 import ModifyCategory from "./screens/categories/category/modifyCategory";
@@ -81,12 +78,6 @@ function App() {
                 <Route path="/product" element={<Product />} />
                 <Route path="/modifyProduct" element={<ModifyProduct />} />
                 <Route path="/addProduct" element={<AddProduct />} />
-                <Route path="/supplements" element={<Supplement />} />
-                <Route path="/addSupplement" element={<AddSupplement />} />
-                <Route
-                  path="/modifySupplement"
-                  element={<ModifySupplement />}
-                />
                 <Route path="/ingrediants" element={<Ingrediant />} />
                 <Route path="/addIngrediant" element={<AddIngrediant />} />
                 <Route

@@ -9,7 +9,6 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CategoryIcon from "@mui/icons-material/Category";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import KebabDiningIcon from "@mui/icons-material/KebabDining";
-import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import IcecreamIcon from "@mui/icons-material/Icecream";
@@ -200,14 +199,7 @@ const Sidebar = () => {
                   setSelected={setSelected}
                 />
                 <Item
-                  title="Supplements"
-                  to="/supplements"
-                  icon={<SoupKitchenIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                <Item
-                  title="Etapes"
+                  title="Options"
                   to="/type"
                   icon={<ChecklistIcon />}
                   selected={selected}

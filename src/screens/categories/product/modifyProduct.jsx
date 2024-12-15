@@ -37,17 +37,10 @@ import {
   selectAllIngrediants,
   getIngrediantsByType,
 } from "../../../features/ingrediantSlice";
-import {
-  selectAllSupplements,
-  getSupplements,
-} from "../../../features/supplementSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
-import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
-// import * as uuid from "uuid";
-
 const ModifyProduct = () => {
   const location = useLocation();
   const data = location.state.product || {};
@@ -55,7 +48,6 @@ const ModifyProduct = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const ingrediantsByType = useSelector(selectAllIngrediants) || {};
-  const supplements = useSelector(selectAllSupplements);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
@@ -148,7 +140,6 @@ const ModifyProduct = () => {
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(getIngrediantsByType());
-    dispatch(getSupplements());
     if (status === "modifySuccess") {
       toast.success(success);
       dispatch(updateStatus());
@@ -256,12 +247,6 @@ const ModifyProduct = () => {
 
               {values.choice === "multiple" && (
                 <>
-                  <MultipleSelectComponent
-                    change={handleChange}
-                    items={supplements}
-                    name="supplement"
-                    value={values.supplement}
-                  />
                   <Stack
                     flexWrap="wrap"
                     flexDirection="row"

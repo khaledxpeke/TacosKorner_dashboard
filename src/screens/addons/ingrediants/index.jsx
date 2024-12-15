@@ -100,7 +100,7 @@ const Ingrediant = () => {
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
         title={"Mes ingrédiants"}
-        buttonTitle={"Ajouter un ingrédiants"}
+        buttonTitle={"Ajouter un ingrédiant"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

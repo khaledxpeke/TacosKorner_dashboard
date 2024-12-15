@@ -7,7 +7,7 @@ const MultipleSelectComponent = ({ name, items, value, change }) => {
       fullWidth
       sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
     >
-      <InputLabel id={name}>Selectioner les {name}</InputLabel>
+      <InputLabel id={name}>Sélectionner les {name}</InputLabel>
       <Select
         name={name}
         labelId={name}

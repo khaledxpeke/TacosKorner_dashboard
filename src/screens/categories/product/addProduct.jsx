@@ -37,15 +37,10 @@ import {
   selectAllIngrediants,
   getIngrediantsByType,
 } from "../../../features/ingrediantSlice";
-import {
-  selectAllSupplements,
-  getSupplements,
-} from "../../../features/supplementSlice";
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
-import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -60,7 +55,6 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
   const ingrediantsByType = useSelector(selectAllIngrediants);
-  const supplements = useSelector(selectAllSupplements);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     category: yup.string().required("categorie est requis"),
@@ -80,7 +74,7 @@ const AddProduct = () => {
     ingrediant: [],
     supplement: [],
     currency: "",
-    price: "",
+    price: 0,
     choice: "seul",
     maxExtras: 1,
     maxDessert: 1,
@@ -142,7 +136,6 @@ const AddProduct = () => {
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(getIngrediantsByType());
-    dispatch(getSupplements());
     if (status === "addSuccess") {
       toast.success(success);
       dispatch(updateStatus());
@@ -247,12 +240,6 @@ const AddProduct = () => {
               />
               {values.choice === "multiple" && (
                 <>
-                  <MultipleSelectComponent
-                    change={handleChange}
-                    items={supplements}
-                    name="supplement"
-                    value={values.supplement}
-                  />
                   <Stack
                     flexWrap="wrap"
                     flexDirection="row"

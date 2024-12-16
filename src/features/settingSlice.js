@@ -27,8 +27,8 @@ export const getSettings = createAsyncThunk(
   }
 );
 
-export const addSettings = createAsyncThunk(
-  "settings/addSettings",
+export const modifySettings = createAsyncThunk(
+  "settings/modifySettings",
   async (body) => {
     try {
       const response = await axios.post(`${apiUrl}/settings`, body, {
@@ -126,16 +126,16 @@ const settingSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(addSettings.pending, (state, action) => {
+      .addCase(modifySettings.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
       })
-      .addCase(addSettings.fulfilled, (state, action) => {
+      .addCase(modifySettings.fulfilled, (state, action) => {
         state.status = "addSuccess";
         state.loading = false;
         state.success = action.payload.message;
       })
-      .addCase(addSettings.rejected, (state, action) => {
+      .addCase(modifySettings.rejected, (state, action) => {
         state.status = "addError";
         state.loading = false;
         state.error = action.error.message;

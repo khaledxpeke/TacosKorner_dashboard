@@ -29,7 +29,7 @@ const AppBarSearch = ({ handleSubmit, handleSearch, title, buttonTitle }) => {
         >
           <input
             type="text"
-            placeholder="Rechercher"
+            placeholder="Rechercher..."
             className="search-input pl-2"
             style={{ paddingLeft: "10px", maxWidth: "300px" }}
             onChange={handleSearch}

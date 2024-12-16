@@ -84,7 +84,7 @@ const SettingsManagement = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/addSettings");
+    navigate("/modifySettings");
   };
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -150,9 +150,10 @@ const SettingsManagement = () => {
               <TableHead sx={{ backgroundColor: colors.primary[700] }}>
                 <TableRow>
                   <TableCell>Devise</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="right">
+                    Action
                     <Button
+                    sx={{ml:2}}
                       type="submit"
                       color="secondary"
                       variant="contained"
@@ -280,7 +281,7 @@ const SettingsManagement = () => {
           >
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Rechercher..."
               className="search-input pl-2"
               style={{ paddingLeft: "10px", maxWidth: "300px" }}
               onChange={handleSearch}

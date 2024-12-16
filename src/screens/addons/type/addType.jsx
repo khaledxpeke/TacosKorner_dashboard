@@ -81,8 +81,8 @@ const AddType = () => {
   ) : (
     <Box m="20px">
       <Header
-        title="AJOUTER TYPE"
-        subtitle="Créer une nouvelle type d'ingrédiant"
+        title="AJOUTER OPTION"
+        subtitle="Créer une nouvelle option"
       />
       <Formik
         onSubmit={handleFormSubmit}
@@ -139,6 +139,7 @@ const AddType = () => {
                 error={errors.quantity}
                 colum="span 8"
                 num={1}
+                onlyDigits={true}
               />
               <FormControl
                 variant="filled"

@@ -33,7 +33,7 @@ import AddDrink from "./screens/extra/drinks/addDrink";
 import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
 import SettingsManagement from "./screens/settings/settings";
-import AddSettings from "./screens/settings/addSettings";
+import ModifySettings from "./screens/settings/modifySettings";
 import CarouselMedia from "./screens/settings/CarouselMedia";
 import AddToCarousel from "./screens/settings/CarouselMedia/addToCarousel";
 
@@ -70,7 +70,7 @@ function App() {
               <>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/settings" element={<SettingsManagement />} />
-                <Route path="/addSettings" element={< AddSettings/>} />
+                <Route path="/modifySettings" element={<ModifySettings />} />
                 <Route path="/category" element={<Category />} />
                 <Route path="/addCategory" element={<AddCategory />} />
                 <Route path="/modifyCategory" element={<ModifyCategory />} />

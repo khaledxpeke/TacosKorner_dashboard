@@ -130,7 +130,7 @@ const AddIngrediant = () => {
                 error={errors.price}
                 colum="span 2"
                 row="1 / span 1"
-                inputProps={{ min: 0 }}
+                num={0}
               />
               <TextFieldCompnent
                 type="number"
@@ -143,7 +143,7 @@ const AddIngrediant = () => {
                 error={errors.suppPrice}
                 colum="span 2"
                 row="1 / span 1"
-                inputProps={{ min: 0 }}
+                num={0}
               />
               <ImageInput
                 sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}

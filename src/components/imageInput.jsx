@@ -2,7 +2,9 @@ import React from "react";
 import upload from "../assets/upload.png";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
-const apiUrl=process.env.REACT_APP_API_URL
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ImageInput = ({
   previewImage,
   setPreviewImage,
@@ -27,10 +29,20 @@ const ImageInput = ({
   };
 
   return (
-    <div className="position-relative text-center">
+    <div style={{ position: "relative", display: "inline-block" }}>
       {previewImage && (
-        <IconButton type="button" onClick={handleCancelImage} sx={{ ml: 22 }}>
-          <CloseIcon />
+        <IconButton
+          type="button"
+          onClick={handleCancelImage}
+          sx={{
+            position: "absolute",
+            top: "-8px",
+            zIndex: 10,
+          }}
+        >
+          <CloseIcon
+            sx={{ color: "red", fontSize: "30px", fontWeight: "bold" }}
+          />
         </IconButton>
       )}
       <label htmlFor="imageInput">
@@ -43,7 +55,12 @@ const ImageInput = ({
               : upload
           }
           alt="Upload"
-          style={{ maxWidth: "200px", maxHeight: "200px", cursor: "pointer" }}
+          style={{
+            width: "200px",
+            height: "200px",
+            objectFit: "cover",
+            cursor: "pointer",
+          }}
         />
         <input
           type="file"
@@ -56,7 +73,7 @@ const ImageInput = ({
       <br />
       {displayLabel && (
         <label htmlFor="imageInput" className="mt-2 d-block">
-          {image ? "Modifier une image" : "Cliquez pour choisir une image"}
+          {image ? "Modifier cette image" : "Choisissez une image"}
         </label>
       )}
     </div>

@@ -65,7 +65,7 @@ const Ingrediant = () => {
               handleClickOpen={() => handleClickOpen(card._id)}
               content={
                 <>
-                  Types: {card.types?.map((type) => type.name).join(", ")} <br />
+                  Options: {card.types?.map((type) => type.name).join(", ")} <br />
                   {card.price ? `Prix: ${card.price}` : null}
                 </>
               }

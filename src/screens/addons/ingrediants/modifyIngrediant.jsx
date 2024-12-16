@@ -1,4 +1,12 @@
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -38,11 +46,22 @@ const ModifyIngrediant = () => {
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     // type: yup.string().required("required"),
+    price: yup
+      .number()
+      .required("Le prix est requis")
+      .min(0, "La prix minimal est 0"),
+    suppPrice: yup
+      .number()
+      .required("Le prix est requis")
+      .min(0, "La prix minimal est 0"),
+    inStock: yup.boolean(),
   });
   const initialValues = {
     name: data.name,
     price: data.price,
-    types: data.types.map((type) => type._id)|| [],
+    types: data.types.map((type) => type._id) || [],
+    suppPrice: 0,
+    inStock: false,
   };
 
   const handleFormSubmit = (values) => {
@@ -92,15 +111,8 @@ const ModifyIngrediant = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
-               <TextFieldCompnent
+            <Box display="flex" flexDirection="column" gap="30px">
+              <TextFieldCompnent
                 type="text"
                 label="Nom"
                 change={handleChange}
@@ -109,7 +121,7 @@ const ModifyIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 4"
+                colum="span 2"
                 row="1 / span 1"
               />
               <TextFieldCompnent
@@ -121,9 +133,22 @@ const ModifyIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.price}
                 error={errors.price}
-                colum="span 1"
+                colum="span 2"
                 row="1 / span 1"
-                // num={0}
+                inputProps={{ min: 0 }}
+              />
+              <TextFieldCompnent
+                type="number"
+                label="Prix supplémentaire"
+                change={handleChange}
+                value={values.suppPrice}
+                name="suppPrice"
+                blur={handleBlur}
+                touched={touched.suppPrice}
+                error={errors.suppPrice}
+                colum="span 2"
+                row="1 / span 1"
+                inputProps={{ min: 0 }}
               />
               <ImageInput
                 sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
@@ -141,12 +166,36 @@ const ModifyIngrediant = () => {
                   const { value } = event.target;
                   handleChange({
                     target: {
-                      name: "types",  
-                      value: Array.isArray(value) ? value : value.split(","), 
+                      name: "types",
+                      value: Array.isArray(value) ? value : value.split(","),
                     },
                   });
                 }}
               />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 8" }}
+              >
+                <FormLabel>On repture de stock :</FormLabel>
+                <RadioGroup
+                  name="inStock"
+                  value={values.inStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

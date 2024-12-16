@@ -104,14 +104,7 @@ const AddIngrediant = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
+            <Box display="flex" flexDirection="column" gap="30px">
               <TextFieldCompnent
                 type="text"
                 label="Nom"
@@ -142,7 +135,7 @@ const AddIngrediant = () => {
                 label="Prix supplémentaire"
                 change={handleChange}
                 value={values.suppPrice}
-                name="price"
+                name="suppPrice"
                 blur={handleBlur}
                 touched={touched.suppPrice}
                 error={errors.suppPrice}

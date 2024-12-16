@@ -16,6 +16,7 @@ import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import jwtDecode from "jwt-decode";
 import LiquorIcon from "@mui/icons-material/Liquor";
 import { useResponsive } from "../hooks/uiHook";
+import { Fastfood } from "@mui/icons-material";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -174,6 +175,13 @@ const Sidebar = () => {
                   title="Catégorie"
                   to="/category"
                   icon={<CategoryIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Sous catégorie"
+                  to="/sousCategory"
+                  icon={<Fastfood />}
                   selected={selected}
                   setSelected={setSelected}
                 />

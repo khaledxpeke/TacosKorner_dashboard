@@ -3,13 +3,11 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
-import ImageInput from "../../../components/imageInput";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../../components/loading";
 import {
-  addDesert,
   getDesertsError,
   getDesertsStatus,
   getDesertsSuccess,
@@ -21,8 +19,6 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
 
 const AddSousCategory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const [previewImage, setPreviewImage] = useState(null);
-  const [displayLabel, setDisplayLabel] = useState(true);
   const dispatch = useDispatch();
   const status = useSelector(getDesertsStatus);
   const error = useSelector(getDesertsError);
@@ -33,23 +29,33 @@ const AddSousCategory = () => {
   const desertSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
-    items: yup.array(),
-    // price: yup.number().required("Prix est requis"),
+    items: yup.array().of(
+      yup.object().shape({
+        price: yup
+          .number()
+          .typeError("Prix doit être un nombre")
+          .required("Prix est requis")
+          .min(0, "Prix doit être positif"),
+        name: yup.string().required("Nom est requis"),
+      })
+    ),
   });
   const initialValues = {
     name: "",
     message: "",
-    items: [{ price: 0, name: "", image: "" }],
+    items: [{ price: 0, name: "" }],
   };
+
   const handleFormSubmit = (values) => {
-    dispatch(
-      addDesert({
-        name: values.name,
-        image: previewImage,
-        price: values.price,
-      })
-    );
+    // dispatch(
+    //   addDesert({
+    //     name: values.name,
+    //     price: values.price,
+    //     items: values.items,
+    //   })
+    // );
   };
+
   useEffect(() => {
     if (status === "addSuccess") {
       toast.success(success);
@@ -80,6 +86,7 @@ const AddSousCategory = () => {
           handleBlur,
           handleChange,
           handleSubmit,
+          setFieldValue,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -102,6 +109,7 @@ const AddSousCategory = () => {
                 colum="span 3"
                 row="1 / span 1"
               />
+
               <TextFieldCompnent
                 type="text"
                 label="Description"
@@ -114,31 +122,66 @@ const AddSousCategory = () => {
                 colum="span 3"
                 row="1 / span 1"
               />
-              <Box>
-                <TextFieldCompnent
-                  type="number"
-                  label="Prix"
-                  change={handleChange}
-                  value={values.price}
-                  name="price"
-                  blur={handleBlur}
-                  touched={touched.price}
-                  error={errors.price}
-                  colum="span 3"
-                  row="2 / span 1"
-                  num={0}
-                />
-                <ImageInput
-                  row="3 / span 1"
-                  previewImage={previewImage}
-                  setPreviewImage={setPreviewImage}
-                  displayLabel={displayLabel}
-                  setDisplayLabel={setDisplayLabel}
-                />
-                <Button type="submit" color="secondary" variant="contained">
-                  Soumettre
-                </Button>
-              </Box>
+              {values.items.map((item, index) => (
+                <Box key={index}>
+                  <TextFieldCompnent
+                    type="text"
+                    label="Nom"
+                    change={handleChange}
+                    value={item.name}
+                    name={`items[${index}].name`}
+                    blur={handleBlur}
+                    touched={touched?.items?.[index]?.name}
+                    error={errors?.items?.[index]?.name}
+                    colum="span 3"
+                    row="1 / span 1"
+                  />
+
+                  <TextFieldCompnent
+                    sx={{ my: 2 }}
+                    type="number"
+                    label="Prix"
+                    change={handleChange}
+                    value={item.price}
+                    name={`items[${index}].price`}
+                    blur={handleBlur}
+                    touched={touched?.items?.[index]?.price}
+                    error={errors?.items?.[index]?.price}
+                    colum="span 3"
+                    row="2 / span 1"
+                  />
+                  {index !== 0 && (
+                    <Button
+                      sx={{ mt: 2 }}
+                      type="button"
+                      color="error"
+                      variant="contained"
+                      onClick={() =>
+                        setFieldValue(
+                          "items",
+                          values.items.filter((itm) => itm !== item)
+                        )
+                      }
+                    >
+                      Supprimer
+                    </Button>
+                  )}
+                </Box>
+              ))}
+
+              <Button
+                type="button"
+                color="info"
+                variant="contained"
+                onClick={() =>
+                  setFieldValue("items", [
+                    ...values.items,
+                    { name: "", price: 0, image: "" },
+                  ])
+                }
+              >
+                Ajouter une autre
+              </Button>
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

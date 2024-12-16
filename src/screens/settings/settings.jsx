@@ -37,6 +37,7 @@ import {
   updateCurrency,
   selectAllSettings,
   updateCurrencyOrTva,
+  modifySettings,
 } from "../../features/settingSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -65,8 +66,9 @@ const SettingsManagement = () => {
     setEditType(type);
     if (type === "currency") {
       setOldCurrency(value);
-    } else if (type === "tva") {
       setNewCurrency(value);
+    } else if (type === "newCurrency") {
+      setNewCurrency("");
     }
     setOpen(true);
   };
@@ -84,7 +86,14 @@ const SettingsManagement = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/modifySettings");
+    navigate("/modifySettings", { 
+      state: { 
+        tva: settings.tva,
+        maxDrink: settings.maxDrink,
+        maxDessert: settings.maxDessert,
+        maxExtras: settings.maxExtras
+      } 
+    });
   };
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -100,21 +109,24 @@ const SettingsManagement = () => {
     dispatch(updateCurrencyOrTva({ oldCurrency, newCurrency }));
     setOpen(false);
   };
-  const handleUpdateTva = () => {
-    if (!newCurrency.trim() || isNaN(newCurrency) || Number(newCurrency) < 0) {
-      toast.error("Please enter a valid TVA value.");
-      return;
-    }
-    dispatch(updateCurrencyOrTva({ tva: newCurrency }));
+  const handleAddCurrency = () => {
+    dispatch(modifySettings({ currency: newCurrency }));
     setOpen(false);
   };
 
   useEffect(() => {
-    if (settingStatus === "modifySuccess") {
-      toast.success("Settings updated successfully!");
+    if (settingStatus === "addSuccess" ) {
+      toast.success("Currency added successfully!");
       dispatch(getSettings());
       dispatch(updateStatus());
-    } else if (settingStatus === "modifyError") {
+    } else if (settingStatus === "addError") {
+      toast.error(error || "Failed to add currency.");
+      dispatch(updateStatus());
+    }else if (settingStatus === "modifySuccess") {
+      toast.success("Currency updated successfully!");
+      dispatch(getSettings());
+      dispatch(updateStatus());
+    }else if (settingStatus === "modifyError") {
       toast.error(error || "Failed to update currency.");
       dispatch(updateStatus());
     }
@@ -153,11 +165,11 @@ const SettingsManagement = () => {
                   <TableCell align="right">
                     Action
                     <Button
-                    sx={{ml:2}}
+                      sx={{ ml: 2 }}
                       type="submit"
                       color="secondary"
                       variant="contained"
-                      onClick={handleSubmit}
+                      onClick={() => handleClickOpen("newCurrency")}
                     >
                       Ajouter
                     </Button>
@@ -234,20 +246,20 @@ const SettingsManagement = () => {
               TVA : {settings.tva}%
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
-              Nombre max de boissons : {settings.tva}
+              Nombre max d'extras : {settings.maxExtras}
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
-              Nombre max de désserts : {settings.tva}
+              Nombre max de boissons : {settings.maxDrink}
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
-              Nombre max d'extras : {settings.tva}
+              Nombre max de désserts : {settings.maxDessert}
             </Typography>
             <Button
               sx={{ mt: 2 }}
               size="small"
               variant="contained"
               color="secondary"
-              onClick={() => handleClickOpen("tva", settings.tva)}
+              onClick={handleSubmit}
             >
               Modifier
             </Button>
@@ -302,32 +314,31 @@ const SettingsManagement = () => {
       </main>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          {editType === "currency" ? "Modifier la Devise" : "Modifier la TVA"}
+          {editType === "currency" ? "Modifier la Devise" : "Ajouter une nouvelle devise"}
         </DialogTitle>
         <DialogContent>
           {editType === "currency" ? (
             <>
-              <TextField
+              {/* <TextField
                 label="Ancienne Devise"
                 fullWidth
                 margin="normal"
                 value={oldCurrency}
                 disabled
-              />
+              /> */}
               <TextField
-                label="Nouvelle Devise"
+                label="Devise"
                 fullWidth
                 margin="normal"
-                value={newCurrency}
+                value={newCurrency || oldCurrency}
                 onChange={(e) => setNewCurrency(e.target.value)}
               />
             </>
           ) : (
             <TextField
-              label="Nouvelle TVA"
+              label="Nouvelle Devise"
               fullWidth
               margin="normal"
-              type="number"
               value={newCurrency}
               onChange={(e) => setNewCurrency(e.target.value)}
             />
@@ -341,8 +352,8 @@ const SettingsManagement = () => {
             onClick={() => {
               if (editType === "currency") {
                 handleUpdateCurrency();
-              } else if (editType === "tva") {
-                handleUpdateTva(); // Function to update TVA
+              } else if (editType === "newCurrency") {
+                handleAddCurrency(); 
               }
             }}
             color="secondary"

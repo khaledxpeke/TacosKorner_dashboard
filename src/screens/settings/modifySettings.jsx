@@ -5,21 +5,23 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { useEffect } from "react";
 import {
-  modifySettings,
   updateStatus,
   getSettingsError,
   getSettingsStatus,
   getSettingsLoading,
   getSettingsSuccess,
+  updateCurrencyOrTva,
 } from "../../features/settingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../components/loading";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TextFieldCompnent from "../../components/textFieldComponent";
 
 const ModifySettings = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const location = useLocation();
+  const data = location.state;
   const navigate = useNavigate();
   const settingsSchema = yup.object().shape({
     tva: yup
@@ -40,10 +42,10 @@ const ModifySettings = () => {
       .min(1, "Le boisson minimal est 1"),
   });
   const initialValues = {
-    tva: 0,
-    maxExtras: 1,
-    maxDessert: 1,
-    maxDrink: 1,
+    tva:data?.tva || 0,
+    maxDrink: data?.maxDrink || 1,
+    maxDessert: data?.maxDessert || 1,
+    maxExtras: data?.maxExtras || 1,
   };
   const dispatch = useDispatch();
   const status = useSelector(getSettingsStatus);
@@ -52,7 +54,7 @@ const ModifySettings = () => {
   const success = useSelector(getSettingsSuccess);
   const handleFormSubmit = (values) => {
     dispatch(
-      modifySettings({
+      updateCurrencyOrTva({
         tva: values.tva,
         maxExtras: values.maxExtras,
         maxDessert: values.maxDessert,
@@ -61,11 +63,11 @@ const ModifySettings = () => {
     );
   };
   useEffect(() => {
-    if (status === "addSuccess") {
+    if (status === "modifySuccess") {
       toast.success(success);
       dispatch(updateStatus());
       navigate("/settings");
-    } else if (status === "addError") {
+    } else if (status === "modifyError") {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
@@ -124,19 +126,6 @@ const ModifySettings = () => {
               />
               <TextFieldCompnent
                 type="number"
-                label="Nombre max de désserts"
-                change={handleChange}
-                value={values.maxDessert}
-                name="maxDessert"
-                blur={handleBlur}
-                touched={touched.maxDessert}
-                error={errors.maxDessert}
-                colum="span 8"
-                num={1}
-                onlyDigits={true}
-              />
-              <TextFieldCompnent
-                type="number"
                 label="Nombre max de boissons"
                 change={handleChange}
                 value={values.maxDrink}
@@ -144,6 +133,19 @@ const ModifySettings = () => {
                 blur={handleBlur}
                 touched={touched.maxDrink}
                 error={errors.maxDrink}
+                colum="span 8"
+                num={1}
+                onlyDigits={true}
+              />
+              <TextFieldCompnent
+                type="number"
+                label="Nombre max de désserts"
+                change={handleChange}
+                value={values.maxDessert}
+                name="maxDessert"
+                blur={handleBlur}
+                touched={touched.maxDessert}
+                error={errors.maxDessert}
                 colum="span 8"
                 num={1}
                 onlyDigits={true}

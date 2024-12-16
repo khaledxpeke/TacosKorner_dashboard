@@ -227,7 +227,7 @@ const Sidebar = () => {
                   setSelected={setSelected}
                 />
                 <Item
-                  title="Désert"
+                  title="Déssert"
                   to="/desert"
                   icon={<IcecreamIcon />}
                   selected={selected}

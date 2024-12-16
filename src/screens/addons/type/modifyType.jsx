@@ -142,7 +142,7 @@ const ModifyType = () => {
                 touched={touched.quantity}
                 error={errors.quantity}
                 colum="span 8"
-                inputProps={{ min: 1 }}
+                num={1}
               />
               <FormControl
                 variant="filled"

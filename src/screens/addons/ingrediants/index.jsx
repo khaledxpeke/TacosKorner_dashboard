@@ -86,11 +86,11 @@ const Ingrediant = () => {
                     )}
                   </Box>
                   <Typography variant="h4" color="inherit">
-                    Prix: {card.price ?? 0 + " " + settings.defaultCurrency}
+                    Prix: {card.price ?? 0} {" " + settings.defaultCurrency}
                   </Typography>
                   <Typography variant="h4" color="inherit">
-                    Prix supplémentaire:{" "}
-                    {card.suppPrice ?? 0 + " " + settings.defaultCurrency}
+                    Prix supplémentaire: {card.suppPrice ?? 0}
+                    {" " + settings.defaultCurrency}
                   </Typography>
                   <Stack direction="row" sx={{ mt: 1 }}>
                     <Chip

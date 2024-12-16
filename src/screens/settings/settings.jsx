@@ -15,11 +15,15 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  IconButton,
+  Typography,
+  Box,
+  Toolbar,
+  AppBar,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import NoData from "../../components/no_data";
 import AlertDialog from "../../components/dialog";
-import AppBarSearch from "../../global/appBarSearch";
 import { useTheme } from "@mui/material/styles";
 import { tokens } from "../../theme";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +42,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Loading from "../../components/loading";
 import Error from "../../components/Error";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SettingsManagement = () => {
   const dispatch = useDispatch();
@@ -211,34 +216,41 @@ const SettingsManagement = () => {
         </Grid>
         <Grid
           item
-          xs={2}
+          xs={6}
           sx={{
             display: "flex",
             alignItems: "start",
-            justifyContent: "center",
           }}
         >
-          <div
+          <Box
             style={{
-              textAlign: "center",
               padding: "1rem",
               backgroundColor: colors.primary[400],
               borderRadius: "8px",
             }}
           >
-            <h2 style={{ margin: 0, color: colors.primary[100] }}>
+            <Typography variant="h2" color="inherit">
               TVA : {settings.tva}%
-            </h2>
+            </Typography>
+            <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
+              Nombre max de boissons : {settings.tva}
+            </Typography>
+            <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
+              Nombre max de désserts : {settings.tva}
+            </Typography>
+            <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
+              Nombre max d'extras : {settings.tva}
+            </Typography>
             <Button
+              sx={{ mt: 2 }}
               size="small"
               variant="contained"
               color="secondary"
               onClick={() => handleClickOpen("tva", settings.tva)}
-              style={{ marginTop: "0.5rem" }}
             >
               Modifier
             </Button>
-          </div>
+          </Box>
         </Grid>
       </>
     );
@@ -255,12 +267,30 @@ const SettingsManagement = () => {
 
   return (
     <div className="main-application">
-      <AppBarSearch
-        handleSearch={handleSearch}
-        title="Gestion des devises"
-        buttonTitle="Ajouter une devise"
-        handleSubmit={handleSubmit}
-      />
+      <AppBar position="relative">
+        <Toolbar>
+          <Typography variant="h3" color="inherit" noWrap>
+            Gestion des devises
+          </Typography>
+          <Box
+            ml={2}
+            display="flex"
+            backgroundColor={colors.primary[400]}
+            borderRadius="3px"
+          >
+            <input
+              type="text"
+              placeholder="Search"
+              className="search-input pl-2"
+              style={{ paddingLeft: "10px", maxWidth: "300px" }}
+              onChange={handleSearch}
+            />
+            <IconButton type="button" sx={{ p: 1 }}>
+              <SearchIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>

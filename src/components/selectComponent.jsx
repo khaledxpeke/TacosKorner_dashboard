@@ -1,11 +1,11 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 
-const SelectComponent = ({name,items,value,change,error}) => {
+const SelectComponent = ({name,items,value,change,error,gridColumn,gridRow}) => {
   return (
     <FormControl
       variant="filled"
       fullWidth
-      sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+      sx={{ gridColumn: gridColumn, gridRow: gridRow }}
     >
       <InputLabel id={name}>Selectioner une {name}</InputLabel>
       <Select

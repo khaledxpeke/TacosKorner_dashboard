@@ -38,13 +38,9 @@ const ImageInput = ({
           type="button"
           onClick={handleCancelImage}
           sx={{
-            // position: "relative",
-            // display: "grid",
-            // top: "-8px",
-            // zIndex: 10,
-            // gridColumn: colum,
-            // gridRow: row,
-            // ...sx
+            position: "asbolute",
+            top: "-8px",
+            zIndex: 10,
           }}
         >
           <CloseIcon

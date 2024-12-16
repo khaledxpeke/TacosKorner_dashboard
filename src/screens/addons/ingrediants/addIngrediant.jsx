@@ -151,7 +151,6 @@ const AddIngrediant = () => {
                 num={0}
               />
               <ImageInput
-                // sx={{ gridColumn: "span 4", gridRow: "8" }}
                 row="6 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
@@ -195,7 +194,7 @@ const AddIngrediant = () => {
                 </RadioGroup>
               </FormControl>
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Soumettre
               </Button>

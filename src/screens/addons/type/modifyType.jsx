@@ -119,7 +119,8 @@ const ModifyType = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 8"
+                colum="span 3"
+                row="1 / span 1"
               />
               <TextFieldCompnent
                 type="text"
@@ -130,7 +131,8 @@ const ModifyType = () => {
                 blur={handleBlur}
                 touched={touched.message}
                 error={errors.message}
-                colum="span 8"
+                colum="span 3"
+                row="2 / span 1"
               />
               <TextFieldCompnent
                 label="Quantité d'ingrédients"
@@ -141,14 +143,15 @@ const ModifyType = () => {
                 blur={handleBlur}
                 touched={touched.quantity}
                 error={errors.quantity}
-                colum="span 8"
+                colum="span 3"
+                row="3 / span 1"
                 num={1}
                 onlyDigits={true}
               />
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 8" }}
+                sx={{ gridColumn: "span 3", gridRow: "4 / span 1" }}
               >
                 <FormLabel>Tous les ingrédients sont payants :</FormLabel>
                 <RadioGroup
@@ -172,7 +175,7 @@ const ModifyType = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 8" }}
+                sx={{ gridColumn: "span 3", gridRow: "5 / span 1" }}
               >
                 <FormLabel>Type de sélection :</FormLabel>
                 <RadioGroup
@@ -202,13 +205,14 @@ const ModifyType = () => {
                   />
                 }
                 sx={{
-                  gridColumn: "span 6",
+                  gridColumn: "span 3",
+                  gridRow: "6 / span 1",
                 }}
                 label="Requis (Il faut choisir au moins un ingrédient pour continuer)"
                 checked={initialValues.isRequired}
               />
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Modifier
               </Button>

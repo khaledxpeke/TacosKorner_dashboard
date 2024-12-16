@@ -77,12 +77,12 @@ const ModifyCategory = () => {
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-             <TextFieldCompnent
+              <TextFieldCompnent
                 type="text"
                 label="Nom"
                 change={handleChange}
@@ -91,10 +91,11 @@ const ModifyCategory = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 8"
+                colum="span 3"
                 row="1 / span 1"
               />
               <ImageInput
+                row="3 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -102,7 +103,7 @@ const ModifyCategory = () => {
                 image={data.image}
               />
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Modifier une catégorie
               </Button>

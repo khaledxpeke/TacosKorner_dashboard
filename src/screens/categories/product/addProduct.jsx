@@ -32,9 +32,7 @@ import {
   selectAllCategories,
   fetchCategories,
 } from "../../../features/categorySlice";
-import {
-  getIngrediantsByType,
-} from "../../../features/ingrediantSlice";
+import { getIngrediantsByType } from "../../../features/ingrediantSlice";
 import { useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
@@ -107,7 +105,7 @@ const AddProduct = () => {
   };
 
   const handleTypeSelect = (event) => {
-    const selectedTypeIds = event.target.value; 
+    const selectedTypeIds = event.target.value;
     setSelectedTypes((prevTypes) => {
       return typesWithIngrediants.filter((type) =>
         selectedTypeIds.includes(type._id)
@@ -150,6 +148,7 @@ const AddProduct = () => {
             <Box
               display="grid"
               gap="30px"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
@@ -163,7 +162,7 @@ const AddProduct = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 2"
+                colum="span 3"
                 row="1 / span 1"
               />
               <TextFieldCompnent
@@ -175,17 +174,20 @@ const AddProduct = () => {
                 blur={handleBlur}
                 touched={touched.price}
                 error={errors.price}
-                colum="span 1"
-                row="1 / span 1"
+                colum="span 3"
+                row="2 / span 1"
                 num={0}
               />
               <ImageInput
+                row="3 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
               <SelectComponent
+                gridColumn="span 3"
+                gridRow="4 / span 1"
                 name="category"
                 items={categories}
                 value={values.category}
@@ -197,12 +199,12 @@ const AddProduct = () => {
                     flexWrap="wrap"
                     flexDirection="row"
                     sx={{
-                      gridColumn: "span 2",
-                      gridRow: "5 / span 1",
+                      gridColumn: "span 3",
+                      gridRow: "6 / span 1",
                       gap: "30px",
                     }}
                   >
-                    <FormControl fullWidth  variant="filled">
+                    <FormControl fullWidth variant="filled">
                       <InputLabel id="type-select-label">
                         Select Types
                       </InputLabel>
@@ -239,57 +241,11 @@ const AddProduct = () => {
                     </FormControl>
                   </Stack>
                   <Stack
-                    flexDirection="row"
-                    flexWrap="wrap"
-                    sx={{
-                      gridColumn: "span 4",
-                      gridRow: "6 / span 1",
-                      gap: "30px",
-                    }}
-                  >
-                    <TextFieldCompnent
-                      type="number"
-                      label="Max Extras"
-                      change={handleChange}
-                      value={values.maxExtras}
-                      name="maxExtras"
-                      blur={handleBlur}
-                      touched={touched.maxExtras}
-                      error={errors.maxExtras}
-                      // sx={{ minWidth: "200px" }}
-                      num={1}
-                    />
-                    <TextFieldCompnent
-                      type="number"
-                      label="Max Dessert"
-                      change={handleChange}
-                      value={values.maxDessert}
-                      name="maxDessert"
-                      blur={handleBlur}
-                      touched={touched.maxDessert}
-                      error={errors.maxDessert}
-                      // sx={{ minWidth: "200px" }}
-                      num={1}
-                    />
-                    <TextFieldCompnent
-                      type="number"
-                      label="Max Drink"
-                      change={handleChange}
-                      value={values.maxDrink}
-                      name="maxDrink"
-                      blur={handleBlur}
-                      touched={touched.maxDrink}
-                      error={errors.maxDrink}
-                      // sx={{ minWidth: "200px" }}
-                      num={1}
-                    />
-                  </Stack>
-                  <Stack
                     flexWrap="wrap"
                     flexDirection="row"
                     sx={{
                       gridColumn: "span 1",
-                      gridRow: "5 / span 1",
+                      gridRow: "6 / span 1",
                     }}
                   >
                     <ReorderType onDragEnd={onDragEnd} types={selectedTypes} />
@@ -303,7 +259,7 @@ const AddProduct = () => {
                   gridColumn: "span 1",
                   gridRow: {
                     gridRow:
-                      values.choice === "seul" ? "4 / span 1" : "4 / span 1",
+                      values.choice === "seul" ? "5 / span 1" : "5 / span 1",
                   },
                 }}
               >
@@ -329,7 +285,7 @@ const AddProduct = () => {
               </FormControl>
             </Box>
 
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Soumettre
               </Button>

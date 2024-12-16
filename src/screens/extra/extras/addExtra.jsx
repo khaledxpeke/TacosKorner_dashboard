@@ -78,7 +78,7 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
               <Box
                 display="grid"
                 gap="30px"
-                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                gridTemplateColumns="repeat(6, minmax(0, 1fr))"
                 sx={{
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
@@ -92,7 +92,7 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
                   blur={handleBlur}
                   touched={touched.name}
                   error={errors.name}
-                  colum="span 4"
+                  colum="span 3"
                   row="1 / span 1"
                 />
                 <TextFieldCompnent
@@ -104,19 +104,19 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
                   blur={handleBlur}
                   touched={touched.price}
                   error={errors.price}
-                  colum="span 1"
-                  row="1 / span 1"
+                  colum="span 3"
+                  row="2 / span 1"
                   num={1}
                 />
                 <ImageInput
-                  sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
+                  row="3 / span 1"
                   previewImage={previewImage}
                   setPreviewImage={setPreviewImage}
                   displayLabel={displayLabel}
                   setDisplayLabel={setDisplayLabel}
                 />
               </Box>
-              <Box display="flex" justifyContent="end" mt="20px">
+              <Box display="flex" justifyContent="start" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
                   Soumettre
                 </Button>

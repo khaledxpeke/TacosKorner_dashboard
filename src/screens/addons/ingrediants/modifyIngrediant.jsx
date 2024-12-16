@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
 import { useEffect, useState } from "react";
@@ -32,7 +32,7 @@ import MultipleSelectComponent from "../../../components/multipleSelectComponent
 const ModifyIngrediant = () => {
   const location = useLocation();
   const data = location.state.ingrediant;
-  // const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const dispatch = useDispatch();
@@ -45,7 +45,6 @@ const ModifyIngrediant = () => {
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    // type: yup.string().required("required"),
     price: yup
       .number()
       .required("Le prix est requis")
@@ -113,7 +112,14 @@ const ModifyIngrediant = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            <Box display="flex" flexDirection="column" gap="30px">
+            <Box
+              display="grid"
+              gap="30px"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
+              sx={{
+                "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
+              }}
+            >
               <TextFieldCompnent
                 type="text"
                 label="Nom"
@@ -123,7 +129,7 @@ const ModifyIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 2"
+                colum="span 3"
                 row="1 / span 1"
               />
               <TextFieldCompnent
@@ -135,8 +141,8 @@ const ModifyIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.price}
                 error={errors.price}
-                colum="span 2"
-                row="1 / span 1"
+                colum="span 3"
+                row="2 / span 1"
                 num={0}
               />
               <TextFieldCompnent
@@ -148,12 +154,12 @@ const ModifyIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.suppPrice}
                 error={errors.suppPrice}
-                colum="span 2"
-                row="1 / span 1"
+                colum="span 3"
+                row="3 / span 1"
                 num={0}
               />
               <ImageInput
-                sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
+                row="6 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -161,6 +167,8 @@ const ModifyIngrediant = () => {
                 image={data.image}
               />
               <MultipleSelectComponent
+                gridColumn="span 3"
+                gridRow="5 / span 1"
                 name="types"
                 items={types}
                 value={Array.isArray(values.types) ? values.types : []}
@@ -177,7 +185,7 @@ const ModifyIngrediant = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 8" }}
+                sx={{ gridColumn: "span 3", gridRow: "7 / span 1" }}
               >
                 <FormLabel>On repture de stock :</FormLabel>
                 <RadioGroup
@@ -199,7 +207,7 @@ const ModifyIngrediant = () => {
                 </RadioGroup>
               </FormControl>
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Modifier
               </Button>

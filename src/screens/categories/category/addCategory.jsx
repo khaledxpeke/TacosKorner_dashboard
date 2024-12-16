@@ -11,7 +11,7 @@ import {
   getCategoriesStatus,
   updateStatus,
   getCategoriesLoading,
-  getCategoriesSuccess
+  getCategoriesSuccess,
 } from "../../../features/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -51,7 +51,7 @@ const AddCategory = () => {
     } else if (status === "addError") {
       toast.error(error);
     }
-  }, [status, error,success, dispatch, navigate]);
+  }, [status, error, success, dispatch, navigate]);
 
   return loading ? (
     <Loading />
@@ -79,7 +79,7 @@ const AddCategory = () => {
             <Box
               display="grid"
               gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
@@ -93,17 +93,18 @@ const AddCategory = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 8"
+                colum="span 3"
                 row="1 / span 1"
               />
               <ImageInput
+                row="2 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Créer une nouvelle catégorie
               </Button>

@@ -1,11 +1,11 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-const MultipleSelectComponent = ({ name, items, value, change }) => {
+const MultipleSelectComponent = ({ name, items, value, change,gridColumn,gridRow }) => {
   return (
     <FormControl
       variant="filled"
       fullWidth
-      sx={{ gridColumn: "span 1", gridRow: "3 / span 1" }}
+      sx={{ gridColumn: gridColumn, gridRow: gridRow }}
     >
       <InputLabel id={name}>Sélectionner les {name}</InputLabel>
       <Select
@@ -16,14 +16,7 @@ const MultipleSelectComponent = ({ name, items, value, change }) => {
         multiple
         label={name}
         onChange={change}
-        sx={{ gridColumn: "span 1" }}
-        MenuProps={{
-          PaperProps: {
-            style: {
-              maxHeight: "300px",
-            },
-          },
-        }}
+        sx={{ gridColumn: gridColumn , gridRow: gridRow }}
       >
         {items.map((item) => (
           <MenuItem

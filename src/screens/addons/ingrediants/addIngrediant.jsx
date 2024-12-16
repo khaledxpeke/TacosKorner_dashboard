@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddIngrediant = () => {
-  // const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const [typeError, setTypeError] = useState(false);
@@ -106,7 +106,12 @@ const AddIngrediant = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            <Box display="flex" flexDirection="column" gap="30px">
+            <Box display="grid"
+              gap="30px"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
+              sx={{
+                "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
+              }}>
               <TextFieldCompnent
                 type="text"
                 label="Nom"
@@ -116,7 +121,7 @@ const AddIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
-                colum="span 2"
+                colum="span 3"
                 row="1 / span 1"
               />
               <TextFieldCompnent
@@ -128,8 +133,8 @@ const AddIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.price}
                 error={errors.price}
-                colum="span 2"
-                row="1 / span 1"
+                colum="span 3"
+                row="2 / span 1"
                 num={0}
               />
               <TextFieldCompnent
@@ -141,12 +146,13 @@ const AddIngrediant = () => {
                 blur={handleBlur}
                 touched={touched.suppPrice}
                 error={errors.suppPrice}
-                colum="span 2"
-                row="1 / span 1"
+                colum="span 3"
+                row="3 / span 1"
                 num={0}
               />
               <ImageInput
-                sx={{ gridColumn: "span 4", gridRow: "2 / span 1" }}
+                // sx={{ gridColumn: "span 4", gridRow: "8" }}
+                row="6 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
@@ -154,6 +160,8 @@ const AddIngrediant = () => {
               />
               <MultipleSelectComponent
                 name="types"
+                gridColumn="span 3"
+                gridRow="5 / span 1"
                 items={types}
                 value={values.types}
                 change={(e) => {
@@ -165,7 +173,7 @@ const AddIngrediant = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 8" }}
+                sx={{ gridColumn: "span 3",gridRow: "7 / span 1" }}
               >
                 <FormLabel>On repture de stock :</FormLabel>
                 <RadioGroup

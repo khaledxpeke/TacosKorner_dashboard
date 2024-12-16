@@ -70,6 +70,7 @@ const Type = () => {
     const filteredTypes = types?.filter((dish) =>
       dish.name.toLowerCase().includes(search.toLowerCase())
     );
+    console.log(filteredTypes);
     content = (
       <Grid item xs={12}>
         <TableContainer>
@@ -86,6 +87,9 @@ const Type = () => {
               <TableRow>
                 <TableCell>Nom</TableCell>
                 <TableCell>Message</TableCell>
+                <TableCell>Quantité</TableCell>
+                <TableCell>Payant</TableCell>
+                <TableCell>Type</TableCell>
                 <TableCell>Requis</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
@@ -96,9 +100,11 @@ const Type = () => {
                   <TableRow key={card._id}>
                     <TableCell>{card.name}</TableCell>
                     <TableCell>{card.message}</TableCell>
+                    <TableCell>{card.quantity}</TableCell>
+                    <TableCell>{card.payment ? "Oui" : "Non"}</TableCell>
+                    <TableCell>{card.selection ? "Multiple" : "Seul"}</TableCell>
                     <TableCell>
-                      {card.isRequired ? <DoneIcon/> : <CloseIcon/>}
-                      
+                      {card.isRequired ? <DoneIcon /> : <CloseIcon />}
                     </TableCell>
                     <TableCell align="right">
                       <ButtonGroup

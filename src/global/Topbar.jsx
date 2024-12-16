@@ -98,26 +98,6 @@ const Topbar = () => {
                 <ButtonBase
                   component="div"
                   onClick={() => {
-                    navigate("/tva");
-                    toggleParameterList();
-                  }}
-                  style={{ width: "100%" }}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    textAlign: "center",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <ListItem>
-                    <ListItemText primary="TVA" />
-                  </ListItem>
-                </ButtonBase>
-                <ButtonBase
-                  component="div"
-                  onClick={() => {
                     navigate("/carousel");
                     toggleParameterList();
                   }}

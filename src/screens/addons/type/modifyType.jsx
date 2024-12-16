@@ -86,7 +86,7 @@ const ModifyType = () => {
     <Loading />
   ) : (
     <Box m="20px">
-      <Header title="MODIFIER TYPE" subtitle="Modifier type d'ingrédiant" />
+      <Header title="MODIFIER OPTION" subtitle="Modifier l'option" />
 
       <Formik
         onSubmit={handleFormSubmit}
@@ -143,6 +143,7 @@ const ModifyType = () => {
                 error={errors.quantity}
                 colum="span 8"
                 num={1}
+                onlyDigits={true}
               />
               <FormControl
                 variant="filled"

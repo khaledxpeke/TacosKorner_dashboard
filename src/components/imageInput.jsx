@@ -11,9 +11,6 @@ const ImageInput = ({
   displayLabel,
   setDisplayLabel,
   image,
-  // colum,
-  row,
-  // sx = {}
 }) => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -32,13 +29,13 @@ const ImageInput = ({
   };
 
   return (
-    <div style={{ position: "relative", display: "grid" ,gridRow: row}}>
+    <div style={{ position: "relative", display: "inline-block" }}>
       {previewImage && (
         <IconButton
           type="button"
           onClick={handleCancelImage}
           sx={{
-            position: "asbolute",
+            position: "absolute",
             top: "-8px",
             zIndex: 10,
           }}

@@ -36,6 +36,9 @@ import SettingsManagement from "./screens/settings/settings";
 import ModifySettings from "./screens/settings/modifySettings";
 import CarouselMedia from "./screens/settings/CarouselMedia";
 import AddToCarousel from "./screens/settings/CarouselMedia/addToCarousel";
+import AddSousCategory from "./screens/categories/sousCategory/addSousCategory";
+import SousCategory from "./screens/categories/sousCategory";
+import ModifySousCategory from "./screens/categories/sousCategory/modifySousCategory";
 
 function App() {
   const { theme, colorMode } = useMode();
@@ -74,6 +77,12 @@ function App() {
                 <Route path="/category" element={<Category />} />
                 <Route path="/addCategory" element={<AddCategory />} />
                 <Route path="/modifyCategory" element={<ModifyCategory />} />
+                <Route path="/sousCategory" element={<SousCategory />} />
+                <Route path="/addSousCategory" element={<AddSousCategory />} />
+                <Route
+                  path="/modifySousCategory"
+                  element={<ModifySousCategory />}
+                />
                 <Route path="/viewProduct" element={<ViewProduct />} />
                 <Route path="/product" element={<Product />} />
                 <Route path="/modifyProduct" element={<ModifyProduct />} />

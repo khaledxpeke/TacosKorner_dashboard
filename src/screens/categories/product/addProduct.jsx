@@ -57,9 +57,6 @@ const AddProduct = () => {
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     category: yup.string().required("categorie est requis"),
-    ingrediant: yup.array().default(() => []),
-    supplement: yup.array().default(() => []),
-    currency: yup.string().required("Currency est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
     maxExtras: yup.number(),
@@ -70,17 +67,13 @@ const AddProduct = () => {
     name: "",
     image: "",
     category: categories.length > 0 ? categories[0]._id : "",
-    ingrediant: [],
-    supplement: [],
     type: [],
-    currency: "",
     price: 0,
     choice: "seul",
     maxExtras: 1,
     maxDessert: 1,
     maxDrink: 1,
   };
-  const [types, updateTypes] = useState([]);
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -94,37 +87,16 @@ const AddProduct = () => {
     setSelectedTypes(updatedTypes);
   };
   const handleFormSubmit = (values) => {
-    const selectedTypeIds = types.map((type) => type._id);
-    const ingrediants =
-      values.choice === "multiple"
-        ? values.ingrediant.length > 0
-          ? values.ingrediant.join(",")
-          : []
-        : [];
-    const supplements =
-      values.choice === "multiple"
-        ? values.supplement.length > 0
-          ? values.supplement.join(",")
-          : []
-        : [];
-    const rules = types.map((type) => ({
-      type: type._id,
-      free: type.free || 1,
-      quantity: type.quantity || 1,
-    }));
+    const selectedTypeIds = selectedTypes.map((type) => type._id);
 
     dispatch(
       addProduct({
         body: {
           name: values.name,
           image: previewImage,
-          currency: values.currency,
           price: values.price,
-          ingrediants,
-          supplements,
           choice: values.choice,
           type: selectedTypeIds,
-          rules: JSON.stringify(rules),
           maxExtras: values.maxExtras,
           maxDessert: values.maxDessert,
           maxDrink: values.maxDrink,
@@ -207,19 +179,6 @@ const AddProduct = () => {
                 row="1 / span 1"
                 num={0}
               />
-              <TextFieldCompnent
-                type="text"
-                label="Currency"
-                change={handleChange}
-                value={values.currency}
-                name="currency"
-                blur={handleBlur}
-                touched={touched.currency}
-                error={errors.currency}
-                colum="span 1"
-                row="1 / span 1"
-              />
-
               <ImageInput
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}

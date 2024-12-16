@@ -19,6 +19,8 @@ import AppBarSearch from "../../../global/appBarSearch";
 import { Container, Grid } from "@mui/material";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
+import InventoryIcon from '@mui/icons-material/Inventory';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 
 const Ingrediant = () => {
   const dispatch = useDispatch();
@@ -37,6 +39,10 @@ const Ingrediant = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     navigate("/addIngrediant");
+  };
+  const truncateText = (text, limit = 30) => {
+    if (text.length <= limit) return text;
+    return text.slice(0, limit).trim() + "...";
   };
   const handleModify = (data) => {
     navigate("/modifyIngrediant", { state: { ingrediant: data } });
@@ -65,8 +71,45 @@ const Ingrediant = () => {
               handleClickOpen={() => handleClickOpen(card._id)}
               content={
                 <>
-                  Options: {card.types?.map((type) => type.name).join(", ")} <br />
-                  {card.price ? `Prix: ${card.price}` : null}
+                  <div
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      width: "200px", // adjust width as needed
+                    }}
+                  >
+                    Options:{" "}
+                    {truncateText(
+                      card.types?.map((type) => type.name).join(", ")
+                    )}{" "}
+                    <br />
+                  </div>
+                  {card.price ? `Prix: ${card.price}` : null} <br />
+                  {card.suppPrice
+                    ? `Prix Supplementaire: ${card.suppPrice}`
+                    : null}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      color: card.inStock ? "#4caf50" : "#f44336",
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    {card.inStock ? (
+                      <>
+                        <InventoryIcon sx={{ fontSize: 20 }} />
+                        <span>En stock</span>
+                      </>
+                    ) : (
+                      <>
+                        <RemoveShoppingCartIcon sx={{ fontSize: 20 }} />
+                        <span>Rupture de stock</span>
+                      </>
+                    )}
+                  </div>
                 </>
               }
             />

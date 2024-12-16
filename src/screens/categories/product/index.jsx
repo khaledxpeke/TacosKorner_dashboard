@@ -19,12 +19,14 @@ import NoData from "../../../components/no_data";
 import AppBarSearch from "../../../global/appBarSearch";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
+import { getSettings, selectAllSettings } from "../../../features/settingSlice";
 
 const Formule = () => {
   const dispatch = useDispatch();
   const productStatus = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
   const products = useSelector(selectAllProducts);
+  const settings = useSelector(selectAllSettings);
   const success = useSelector(getProductsSuccess);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -43,6 +45,7 @@ const Formule = () => {
   };
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getSettings());
   }, [dispatch]);
   let content;
   if (productStatus === "loading") {
@@ -61,7 +64,7 @@ const Formule = () => {
               key={card._id}
               data={card}
               handleModify={() => handleModify(card)}
-              content={card.price + " " + card.currency}
+              content={card.price + " " + settings.defaultCurrency}
               handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
 import { useEffect, useState } from "react";
@@ -32,7 +32,7 @@ import MultipleSelectComponent from "../../../components/multipleSelectComponent
 const ModifyIngrediant = () => {
   const location = useLocation();
   const data = location.state.ingrediant;
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  // const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const dispatch = useDispatch();
@@ -60,14 +60,16 @@ const ModifyIngrediant = () => {
     name: data.name,
     price: data.price,
     types: data.types.map((type) => type._id) || [],
-    suppPrice: 0,
-    inStock: false,
+    suppPrice: data.suppPrice || 0,
+    inStock: data.inStock,
   };
 
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
       price: values.price,
+      suppPrice: values.suppPrice,
+      inStock: values.inStock,
       types: values.types,
       ...(previewImage && { image: previewImage }),
     };

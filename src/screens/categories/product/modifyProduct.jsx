@@ -10,7 +10,6 @@ import {
   RadioGroup,
   Select,
   Stack,
-  TextField,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -34,98 +33,66 @@ import {
   fetchCategories,
 } from "../../../features/categorySlice";
 import {
-  selectAllIngrediants,
   getIngrediantsByType,
 } from "../../../features/ingrediantSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
+import { getTypes, selectAllTypes } from "../../../features/typeSlice";
 const ModifyProduct = () => {
   const location = useLocation();
   const data = location.state.product || {};
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const ingrediantsByType = useSelector(selectAllIngrediants) || {};
+  const [selectedTypes, setSelectedTypes] = useState(
+    data.type.map((typ) => ({
+      name: typ.name,
+      _id: typ._id
+    }))
+  );
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
   const loading = useSelector(getProductsisLoading);
   const success = useSelector(getProductsSuccess);
+  const typesWithIngrediants = useSelector(selectAllTypes);
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     category: yup.string().required("categorie est requis"),
-    ingrediant: yup.array().default(() => []),
-    supplement: yup.array().default(() => []),
-    types: yup.array().default(() => []),
-    currency: yup.string().required("Currency est requis"),
+    type: yup.array().default(() => []),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
     maxExtras: yup.number(),
     maxDessert: yup.number(),
     maxDrink: yup.number(),
   });
-  const typesWithRules = data?.type.map((typ) => {
-    const rule = data?.rules.find((rule) => rule?.type === typ._id);
-    return {
-      name: typ.name,
-      _id: typ._id,
-      free: rule?.free || 0,
-      quantity: rule?.quantity || 1,
-    };
-  });
   const initialValues = {
     name: data.name,
     category: categories.some((category) => category._id === data.category)
       ? data.category
       : "",
-    ingrediant: data.ingrediants,
-    supplement: data.supplements,
-    currency: data.currency,
     price: data.price,
     choice: data.choice,
-    types: typesWithRules,
+    type: data.type|| [],
     free: 0,
     quantity: 1,
-    rules: data.rules,
     maxExtras: data.maxExtras || 1,
     maxDessert: data.maxDessert || 1,
     maxDrink: data.maxDrink || 1,
   };
   const handleFormSubmit = (values) => {
-    const ingrediants =
-      values.choice === "multiple"
-        ? values.ingrediant.length > 0
-          ? values.ingrediant.map((ingredient) => ingredient._id).join(",")
-          : []
-        : [];
-    const supplements =
-      values.choice === "multiple"
-        ? values.supplement.length > 0
-          ? values.supplement.join(",")
-          : []
-        : [];
-    const reorderedRules = types.map((type) => {
-      const rule = values.rules.find((rule) => rule.type === type._id);
-      return {
-        ...rule,
-        type: type._id,
-      };
-    });
+    const selectedTypeIds = selectedTypes.map((type) => type._id); 
     const requestBody = {
       name: values.name,
-      currency: values.currency,
       price: values.price,
       category: values.category,
-      ingrediants,
-      supplements,
       choice: values.choice,
       ...(previewImage && { image: previewImage }),
-      type: types.map((item) => item._id).join(","),
-      rules: reorderedRules,
+      type: selectedTypeIds.join(","),
       maxExtras: values.maxExtras,
       maxDessert: values.maxDessert,
       maxDrink: values.maxDrink,
@@ -137,7 +104,15 @@ const ModifyProduct = () => {
       })
     );
   };
+  const handleTypeSelect = (event) => {
+    const selectedTypeIds = event.target.value;
+    const newSelectedTypes = typesWithIngrediants.filter((type) =>
+      selectedTypeIds.includes(type._id)
+    );
+    setSelectedTypes(newSelectedTypes);
+  };
   useEffect(() => {
+    dispatch(getTypes());
     dispatch(fetchCategories());
     dispatch(getIngrediantsByType());
     if (status === "modifySuccess") {
@@ -148,22 +123,17 @@ const ModifyProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
-  const [types, updateTypes] = useState(
-    data.type.map((typ) => ({
-      name: typ.name,
-      _id: typ._id,
-    }))
-  );
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
 
-    const updatedTypes = Array.from(types);
+    const updatedTypes = Array.from(selectedTypes);
     const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
+
     updatedTypes.splice(result.destination.index, 0, reorderedItem);
 
-    updateTypes(updatedTypes);
+    setSelectedTypes(updatedTypes);
   };
   return loading ? (
     <Loading />
@@ -218,18 +188,6 @@ const ModifyProduct = () => {
                 row="1 / span 1"
                 num={0}
               />
-              <TextFieldCompnent
-                type="text"
-                label="Currency"
-                change={handleChange}
-                value={values.currency}
-                name="currency"
-                blur={handleBlur}
-                touched={touched.currency}
-                error={errors.currency}
-                colum="span 1"
-                row="1 / span 1"
-              />
               <ImageInput
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
@@ -256,166 +214,41 @@ const ModifyProduct = () => {
                       gap: "30px",
                     }}
                   >
-                    {Object.entries(ingrediantsByType).map(
-                      ([typeName, ingredients], index) => (
-                        <FormControl
-                          key={typeName}
-                          variant="filled"
-                          sx={{ minWidth: "200px" }}
-                        >
-                          <InputLabel id="ingrediants">
-                            Selectioner les {typeName}
-                          </InputLabel>
-                          <Select
-                            name="ingrediant"
-                            labelId="ingrediants"
-                            id="ingrediant"
-                            value={values.ingrediant.map(
-                              (ingredient) => ingredient._id
-                            )}
-                            multiple
-                            label="ingrediant"
-                            onChange={(event) => {
-                              const selectedIngredientIds = event.target.value;
-                              const selectedTypes = [];
-                              const selectedIngredients = [];
-                              Object.entries(ingrediantsByType).forEach(
-                                ([typeName, ingredients]) => {
-                                  const selectedIngredientsOfType =
-                                    ingredients.filter((ingredient) =>
-                                      selectedIngredientIds.includes(
-                                        ingredient._id
-                                      )
-                                    );
-                                  selectedIngredients.push(
-                                    ...selectedIngredientsOfType
-                                  );
-                                  if (selectedIngredientsOfType.length > 0) {
-                                    selectedTypes.push({
-                                      name: typeName,
-                                      _id: selectedIngredientsOfType[0].type
-                                        ._id,
-                                    });
-                                  }
-                                }
-                              );
-                              updateTypes(selectedTypes);
-                              handleChange({
-                                target: {
-                                  name: "ingrediant",
-                                  value: selectedIngredients.map(
-                                    (ingredient) => ({
-                                      _id: ingredient._id,
-                                      type: ingredient.type._id,
-                                    })
-                                  ),
-                                },
-                              });
-                            }}
-                            sx={{ gridColumn: "span 1" }}
-                            MenuProps={{
-                              PaperProps: {
-                                style: {
-                                  maxHeight: "300px",
-                                },
-                              },
+                    <FormControl fullWidth  variant="filled">
+                      <InputLabel id="type-select-label">
+                        Select Types
+                      </InputLabel>
+                      <Select
+                        labelId="type-select-label"
+                        multiple
+                        value={selectedTypes.map((type) => type._id)}
+                        onChange={handleTypeSelect}
+                      >
+                        {typesWithIngrediants.map((type) => (
+                          <MenuItem
+                            key={type._id}
+                            value={type._id}
+                            sx={{
+                              opacity: selectedTypes.some(
+                                (selectedType) => selectedType._id === type._id
+                              )
+                                ? 1
+                                : 0.6,
+                              backgroundColor: selectedTypes.some(
+                                (selectedType) => selectedType._id === type._id
+                              )
+                                ? "black !important"
+                                : "transparent",
+                              color: selectedTypes.includes(type._id)
+                                ? "white"
+                                : "inherit",
                             }}
                           >
-                            {Array.isArray(ingredients) &&
-                              ingredients.map((ingredient) => (
-                                <MenuItem
-                                  key={ingredient._id}
-                                  value={ingredient._id}
-                                >
-                                  {ingredient.name}
-                                </MenuItem>
-                              ))}
-                          </Select>
-                          {types.some(
-                            (type) => type._id === ingredients[0].type._id
-                          ) && (
-                            <>
-                              <TextField
-                                label="Nombre d'ingrediant gratuit"
-                                type="number"
-                                defaultValue={
-                                  data.rules.find(
-                                    (type) =>
-                                      type.type === ingredients[0].type._id
-                                  )?.free || 0
-                                }
-                                onChange={(e) => {
-                                  const updatedRules = [...values.rules];
-                                  const ruleIndex = updatedRules.findIndex(
-                                    (rule) =>
-                                      rule.type === ingredients[0].type._id
-                                  );
-                                  if (ruleIndex !== -1) {
-                                    updatedRules[ruleIndex] = {
-                                      ...updatedRules[ruleIndex],
-                                      free: parseInt(e.target.value),
-                                    };
-                                  } else {
-                                    updatedRules.push({
-                                      _id: null,
-                                      type: ingredients[0].type._id,
-                                      free: parseInt(e.target.value),
-                                      quantity: 1,
-                                    });
-                                  }
-
-                                  handleChange({
-                                    target: {
-                                      name: "rules",
-                                      value: updatedRules,
-                                    },
-                                  });
-                                }}
-                                inputProps={{ min: 0 }}
-                              />
-                              <TextField
-                                label="Quantité d'ingrediant"
-                                type="number"
-                                defaultValue={
-                                  data.rules.find(
-                                    (type) =>
-                                      type.type === ingredients[0].type._id
-                                  )?.quantity || 1
-                                }
-                                onChange={(e) => {
-                                  const updatedRules = [...values.rules];
-                                  // hadhyy rule.type ta3mel f error lazem nchoofoolha 7all
-                                  const ruleIndex = updatedRules.findIndex(
-                                    (rule) =>
-                                      rule?.type === ingredients?.[0]?.type._id
-                                  );
-                                  if (ruleIndex !== -1) {
-                                    updatedRules[ruleIndex] = {
-                                      ...updatedRules[ruleIndex],
-                                      quantity: parseInt(e.target.value),
-                                    };
-                                  } else {
-                                    updatedRules.push({
-                                      _id: null,
-                                      type: ingredients[0].type._id,
-                                      free: 0,
-                                      quantity: parseInt(e.target.value),
-                                    });
-                                  }
-                                  handleChange({
-                                    target: {
-                                      name: "rules",
-                                      value: updatedRules,
-                                    },
-                                  });
-                                }}
-                                inputProps={{ min: 1 }}
-                              />
-                            </>
-                          )}
-                        </FormControl>
-                      )
-                    )}
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Stack>
                   <Stack
                     flexDirection="row"
@@ -473,7 +306,7 @@ const ModifyProduct = () => {
                   >
                     <ReorderType
                       onDragEnd={onDragEnd}
-                      types={types}
+                      types={selectedTypes}
                       sx={{
                         gridColumn: "span 1",
                         gridRow: {

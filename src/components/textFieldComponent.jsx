@@ -3,10 +3,23 @@ import {
 } from "@mui/material";
 
 
-const TextFieldCompnent = ({type,label,change,value,name,blur,touched,error,colum,row,num}) => {
-    const inputProps = num ? { min: num } : undefined;
+const TextFieldCompnent = ({type,label,change,value,name,blur,touched,error,colum,row,num,...otherProps}) => {
     const gridColumn = colum ? colum : undefined;
     const gridRow = row ? row : undefined;
+    const getInputProps = () => {
+      if (type === "number") {
+        return {
+          min: num || 0,
+          onKeyDown: (e) => {
+            if (e.key === '-') {
+              e.preventDefault();
+            }
+          },
+          step: "any"
+        };
+      }
+      return {};
+    };
   return (
     <TextField
     //   fullWidth
@@ -20,7 +33,8 @@ const TextFieldCompnent = ({type,label,change,value,name,blur,touched,error,colu
       error={!!touched && !!error}
       helperText={touched && error}
       sx={{ gridColumn: gridColumn, gridRow: gridRow  }}
-      inputProps={{inputProps}}
+      inputProps={getInputProps()}
+      {...otherProps}
     />
   );
 };

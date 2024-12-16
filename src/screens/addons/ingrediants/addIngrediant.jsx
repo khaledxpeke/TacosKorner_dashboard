@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageInput from "../../../components/imageInput";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ import TextFieldCompnent from "../../../components/textFieldComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 
 const AddIngrediant = () => {
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  // const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
   const [typeError, setTypeError] = useState(false);
@@ -62,6 +62,8 @@ const AddIngrediant = () => {
     const formData = {
       name: values.name,
       price: values.price,
+      suppPrice: values.suppPrice,
+      inStock: values.inStock,
       image: previewImage,
       typeIds: values.types,
     };

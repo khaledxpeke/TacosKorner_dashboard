@@ -44,7 +44,7 @@ const AddIngrediant = () => {
       .number()
       .required("Le prix est requis")
       .min(0, "La prix minimal est 0"),
-    inStock: yup.boolean(),
+    outOfStock: yup.boolean(),
   });
   const initialValues = {
     name: "",
@@ -52,7 +52,7 @@ const AddIngrediant = () => {
     price: 0,
     suppPrice: 0,
     types: [],
-    inStock: false,
+    outOfStock: false,
   };
   const handleFormSubmit = (values) => {
     if (values.types.length === 0) {
@@ -63,7 +63,7 @@ const AddIngrediant = () => {
       name: values.name,
       price: values.price,
       suppPrice: values.suppPrice,
-      inStock: values.inStock,
+      outOfStock: values.outOfStock,
       image: previewImage,
       typeIds: values.types,
     };
@@ -169,8 +169,8 @@ const AddIngrediant = () => {
               >
                 <FormLabel>On repture de stock :</FormLabel>
                 <RadioGroup
-                  name="inStock"
-                  value={values.inStock}
+                  name="outOfStock"
+                  value={values.outOfStock}
                   onChange={handleChange}
                   row
                 >

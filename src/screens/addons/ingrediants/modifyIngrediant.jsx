@@ -54,14 +54,14 @@ const ModifyIngrediant = () => {
       .number()
       .required("Le prix est requis")
       .min(0, "La prix minimal est 0"),
-    inStock: yup.boolean(),
+    outOfStock: yup.boolean(),
   });
   const initialValues = {
     name: data.name,
     price: data.price,
     types: data.types.map((type) => type._id) || [],
     suppPrice: data.suppPrice || 0,
-    inStock: data.inStock,
+    outOfStock: data.outOfStock,
   };
 
   const handleFormSubmit = (values) => {
@@ -69,7 +69,7 @@ const ModifyIngrediant = () => {
       name: values.name,
       price: values.price,
       suppPrice: values.suppPrice,
-      inStock: values.inStock,
+      outOfStock: values.outOfStock,
       types: values.types,
       ...(previewImage && { image: previewImage }),
     };
@@ -181,8 +181,8 @@ const ModifyIngrediant = () => {
               >
                 <FormLabel>On repture de stock :</FormLabel>
                 <RadioGroup
-                  name="inStock"
-                  value={values.inStock}
+                  name="outOfStock"
+                  value={values.outOfStock}
                   onChange={handleChange}
                   row
                 >

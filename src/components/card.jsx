@@ -25,7 +25,12 @@ const ProductCard = ({
   const { isSmallScreen } = useResponsive();
 
   return (
-    <Grid item xs={isSmallScreen ? 9 : 12} sm={isSmallScreen ? 6 : 6} md={isSmallScreen ? 1 : 3}>
+    <Grid
+      item
+      xs={isSmallScreen ? 9 : 12}
+      sm={isSmallScreen ? 6 : 6}
+      md={isSmallScreen ? 1 : 3}
+    >
       <Card
         sx={{
           height: "100%",
@@ -63,7 +68,7 @@ const ProductCard = ({
             {content}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ justifyContent: "space-between" }}>
           <Button
             variant="contained"
             color="error"
@@ -79,11 +84,11 @@ const ProductCard = ({
               variant="contained"
               color="warning"
               size="small"
-              startIcon={!isSmallScreen &&<EditIcon />}
+              startIcon={!isSmallScreen && <EditIcon />}
               style={{ color: "white" }}
               onClick={handleModify}
             >
-               Modifier
+              Modifier
             </Button>
           )}
         </CardActions>

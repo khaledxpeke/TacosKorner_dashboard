@@ -16,11 +16,10 @@ import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
 import AppBarSearch from "../../../global/appBarSearch";
-import { Container, Grid } from "@mui/material";
+import { Box, Chip, Container, Grid, Stack, Typography } from "@mui/material";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
-import InventoryIcon from '@mui/icons-material/Inventory';
-import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
+import { getSettings, selectAllSettings } from "../../../features/settingSlice";
 
 const Ingrediant = () => {
   const dispatch = useDispatch();
@@ -28,6 +27,7 @@ const Ingrediant = () => {
   const error = useSelector(getIngrediantsError);
   const ingrediants = useSelector(selectAllIngrediants);
   const success = useSelector(getIngrediantsSuccess);
+  const settings = useSelector(selectAllSettings);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
@@ -49,6 +49,7 @@ const Ingrediant = () => {
   };
   useEffect(() => {
     dispatch(getIngrediants());
+    dispatch(getSettings());
   }, [dispatch]);
 
   let content;
@@ -71,45 +72,33 @@ const Ingrediant = () => {
               handleClickOpen={() => handleClickOpen(card._id)}
               content={
                 <>
-                  <div
-                    style={{
+                  <Box
+                    sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      width: "200px", // adjust width as needed
+                      width: "200px",
                     }}
                   >
                     Options:{" "}
                     {truncateText(
                       card.types?.map((type) => type.name).join(", ")
-                    )}{" "}
-                    <br />
-                  </div>
-                  {card.price ? `Prix: ${card.price}` : null} <br />
-                  {card.suppPrice
-                    ? `Prix Supplementaire: ${card.suppPrice}`
-                    : null}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "5px",
-                      color: card.inStock ? "#4caf50" : "#f44336",
-                      transition: "all 0.3s ease",
-                    }}
-                  >
-                    {card.inStock ? (
-                      <>
-                        <InventoryIcon sx={{ fontSize: 20 }} />
-                        <span>En stock</span>
-                      </>
-                    ) : (
-                      <>
-                        <RemoveShoppingCartIcon sx={{ fontSize: 20 }} />
-                        <span>Rupture de stock</span>
-                      </>
                     )}
-                  </div>
+                  </Box>
+                  <Typography variant="h4" color="inherit">
+                    Prix: {card.price ?? 0 + " " + settings.defaultCurrency}
+                  </Typography>
+                  <Typography variant="h4" color="inherit">
+                    Prix supplémentaire:{" "}
+                    {card.suppPrice ?? 0 + " " + settings.defaultCurrency}
+                  </Typography>
+                  <Stack direction="row" sx={{ mt: 1 }}>
+                    <Chip
+                      variant="outlined"
+                      label={card.outOfStock ? "Rupture de stock" : "En stock"}
+                      color={card.outOfStock ? "error" : "success"}
+                    />
+                  </Stack>
                 </>
               }
             />

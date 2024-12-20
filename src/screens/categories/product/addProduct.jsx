@@ -54,6 +54,7 @@ const AddProduct = () => {
   const typesWithIngrediants = useSelector(selectAllTypes);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
+    description: yup.string().required("description est requis"),
     category: yup.string().required("categorie est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
@@ -63,6 +64,7 @@ const AddProduct = () => {
   });
   const initialValues = {
     name: "",
+    description: "",
     image: "",
     category: categories.length > 0 ? categories[0]._id : "",
     type: [],
@@ -91,6 +93,7 @@ const AddProduct = () => {
       addProduct({
         body: {
           name: values.name,
+          description: values.description,
           image: previewImage,
           price: values.price,
           choice: values.choice,
@@ -162,6 +165,18 @@ const AddProduct = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
+                colum="span 3"
+                row="1 / span 1"
+              />
+               <TextFieldCompnent
+                type="text"
+                label="Description"
+                change={handleChange}
+                value={values.description}
+                name="description"
+                blur={handleBlur}
+                touched={touched.description}
+                error={errors.description}
                 colum="span 3"
                 row="1 / span 1"
               />

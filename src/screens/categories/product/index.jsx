@@ -64,7 +64,13 @@ const Formule = () => {
               key={card._id}
               data={card}
               handleModify={() => handleModify(card)}
-              content={card.price + " " + settings.defaultCurrency}
+              content={
+                <>
+                  {card?.price + " " + settings.defaultCurrency}
+                  <br />
+                  <strong>Description:</strong> {card?.description}
+                </>
+              }
               handleClickOpen={() => handleClickOpen(card._id)}
             />
           ))

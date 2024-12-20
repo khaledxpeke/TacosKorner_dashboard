@@ -60,6 +60,7 @@ const ModifyProduct = () => {
   const categories = useSelector(selectAllCategories);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
+    description: yup.string().required("description est requis"),
     category: yup.string().required("categorie est requis"),
     type: yup.array().default(() => []),
     price: yup.number().required("Prix est requis"),
@@ -70,6 +71,7 @@ const ModifyProduct = () => {
   });
   const initialValues = {
     name: data.name,
+    description: data.description,
     category: categories.some((category) => category._id === data.category)
       ? data.category
       : "",
@@ -86,6 +88,7 @@ const ModifyProduct = () => {
     const selectedTypeIds = selectedTypes.map((type) => type._id);
     const requestBody = {
       name: values.name,
+      description: values.description,
       price: values.price,
       category: values.category,
       choice: values.choice,
@@ -170,6 +173,18 @@ const ModifyProduct = () => {
                 blur={handleBlur}
                 touched={touched.name}
                 error={errors.name}
+                colum="span 3"
+                row="1 / span 1"
+              />
+              <TextFieldCompnent
+                type="text"
+                label="Description"
+                change={handleChange}
+                value={values.description}
+                name="description"
+                blur={handleBlur}
+                touched={touched.description}
+                error={errors.description}
                 colum="span 3"
                 row="1 / span 1"
               />

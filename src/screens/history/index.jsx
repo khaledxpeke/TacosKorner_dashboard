@@ -33,11 +33,12 @@ import NoData from "../../components/no_data";
 import Loading from "../../components/loading";
 import Error from "../../components/Error";
 
-function createData(product, pack, total, boughtAt) {
+function createData(product, pack, total, currency,boughtAt) {
   return {
     product,
     pack,
     total,
+    currency,
     boughtAt,
   };
 }
@@ -74,7 +75,7 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.pack}
         </TableCell>
-        <TableCell align="right">{row.total}</TableCell>
+        <TableCell align="right">{row.total+ " "+row.currency}</TableCell>
         <TableCell align="right">{row.boughtAt.substring(0, 10)}</TableCell>
       </TableRow>
       <TableRow sx={{ backgroundColor: colors.primary[700] }}>
@@ -93,7 +94,10 @@ function Row(props) {
                     </TableCell>
                     <TableCell>Nom</TableCell>
                     <TableCell align="right">
-                      Prix ({row.product[0].plat?.currency})
+                      Prix ({row?.currency})
+                    </TableCell>
+                    <TableCell align="right">
+                      Total ({row?.currency})
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -120,11 +124,14 @@ function Row(props) {
                         <TableCell align="right">
                           {productRow.plat?.price}
                         </TableCell>
+                        <TableCell align="right">
+                          {productRow?.total}
+                        </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell
                           style={{ paddingBottom: 0, paddingTop: 0 }}
-                          colSpan={2}
+                          colSpan={4}
                         >
                           <Collapse
                             in={addonsOpen}
@@ -147,10 +154,10 @@ function Row(props) {
                                       <TableCell>Name</TableCell>
                                       <TableCell>
                                         Prix unitaire(
-                                        {productRow.plat?.currency})
+                                        {row?.currency})
                                       </TableCell>
                                       <TableCell align="right">
-                                        Total ({productRow.plat?.currency})
+                                        Total ({row?.currency})
                                       </TableCell>
                                     </TableRow>
                                   </TableHead>
@@ -182,7 +189,7 @@ function Row(props) {
                       <TableRow>
                         <TableCell
                           style={{ paddingBottom: 0, paddingTop: 0 }}
-                          colSpan={2}
+                          colSpan={4}
                         >
                           <Collapse
                             in={addonsOpen}
@@ -205,10 +212,10 @@ function Row(props) {
                                       <TableCell>Name</TableCell>
                                       <TableCell>
                                         Prix unitaire(
-                                        {productRow.plat?.currency})
+                                        {row?.currency})
                                       </TableCell>
                                       <TableCell align="right">
-                                        Total ({productRow.plat?.currency})
+                                        Total ({row?.currency})
                                       </TableCell>
                                     </TableRow>
                                   </TableHead>
@@ -274,7 +281,7 @@ const History = () => {
   }
   if (historyStatus === "fetchData") {
     const rows = histories.map((history) =>
-      createData(history.product, history.pack, history.total, history.boughtAt)
+      createData(history.product, history.pack, history.total,history.currency, history.boughtAt)
     );
     filteredHistory = rows?.filter((history) =>
       history.boughtAt.includes(search.toLowerCase())

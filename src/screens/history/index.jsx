@@ -33,10 +33,20 @@ import NoData from "../../components/no_data";
 import Loading from "../../components/loading";
 import Error from "../../components/Error";
 
-function createData(product, pack, total, currency,boughtAt) {
+function createData(
+  product,
+  pack,
+  commandNumber,
+  name,
+  total,
+  currency,
+  boughtAt
+) {
   return {
     product,
     pack,
+    commandNumber,
+    name,
     total,
     currency,
     boughtAt,
@@ -75,7 +85,9 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.pack}
         </TableCell>
-        <TableCell align="right">{row.total+ " "+row.currency}</TableCell>
+        <TableCell>{row.commandNumber}</TableCell>
+        <TableCell>{row.name}</TableCell>
+        <TableCell align="right">{row.total + " " + row.currency}</TableCell>
         <TableCell align="right">{row.boughtAt.substring(0, 10)}</TableCell>
       </TableRow>
       <TableRow sx={{ backgroundColor: colors.primary[700] }}>
@@ -93,12 +105,8 @@ function Row(props) {
                       Plus d'information{" "}
                     </TableCell>
                     <TableCell>Nom</TableCell>
-                    <TableCell align="right">
-                      Prix ({row?.currency})
-                    </TableCell>
-                    <TableCell align="right">
-                      Total ({row?.currency})
-                    </TableCell>
+                    <TableCell align="right">Prix ({row?.currency})</TableCell>
+                    <TableCell align="right">Total ({row?.currency})</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -124,9 +132,7 @@ function Row(props) {
                         <TableCell align="right">
                           {productRow.plat?.price}
                         </TableCell>
-                        <TableCell align="right">
-                          {productRow?.total}
-                        </TableCell>
+                        <TableCell align="right">{productRow?.total}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell
@@ -169,7 +175,9 @@ function Row(props) {
                                             X{addonRow.count} {addonRow.name}
                                           </TableCell>
                                           <TableCell>
-                                            {addonRow.total ? addonRow.pu : "--"}
+                                            {addonRow.total
+                                              ? addonRow.pu
+                                              : "Gratuit"}
                                           </TableCell>
                                           <TableCell align="right">
                                             {addonRow.total
@@ -221,25 +229,23 @@ function Row(props) {
                                   </TableHead>
                                   <TableBody>
                                     {productRow.extras.map((extraRow) => {
-                                        return (
-                                          <TableRow key={extraRow.name}>
-                                            <TableCell
-                                              component="th"
-                                              scope="row"
-                                            >
-                                              X{extraRow.count} {extraRow.name}
-                                            </TableCell>
-                                            <TableCell>
-                                            {extraRow.pu ? extraRow.pu : "Gratuit"}
+                                      return (
+                                        <TableRow key={extraRow.name}>
+                                          <TableCell component="th" scope="row">
+                                            X{extraRow.count} {extraRow.name}
+                                          </TableCell>
+                                          <TableCell>
+                                            {extraRow.pu
+                                              ? extraRow.pu
+                                              : "Gratuit"}
                                           </TableCell>
                                           <TableCell align="right">
                                             {extraRow.total
                                               ? extraRow.total
                                               : "Gratuit"}
                                           </TableCell>
-                                          </TableRow>
-                                        );
-                                      
+                                        </TableRow>
+                                      );
                                     })}
                                   </TableBody>
                                 </Table>
@@ -281,7 +287,15 @@ const History = () => {
   }
   if (historyStatus === "fetchData") {
     const rows = histories.map((history) =>
-      createData(history.product, history.pack, history.total,history.currency, history.boughtAt)
+      createData(
+        history.product,
+        history.pack,
+        history.commandNumber,
+        history.name,
+        history.total,
+        history.currency,
+        history.boughtAt
+      )
     );
     filteredHistory = rows?.filter((history) =>
       history.boughtAt.includes(search.toLowerCase())
@@ -346,6 +360,12 @@ const History = () => {
                   <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
                     Pack
                   </TableCell>
+                  <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
+                    Numéro de commande
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
+                    Nom du client
+                  </TableCell>
                   <TableCell
                     align="right"
                     sx={{ fontSize: "17px", fontWeight: "bold" }}
@@ -373,7 +393,7 @@ const History = () => {
                       })
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4}>
+                      <TableCell colSpan={5}>
                         {historyStatus === "loading" ? (
                           <Loading />
                         ) : historyStatus === "fetchError" ? (

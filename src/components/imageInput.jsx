@@ -43,9 +43,9 @@ const ImageInput = ({
           onClick={handleCancelImage}
           sx={
             {
-              // position: "absolute",
-              // top: "-8px",
-              // zIndex: 10,
+              position: "absolute",
+              top: "-8px",
+              zIndex: 10,
             }
           }
         >

@@ -1,28 +1,33 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   updateStatus,
   getSettingsError,
   getSettingsStatus,
   getSettingsLoading,
   getSettingsSuccess,
-  updateCurrencyOrTva,
+  updateSetting,
 } from "../../features/settingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../components/loading";
 import { useLocation, useNavigate } from "react-router-dom";
 import TextFieldCompnent from "../../components/textFieldComponent";
+import ImageInput from "../../components/imageInput";
 
 const ModifySettings = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const location = useLocation();
   const data = location.state;
   const navigate = useNavigate();
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(null);
+  const [displayLogoLabel, setDisplayLogoLabel] = useState(true);
+  const [displayBannerLabel, setDisplayBannerLabel] = useState(true);
   const settingsSchema = yup.object().shape({
     tva: yup
       .number()
@@ -42,7 +47,7 @@ const ModifySettings = () => {
       .min(1, "Le boisson minimal est 1"),
   });
   const initialValues = {
-    tva:data?.tva || 0,
+    tva: data?.tva || 0,
     maxDrink: data?.maxDrink || 1,
     maxDessert: data?.maxDessert || 1,
     maxExtras: data?.maxExtras || 1,
@@ -54,11 +59,13 @@ const ModifySettings = () => {
   const success = useSelector(getSettingsSuccess);
   const handleFormSubmit = (values) => {
     dispatch(
-      updateCurrencyOrTva({
+      updateSetting({
         tva: values.tva,
         maxExtras: values.maxExtras,
         maxDessert: values.maxDessert,
         maxDrink: values.maxDrink,
+        ...(logoPreview && { logo: logoPreview }),
+        ...(bannerPreview && { banner: bannerPreview }),
       })
     );
   };
@@ -150,6 +157,34 @@ const ModifySettings = () => {
                 num={1}
                 onlyDigits={true}
               />
+              <Box sx={{ gridColumn: "span 4" }}>
+              <Typography variant="h2" color="inherit">
+              Logo 
+            </Typography>
+            <br/>
+                <ImageInput
+                  inputId="logoInput"
+                  previewImage={logoPreview}
+                  setPreviewImage={setLogoPreview}
+                  displayLabel={displayLogoLabel}
+                  setDisplayLabel={setDisplayLogoLabel}
+                  image={data.logo}
+                />
+              </Box>
+              <Box sx={{ gridColumn: "span 4" }}>
+              <Typography variant="h2" color="inherit">
+              Banner 
+            </Typography>
+            <br/>
+                <ImageInput
+                  inputId="bannerInput"
+                  previewImage={bannerPreview}
+                  setPreviewImage={setBannerPreview}
+                  displayLabel={displayBannerLabel}
+                  setDisplayLabel={setDisplayBannerLabel}
+                  image={data.banner}
+                />
+              </Box>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

@@ -12,6 +12,7 @@ const ImageInput = ({
   setDisplayLabel,
   image,
   row,
+  inputId = "imageInput"
 }) => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -54,7 +55,7 @@ const ImageInput = ({
           />
         </IconButton>
       )}
-      <label htmlFor="imageInput">
+      <label htmlFor={inputId}>
         <img
           src={
             previewImage
@@ -73,7 +74,7 @@ const ImageInput = ({
         />
         <input
           type="file"
-          id="imageInput"
+          id={inputId}
           accept=".jpg,.jpeg,.png"
           style={{ display: "none" }}
           onChange={handleImageChange}
@@ -81,7 +82,7 @@ const ImageInput = ({
       </label>
       <br />
       {displayLabel && (
-        <label htmlFor="imageInput" className="mt-2 d-block">
+        <label htmlFor={inputId} className="mt-2 d-block">
           {image ? "Modifier cette image" : "Choisissez une image"}
         </label>
       )}

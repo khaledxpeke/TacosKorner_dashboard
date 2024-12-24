@@ -58,6 +58,8 @@ const AddProduct = () => {
     category: yup.string().required("categorie est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
+    outOfStock: yup.boolean(),
+    visible: yup.boolean(),
     maxExtras: yup.number(),
     maxDessert: yup.number(),
     maxDrink: yup.number(),
@@ -70,6 +72,8 @@ const AddProduct = () => {
     type: [],
     price: 0,
     choice: "seul",
+    outOfStock: false,
+    visible: true,
     maxExtras: 1,
     maxDessert: 1,
     maxDrink: 1,
@@ -97,6 +101,8 @@ const AddProduct = () => {
           image: previewImage,
           price: values.price,
           choice: values.choice,
+          outOfStock: values.outOfStock,
+          visible: values.visible,
           type: selectedTypeIds,
           maxExtras: values.maxExtras,
           maxDessert: values.maxDessert,
@@ -133,7 +139,6 @@ const AddProduct = () => {
   ) : (
     <Box m="20px" className="main-application">
       <Header title="AJOUTER PRODUIT" subtitle="Créer une nouvelle produit" />
-
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -168,18 +173,6 @@ const AddProduct = () => {
                 colum="span 3"
                 row="1 / span 1"
               />
-               <TextFieldCompnent
-                type="text"
-                label="Description"
-                change={handleChange}
-                value={values.description}
-                name="description"
-                blur={handleBlur}
-                touched={touched.description}
-                error={errors.description}
-                colum="span 3"
-                row="1 / span 1"
-              />
               <TextFieldCompnent
                 type="number"
                 label="Prix"
@@ -193,12 +186,19 @@ const AddProduct = () => {
                 row="2 / span 1"
                 num={0}
               />
-              <ImageInput
+              <TextFieldCompnent
+                multiline
+                maxRows={4}
+                type="text"
+                label="Description"
+                change={handleChange}
+                value={values.description}
+                name="description"
+                blur={handleBlur}
+                touched={touched.description}
+                error={errors.description}
+                colum="span 3"
                 row="3 / span 1"
-                previewImage={previewImage}
-                setPreviewImage={setPreviewImage}
-                displayLabel={displayLabel}
-                setDisplayLabel={setDisplayLabel}
               />
               <SelectComponent
                 gridColumn="span 3"
@@ -208,6 +208,89 @@ const AddProduct = () => {
                 value={values.category}
                 change={handleChange}
               />
+              <ImageInput
+                row="5 / span 1"
+                previewImage={previewImage}
+                setPreviewImage={setPreviewImage}
+                displayLabel={displayLabel}
+                setDisplayLabel={setDisplayLabel}
+              />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "6 / span 1" }}
+              >
+                <FormLabel>On repture de stock :</FormLabel>
+                <RadioGroup
+                  name="outOfStock"
+                  value={values.outOfStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "7 / span 1" }}
+              >
+                <FormLabel>Afficher ce produit :</FormLabel>
+                <RadioGroup
+                  name="visible"
+                  value={values.visible}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{
+                  gridColumn: "span 1",
+                  gridRow: "8 / span 1",
+                }}
+              >
+                <FormLabel>Choix de produit</FormLabel>
+                <RadioGroup
+                  defaultValue="seul"
+                  name="choice"
+                  value={values.choice}
+                  onChange={handleChange}
+                  sx={{ my: 1 }}
+                >
+                  <FormControlLabel
+                    value="seul"
+                    control={<Radio />}
+                    label="Seul"
+                  />
+                  <FormControlLabel
+                    value="multiple"
+                    control={<Radio />}
+                    label="Composée"
+                  />
+                </RadioGroup>
+              </FormControl>
               {values.choice === "multiple" && (
                 <>
                   <Stack
@@ -215,7 +298,7 @@ const AddProduct = () => {
                     flexDirection="row"
                     sx={{
                       gridColumn: "span 3",
-                      gridRow: "6 / span 1",
+                      gridRow: "9 / span 1",
                       gap: "30px",
                     }}
                   >
@@ -260,44 +343,13 @@ const AddProduct = () => {
                     flexDirection="row"
                     sx={{
                       gridColumn: "span 1",
-                      gridRow: "6 / span 1",
+                      gridRow: "9 / span 1",
                     }}
                   >
                     <ReorderType onDragEnd={onDragEnd} types={selectedTypes} />
                   </Stack>
                 </>
               )}
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{
-                  gridColumn: "span 1",
-                  gridRow: {
-                    gridRow:
-                      values.choice === "seul" ? "5 / span 1" : "5 / span 1",
-                  },
-                }}
-              >
-                <FormLabel>Choix de produit</FormLabel>
-                <RadioGroup
-                  defaultValue="seul"
-                  name="choice"
-                  value={values.choice}
-                  onChange={handleChange}
-                  sx={{ my: 1 }}
-                >
-                  <FormControlLabel
-                    value="seul"
-                    control={<Radio />}
-                    label="Seul"
-                  />
-                  <FormControlLabel
-                    value="multiple"
-                    control={<Radio />}
-                    label="Composée"
-                  />
-                </RadioGroup>
-              </FormControl>
             </Box>
 
             <Box display="flex" justifyContent="start" mt="20px">

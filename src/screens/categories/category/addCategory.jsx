@@ -106,7 +106,7 @@ const AddCategory = () => {
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Créer une nouvelle catégorie
+                Ajouter
               </Button>
             </Box>
           </form>

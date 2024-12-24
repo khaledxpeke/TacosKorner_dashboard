@@ -44,8 +44,7 @@ import { useDispatch } from "react-redux";
 import Loading from "../../components/loading";
 import Error from "../../components/Error";
 import SearchIcon from "@mui/icons-material/Search";
-import ImageInput from "../../components/imageInput";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const SettingsManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,10 +59,6 @@ const SettingsManagement = () => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [cardId, setCardId] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(null);
-  const [bannerPreview, setBannerPreview] = useState(null);
-  const [displayLogoLabel, setDisplayLogoLabel] = useState(true);
-  const [displayBannerLabel, setDisplayBannerLabel] = useState(true);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -163,6 +158,44 @@ const SettingsManagement = () => {
     );
     content = (
       <>
+        <Grid item xs={4}>
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h2" sx={{ mb: 2 }} color="inherit">
+              Logo
+            </Typography>
+            <img
+              style={{
+                width: "100%",
+                height: "auto",
+                maxWidth: "200px",
+                maxHeight: "200px",
+              }}
+              srcSet={`${apiUrl}/${settings.logo}`}
+              src={`${apiUrl}/${settings.logo}`}
+              alt="Logo"
+              loading="lazy"
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={8}>
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h2" sx={{ mb: 2 }} color="inherit">
+              Banner
+            </Typography>
+            <img
+              style={{
+                width: "100%",
+                height: "auto",
+                maxWidth: "600px",
+                maxHeight: "200px",
+              }}
+              srcSet={`${apiUrl}/${settings.banner}`}
+              src={`${apiUrl}/${settings.banner}`}
+              alt="Banner"
+              loading="lazy"
+            />
+          </Box>
+        </Grid>
         <Grid item xs={6}>
           <TableContainer>
             <Table sx={{ backgroundColor: colors.primary[400] }}>
@@ -261,30 +294,6 @@ const SettingsManagement = () => {
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
               Nombre max de désserts : {settings.maxDessert}
             </Typography>
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h2" sx={{ mb: 2 }} color="inherit">
-                Logo
-              </Typography>
-              <ImageInput
-                previewImage={logoPreview}
-                setPreviewImage={setLogoPreview}
-                displayLabel={displayLogoLabel}
-                setDisplayLabel={setDisplayLogoLabel}
-                image={settings.logo}
-              />
-            </Box>
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h2" sx={{ mb: 2 }} color="inherit">
-                Banner
-              </Typography>
-              <ImageInput
-                previewImage={bannerPreview}
-                setPreviewImage={setBannerPreview}
-                displayLabel={displayBannerLabel}
-                setDisplayLabel={setDisplayBannerLabel}
-                image={settings.banner}
-              />
-            </Box>
             <Button
               sx={{ mt: 2 }}
               size="small"

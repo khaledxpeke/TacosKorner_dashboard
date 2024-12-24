@@ -105,7 +105,7 @@ const ModifyCategory = () => {
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier une catégorie
+                Modifier
               </Button>
             </Box>
           </form>

@@ -65,6 +65,8 @@ const ModifyProduct = () => {
     type: yup.array().default(() => []),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),
+    outOfStock: yup.boolean(),
+    visible: yup.boolean(),
     maxExtras: yup.number(),
     maxDessert: yup.number(),
     maxDrink: yup.number(),
@@ -76,6 +78,8 @@ const ModifyProduct = () => {
       ? data.category
       : "",
     price: data.price,
+    outOfStock: data.outOfStock,
+    visible: data.visible,
     choice: data.choice,
     type: data.type || [],
     free: 0,
@@ -92,6 +96,8 @@ const ModifyProduct = () => {
       price: values.price,
       category: values.category,
       choice: values.choice,
+      outOfStock: values.outOfStock,
+      visible: values.visible,
       ...(previewImage && { image: previewImage }),
       type: selectedTypeIds.join(","),
       maxExtras: values.maxExtras,
@@ -177,18 +183,6 @@ const ModifyProduct = () => {
                 row="1 / span 1"
               />
               <TextFieldCompnent
-                type="text"
-                label="Description"
-                change={handleChange}
-                value={values.description}
-                name="description"
-                blur={handleBlur}
-                touched={touched.description}
-                error={errors.description}
-                colum="span 3"
-                row="1 / span 1"
-              />
-              <TextFieldCompnent
                 type="number"
                 label="Prix"
                 change={handleChange}
@@ -201,15 +195,20 @@ const ModifyProduct = () => {
                 row="2 / span 1"
                 num={0}
               />
-              <ImageInput
+              <TextFieldCompnent
+                multiline
+                maxRows={4}
+                type="text"
+                label="Description"
+                change={handleChange}
+                value={values.description}
+                name="description"
+                blur={handleBlur}
+                touched={touched.description}
+                error={errors.description}
+                colum="span 3"
                 row="3 / span 1"
-                previewImage={previewImage}
-                setPreviewImage={setPreviewImage}
-                displayLabel={displayLabel}
-                setDisplayLabel={setDisplayLabel}
-                image={data.image}
               />
-
               <SelectComponent
                 gridColumn="span 3"
                 gridRow="4 / span 1"
@@ -218,7 +217,89 @@ const ModifyProduct = () => {
                 value={values.category}
                 change={handleChange}
               />
-
+              <ImageInput
+                row="5 / span 1"
+                previewImage={previewImage}
+                setPreviewImage={setPreviewImage}
+                displayLabel={displayLabel}
+                setDisplayLabel={setDisplayLabel}
+              />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "6 / span 1" }}
+              >
+                <FormLabel>On repture de stock :</FormLabel>
+                <RadioGroup
+                  name="outOfStock"
+                  value={values.outOfStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "7 / span 1" }}
+              >
+                <FormLabel>Afficher ce produit :</FormLabel>
+                <RadioGroup
+                  name="visible"
+                  value={values.visible}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{
+                  gridColumn: "span 1",
+                  gridRow: "8 / span 1",
+                }}
+              >
+                <FormLabel>Choix de produit</FormLabel>
+                <RadioGroup
+                  defaultValue="seul"
+                  name="choice"
+                  value={values.choice}
+                  onChange={handleChange}
+                  sx={{ my: 1 }}
+                >
+                  <FormControlLabel
+                    value="seul"
+                    control={<Radio />}
+                    label="Seul"
+                  />
+                  <FormControlLabel
+                    value="multiple"
+                    control={<Radio />}
+                    label="Composée"
+                  />
+                </RadioGroup>
+              </FormControl>
               {values.choice === "multiple" && (
                 <>
                   <Stack
@@ -226,7 +307,7 @@ const ModifyProduct = () => {
                     flexDirection="row"
                     sx={{
                       gridColumn: "span 3",
-                      gridRow: "6 / span 1",
+                      gridRow: "9 / span 1",
                       gap: "30px",
                     }}
                   >
@@ -271,51 +352,18 @@ const ModifyProduct = () => {
                     flexDirection="row"
                     sx={{
                       gridColumn: "span 1",
-                      gridRow: "6 / span 1",
+                      gridRow: "9 / span 1",
                     }}
                   >
-                    <ReorderType
-                      onDragEnd={onDragEnd}
-                      types={selectedTypes}
-                    />
+                    <ReorderType onDragEnd={onDragEnd} types={selectedTypes} />
                   </Stack>
                 </>
               )}
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{
-                  gridColumn: "span 1",
-                  gridRow: {
-                    gridRow:
-                      values.choice === "seul" ?  "5 / span 1" : "5 / span 1"
-                  },
-                }}
-              >
-                <FormLabel>Choix de produit</FormLabel>
-                <RadioGroup
-                  defaultValue="seul"
-                  name="choice"
-                  value={values.choice}
-                  onChange={handleChange}
-                  sx={{ my: 1 }}
-                >
-                  <FormControlLabel
-                    value="seul"
-                    control={<Radio />}
-                    label="Seul"
-                  />
-                  <FormControlLabel
-                    value="multiple"
-                    control={<Radio />}
-                    label="Composée"
-                  />
-                </RadioGroup>
-              </FormControl>
             </Box>
+
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Modifier
+                Soumettre
               </Button>
             </Box>
           </form>

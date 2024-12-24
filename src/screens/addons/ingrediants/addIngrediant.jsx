@@ -45,6 +45,7 @@ const AddIngrediant = () => {
       .required("Le prix est requis")
       .min(0, "La prix minimal est 0"),
     outOfStock: yup.boolean(),
+    visible: yup.boolean(),
   });
   const initialValues = {
     name: "",
@@ -53,6 +54,7 @@ const AddIngrediant = () => {
     suppPrice: 0,
     types: [],
     outOfStock: false,
+    visible: true,
   };
   const handleFormSubmit = (values) => {
     if (values.types.length === 0) {
@@ -64,6 +66,7 @@ const AddIngrediant = () => {
       price: values.price,
       suppPrice: values.suppPrice,
       outOfStock: values.outOfStock,
+      visible: values.visible,
       image: previewImage,
       typeIds: values.types,
     };
@@ -106,12 +109,14 @@ const AddIngrediant = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            <Box display="grid"
+            <Box
+              display="grid"
               gap="30px"
               gridTemplateColumns="repeat(6, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
-              }}>
+              }}
+            >
               <TextFieldCompnent
                 type="text"
                 label="Nom"
@@ -172,12 +177,36 @@ const AddIngrediant = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 3",gridRow: "7 / span 1" }}
+                sx={{ gridColumn: "span 3", gridRow: "7 / span 1" }}
               >
                 <FormLabel>On repture de stock :</FormLabel>
                 <RadioGroup
                   name="outOfStock"
                   value={values.outOfStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "8 / span 1" }}
+              >
+                <FormLabel>Afficher cet ingrédient :</FormLabel>
+                <RadioGroup
+                  name="visible"
+                  value={values.visible}
                   onChange={handleChange}
                   row
                 >

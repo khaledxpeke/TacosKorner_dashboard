@@ -54,6 +54,7 @@ const ModifyIngrediant = () => {
       .required("Le prix est requis")
       .min(0, "La prix minimal est 0"),
     outOfStock: yup.boolean(),
+    visible: yup.boolean(),
   });
   const initialValues = {
     name: data.name,
@@ -61,6 +62,7 @@ const ModifyIngrediant = () => {
     types: data.types.map((type) => type._id) || [],
     suppPrice: data.suppPrice || 0,
     outOfStock: data.outOfStock,
+    visible: data.visible,
   };
 
   const handleFormSubmit = (values) => {
@@ -191,6 +193,30 @@ const ModifyIngrediant = () => {
                 <RadioGroup
                   name="outOfStock"
                   value={values.outOfStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "8 / span 1" }}
+              >
+                <FormLabel>Afficher cet ingrédient :</FormLabel>
+                <RadioGroup
+                  name="visible"
+                  value={values.visible}
                   onChange={handleChange}
                   row
                 >

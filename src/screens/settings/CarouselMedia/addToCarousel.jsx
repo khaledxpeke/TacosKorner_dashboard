@@ -2,136 +2,131 @@ import { Box, Button, IconButton } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../../components/Header";
 import ImageVideoInput from "../../../components/imageVideoInput";
-import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import CloseIcon from "@mui/icons-material/Add";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  getCarouselsError,
+  getCarouselsStatus,
+  getCarouselsSuccess,
+  addCarouselMedia,
+  updateStatus,
+} from "../../../features/carouselSlice";
+import { useNavigate } from "react-router-dom";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const AddToCarousel = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const status = useSelector(getCarouselsStatus);
+  const error = useSelector(getCarouselsError);
+  const success = useSelector(getCarouselsSuccess);
+  const handleSubmit = () => {
+    if (list.length > 0) {
+      const formData = new FormData();
+      list.forEach((file) => {
+        formData.append("files", file);
+      });
+      list.forEach((file) => {
+        formData.append(
+          "mediaType",
+          file.type === "video/mp4" ? "video" : "image"
+        );
+      });
+      dispatch(addCarouselMedia(formData));
+    }
+  };
+
+  useEffect(() => {
+    if (status === "addSuccess") {
+      toast.success(success);
+      dispatch(updateStatus());
+      navigate("/carousel");
+    } else if (status === "addError") {
+      toast.error(error);
+    }
+  }, [status, error, success, dispatch, navigate]);
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const [list, setImages] = useState([]);
+  const [list, setList] = useState([]);
 
   const handleImageAdd = (item) => {
-    setImages([item, ...list]);
+    setList((prevList) => [item, ...prevList]);
   };
 
   const handleRemoveImage = (index) => {
-    const updatedImages = list.filter((_, i) => i !== index);
-    setImages(updatedImages);
+    setList((prevList) => prevList.filter((_, i) => i !== index));
   };
 
-  const handleDragEnd = (result) => {
-    const { destination, source } = result;
-    if (!destination) return; // Dropped outside the list
+  const renderMedia = (item) => {
+    const isVideo =
+      item instanceof File ? item.type === "video/mp4" : item.endsWith(".mp4");
+    const src =
+      item instanceof File ? URL.createObjectURL(item) : `${apiUrl}/${item}`;
 
-    const reorderedList = Array.from(list);
-    const [movedItem] = reorderedList.splice(source.index, 1);
-    reorderedList.splice(destination.index, 0, movedItem);
-
-    setImages(reorderedList);
+    return isVideo ? (
+      <video
+        src={src}
+        style={{
+          maxWidth: "200px",
+          maxHeight: "200px",
+          cursor: "pointer",
+        }}
+        controls
+      />
+    ) : (
+      <img
+        src={src}
+        alt="Uploaded"
+        style={{
+          maxWidth: "200px",
+          maxHeight: "200px",
+          cursor: "pointer",
+        }}
+      />
+    );
   };
-  console.log(list);
 
   return (
     <Box m="20px" className="main-application">
-      <Header title="AJOUTER DESSERT" subtitle="Créer une nouvelle dessert" />
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="image-list" direction="vertical">
-          {(provided) => (
-            <Box
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
-              {list.map((item, index) => (
-                <Draggable
-                  key={index}
-                  draggableId={String(index)}
-                  index={index}
-                >
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="item-item"
-                    >
-                      <IconButton
-                        type="button"
-                        onClick={() => handleRemoveImage(index)}
-                        sx={{ ml: 22 }}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                      {item instanceof File ? (
-                        // If it's a File instance, check its type for video files
-                        item.type === "video/mp4" ? (
-                          <video
-                            src={URL.createObjectURL(item)}
-                            // controls
-                            style={{
-                              maxWidth: "200px",
-                              maxHeight: "200px",
-                              cursor: "pointer",
-                            }}
-                          />
-                        ) : (
-                          <img
-                            src={URL.createObjectURL(item)}
-                            alt="Uploaded"
-                            style={{
-                              maxWidth: "200px",
-                              maxHeight: "200px",
-                              cursor: "pointer",
-                            }}
-                          />
-                        )
-                      ) : // If it's a URL or string (not a File), handle it as a path
-                      item.slice(-4) === ".mp4" ? (
-                        <video
-                          src={`${apiUrl}/${item}`}
-                        //   controls
-                          style={{
-                            maxWidth: "200px",
-                            maxHeight: "200px",
-                            cursor: "pointer",
-                          }}
-                        />
-                      ) : (
-                        <img
-                          src={`${apiUrl}/${item}`}
-                          alt="Uploaded"
-                          style={{
-                            maxWidth: "200px",
-                            maxHeight: "200px",
-                            cursor: "pointer",
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
-      <ImageVideoInput
-        sx={{ gridColumn: "span 2", gridRow: "2 / span 2" }}
-        previewImage={null}
-        setPreviewImage={handleImageAdd}
-      />
-      <Box display="flex" justifyContent="end" mt="20px">
-        <Button type="submit" color="secondary" variant="contained">
+      <Header title="AJOUTER MEDIA" subtitle="Créer un nouveau média" />
+      <Box display="flex" alignItems="center" gap="10px" mb="20px">
+        <ImageVideoInput previewImage={null} setPreviewImage={handleImageAdd} />
+        <Button
+          sx={{ height: 30 }}
+          type="submit"
+          color="secondary"
+          variant="contained"
+          onClick={() => handleSubmit()}
+        >
           Soumettre
         </Button>
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(4, 1fr)"
+        sx={{
+          "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+        }}
+      >
+        {list.map((item, index) => (
+          <Box key={index} position="relative" className="item-container">
+            <IconButton
+              type="button"
+              onClick={() => handleRemoveImage(index)}
+              sx={{
+                position: "absolute",
+                top: "-8px",
+                zIndex: 10,
+              }}
+            >
+              <CloseIcon
+                sx={{ color: "red", fontSize: "30px", fontWeight: "bold" }}
+              />
+            </IconButton>
+            {renderMedia(item)}
+          </Box>
+        ))}
       </Box>
     </Box>
   );

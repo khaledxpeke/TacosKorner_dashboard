@@ -15,7 +15,11 @@ export const getCarouselMedia = createAsyncThunk(
 export const addCarouselMedia = createAsyncThunk(
   "carousel/addCarouselMedia",
   async (formData) => {
-    const response = await axios.post(`${apiUrl}/carousel`, formData);
+    const response = await axios.post(`${apiUrl}/carousel`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   }
 );
@@ -29,7 +33,7 @@ export const updateCarouselOrder = createAsyncThunk(
 );
 
 export const deleteCarouselMedia = createAsyncThunk(
-  "carousel/deleteMedia",
+  "carousel/deleteCarouselMedia",
   async (id) => {
     await axios.delete(`${apiUrl}/carousel/${id}`);
     return id;
@@ -76,6 +80,33 @@ const carouselSlice = createSlice({
       })
       .addCase(updateCarouselOrder.rejected, (state, action) => {
         state.status = "updateError";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(addCarouselMedia.pending, (state) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(addCarouselMedia.fulfilled, (state, action) => {
+        state.status = "addSuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(addCarouselMedia.rejected, (state, action) => {
+        state.status = "addError";
+        state.loading = false;
+        state.error = action.error.message;
+      }).addCase(deleteCarouselMedia.pending, (state) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(deleteCarouselMedia.fulfilled, (state, action) => {
+        state.status = "deleteSuccess";
+        state.loading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(deleteCarouselMedia.rejected, (state, action) => {
+        state.status = "deleteError";
         state.loading = false;
         state.error = action.error.message;
       });

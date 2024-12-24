@@ -24,6 +24,10 @@ const ImageVideoInput = ({ setPreviewImage }) => {
           style={{ display: "none" }}
           onChange={handleImageChange}
         />
+        <br />
+        <label htmlFor="imageInput" className="mt-2 d-block">
+          Choisissez des images/videos
+        </label>
       </label>
     </div>
   );

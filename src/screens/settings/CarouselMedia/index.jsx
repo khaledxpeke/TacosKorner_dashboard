@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   AppBar,
+  Box,
   Button,
   CssBaseline,
   ImageList,
@@ -10,14 +11,12 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-
+import EditIcon from "@mui/icons-material/Edit";
+import { getCarouselMedia } from "../../../features/carouselSlice";
+import { useDispatch, useSelector } from "react-redux";
+const apiUrl = process.env.REACT_APP_API_URL;
 const CarouselMedia = () => {
-    const navigate = useNavigate();
-  const itemData = [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrTPjHOG0LBJKLlx35kYcK4hpx5xRdGNQ4tQ&s",
-    "https://www.w3schools.com/html/mov_bbb.mp4",
-  ];
-
+  const navigate = useNavigate();
   const handleFullscreen = (src, type) => {
     const fullscreenElement = document.createElement(
       type === "video" ? "video" : "img"
@@ -46,6 +45,12 @@ const CarouselMedia = () => {
     fullscreenElement.onclick = closeFullscreen;
   };
 
+  const dispatch = useDispatch();
+  const carouselItems = useSelector((state) => state.carousel?.items || []);
+  React.useEffect(() => {
+    dispatch(getCarouselMedia());
+  }, [dispatch]);
+
   return (
     <div className="main-application">
       <CssBaseline />
@@ -54,40 +59,55 @@ const CarouselMedia = () => {
           <Typography variant="h3" color="inherit" noWrap>
             Carousel
           </Typography>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<AddIcon />}
-            style={{ marginLeft: "auto" }}
-            onClick={() => navigate("/addToCarousel")}
-          >
-            Ajouter
-          </Button>
+          <Box style={{ marginLeft: "auto" }}>
+            <Button
+              variant="contained"
+              color="info"
+              startIcon={<EditIcon />}
+              onClick={() => navigate("/modifyCarousel")}
+              style={{ marginRight: 4 }}
+            >
+              Modifier
+            </Button>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<AddIcon />}
+              onClick={() => navigate("/addToCarousel")}
+            >
+              Ajouter
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <main>
         <ImageList variant="masonry" cols={3} gap={8}>
-          {itemData.map((item, index) => (
-            <ImageListItem key={index}>
-              {item.slice(-4) !== ".mp4" ? (
-                <img
-                  src={`${item}?w=248&fit=crop&auto=format`}
-                  srcSet={`${item}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                  alt={index}
-                  loading="lazy"
-                  onClick={() => handleFullscreen(item, "image")}
-                  style={{ cursor: "pointer" }}
-                />
-              ) : (
-                <video
-                  src={item}
-                  controls
-                  onClick={() => handleFullscreen(item, "video")}
-                  style={{ cursor: "pointer", width: "100%" }}
-                />
-              )}
-            </ImageListItem>
-          ))}
+          {carouselItems &&
+            carouselItems.map((item, index) => (
+              <ImageListItem key={index}>
+                {item.mediaType === "image" ? (
+                  <img
+                    src={`${apiUrl}/${item.fileUrl}?w=248&fit=crop&auto=format`}
+                    srcSet={`${apiUrl}/${item.fileUrl}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                    alt={index}
+                    loading="lazy"
+                    onClick={() =>
+                      handleFullscreen(`${apiUrl}/${item.fileUrl}`, "image")
+                    }
+                    style={{ cursor: "pointer" }}
+                  />
+                ) : (
+                  <video
+                    src={`${apiUrl}/${item.fileUrl}`}
+                    controls
+                    onClick={() =>
+                      handleFullscreen(`${apiUrl}/${item.fileUrl}`, "video")
+                    }
+                    style={{ cursor: "pointer", width: "100%" }}
+                  />
+                )}
+              </ImageListItem>
+            ))}
         </ImageList>
       </main>
     </div>

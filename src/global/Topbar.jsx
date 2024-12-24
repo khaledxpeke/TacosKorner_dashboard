@@ -112,7 +112,7 @@ const Topbar = () => {
                   }}
                 >
                   <ListItem>
-                    <ListItemText primary="Photo" />
+                    <ListItemText primary="Carousel" />
                   </ListItem>
                 </ButtonBase>
               </List>

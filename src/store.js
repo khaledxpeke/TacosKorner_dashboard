@@ -9,6 +9,7 @@ import extraReducer from "./features/extraSlice";
 import desertReducer from "./features/desertSlice";
 import historyReducer from "./features/historySlice";
 import settingReducer from "./features/settingSlice";
+import carouselReducer from "./features/carouselSlice";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     categories: categoriesReducer,
     history: historyReducer,
     settings: settingReducer,
+    carousel: carouselReducer,
   },
 });
 

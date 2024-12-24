@@ -35,6 +35,7 @@ import jwtDecode from "jwt-decode";
 import SettingsManagement from "./screens/settings/settings";
 import ModifySettings from "./screens/settings/modifySettings";
 import CarouselMedia from "./screens/settings/CarouselMedia";
+import CarouselManagement from "./screens/settings/carousel/index";
 import AddToCarousel from "./screens/settings/CarouselMedia/addToCarousel";
 import AddSousCategory from "./screens/categories/sousCategory/addSousCategory";
 import SousCategory from "./screens/categories/sousCategory";
@@ -107,6 +108,7 @@ function App() {
                 <Route path="/modifyDesert" element={<ModifyDesert />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/carousel" element={<CarouselMedia />} />
+                <Route path="/carousels" element={<CarouselManagement />} />
                 <Route path="/addToCarousel" element={<AddToCarousel />} />
               </>
             )}

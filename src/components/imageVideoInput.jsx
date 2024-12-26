@@ -20,7 +20,7 @@ const ImageVideoInput = ({ setPreviewImage }) => {
         <input
           type="file"
           id="imageInput"
-          accept=".jpg,.jpeg,.png,.mp4"
+          accept=".jpg,.jpeg,.png,.gif,.mp4"
           style={{ display: "none" }}
           onChange={handleImageChange}
         />

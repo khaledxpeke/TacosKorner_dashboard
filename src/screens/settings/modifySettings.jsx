@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -45,12 +45,26 @@ const ModifySettings = () => {
       .number()
       .required("Les boissons sont requis")
       .min(1, "Le boisson minimal est 1"),
+    card: yup
+      .string()
+      .required("Le label est requis")
+      .max(20, "Le label doit être de longueur maximale 20"),
+    cardActive: yup.boolean(),
+    cash: yup
+      .string()
+      .required("Le label est requis")
+      .max(20, "Le label doit être de longueur maximale 20"),
+    cashActive: yup.boolean(),
   });
   const initialValues = {
     tva: data?.tva || 0,
     maxDrink: data?.maxDrink || 1,
     maxDessert: data?.maxDessert || 1,
     maxExtras: data?.maxExtras || 1,
+    card: data?.card?.trim() ? data.card : "Carte",
+    cardActive: data?.cardActive || true,
+    cash: data?.cash?.trim() ? data.cash : "Espèces",
+    cashActive: data?.cashActive || true,
   };
   const dispatch = useDispatch();
   const status = useSelector(getSettingsStatus);
@@ -64,6 +78,10 @@ const ModifySettings = () => {
         maxExtras: values.maxExtras,
         maxDessert: values.maxDessert,
         maxDrink: values.maxDrink,
+        method: [
+          { label: values.card, isActive: values.cardActive },
+          { label: values.cash, isActive: values.cashActive },
+        ],
         ...(logoPreview && { logo: logoPreview }),
         ...(bannerPreview && { banner: bannerPreview }),
       })
@@ -83,7 +101,7 @@ const ModifySettings = () => {
     <Loading />
   ) : (
     <Box m="20px">
-      <Header title="MODIFIER PARAMÈTRE" subtitle="Modifier les paramètres" />
+      <Header title="MODIFIER LES PARAMÈTRES" subtitle="Modifier les paramètres" />
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -157,11 +175,81 @@ const ModifySettings = () => {
                 num={1}
                 onlyDigits={true}
               />
+              <TextFieldCompnent
+                type="text"
+                label="Label du paiement par carte"
+                change={handleChange}
+                value={values.card}
+                name="card"
+                blur={handleBlur}
+                touched={touched.card}
+                error={errors.card}
+                colum="span 8"
+              />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 8" }}
+              >
+                <FormLabel>Acceptez-vous le paiement par carte :</FormLabel>
+                <RadioGroup
+                  name="cardActive"
+                  value={values.cardActive}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <TextFieldCompnent
+                type="text"
+                label="Label du paiement en espèces"
+                change={handleChange}
+                value={values.cash}
+                name="cash"
+                blur={handleBlur}
+                touched={touched.cash}
+                error={errors.cash}
+                colum="span 8"
+              />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 8" }}
+              >
+                <FormLabel>Acceptez-vous le paiement en espèces :</FormLabel>
+                <RadioGroup
+                  name="cashActive"
+                  value={values.cashActive}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
               <Box sx={{ gridColumn: "span 4" }}>
-              <Typography variant="h2" color="inherit">
-              Logo 
-            </Typography>
-            <br/>
+                <Typography variant="h2" color="inherit">
+                  Logo
+                </Typography>
+                <br />
                 <ImageInput
                   inputId="logoInput"
                   previewImage={logoPreview}
@@ -172,10 +260,10 @@ const ModifySettings = () => {
                 />
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
-              <Typography variant="h2" color="inherit">
-              Banner 
-            </Typography>
-            <br/>
+                <Typography variant="h2" color="inherit">
+                  Banner
+                </Typography>
+                <br />
                 <ImageInput
                   inputId="bannerInput"
                   previewImage={bannerPreview}

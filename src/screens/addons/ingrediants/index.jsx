@@ -22,8 +22,9 @@ import { toast } from "react-toastify";
 import { getSettings, selectAllSettings } from "../../../features/settingSlice";
 
 const Ingrediant = () => {
+  const [filteredIngrediants, setFilteredIngrediants] = useState([]);
   const dispatch = useDispatch();
-  const ingrediantStatus = useSelector(getIngrediantsStatus);
+  const status = useSelector(getIngrediantsStatus);
   const error = useSelector(getIngrediantsError);
   const ingrediants = useSelector(selectAllIngrediants);
   const success = useSelector(getIngrediantsSuccess);
@@ -52,79 +53,27 @@ const Ingrediant = () => {
     dispatch(getSettings());
   }, [dispatch]);
 
-  let content;
-  if (ingrediantStatus === "loading") {
-    content = <Loading />;
-  } else if (ingrediantStatus === "fetchError") {
-    content = <Error>{error}</Error>;
-  } else if (ingrediantStatus === "fetchData") {
-    const filteredIngrediants = ingrediants?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    content = (
-      <>
-        {filteredIngrediants && filteredIngrediants.length > 0 ? (
-          filteredIngrediants.map((card) => (
-            <ProductCard
-              key={card._id}
-              data={card}
-              handleModify={() => handleModify(card)}
-              handleClickOpen={() => handleClickOpen(card._id)}
-              content={
-                <>
-                  <Box
-                    sx={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      width: "200px",
-                    }}
-                  >
-                    Options:{" "}
-                    {truncateText(
-                      card.types?.map((type) => type.name).join(", ")
-                    )}
-                  </Box>
-                  <Typography variant="h4" color="inherit">
-                    Prix: {card.price ?? 0} {" " + settings.defaultCurrency}
-                  </Typography>
-                  <Typography variant="h4" color="inherit">
-                    Prix supplémentaire: {card.suppPrice ?? 0}
-                    {" " + settings.defaultCurrency}
-                  </Typography>
-                  <Stack direction="row" sx={{ mt: 1 }}>
-                    <Chip
-                      variant="outlined"
-                      label={card.outOfStock ? "Rupture de stock" : "En stock"}
-                      color={card.outOfStock ? "error" : "success"}
-                    />
-                  </Stack>
-                </>
-              }
-            />
-          ))
-        ) : (
-          <NoData />
-        )}
-        <AlertDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          name={"produit"}
-          cardId={cardId}
-          deleteData={deleteIngrediant(cardId)}
-        />
-      </>
-    );
-  }
   useEffect(() => {
-    if (ingrediantStatus === "deleteSuccess") {
+    if (status === "fetchData") {
+      setFilteredIngrediants(
+        ingrediants?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [ingrediants, search, status]);
+
+  useEffect(() => {
+    if (status === "deleteSuccess") {
       toast.success(success);
-      dispatch(getIngrediants());
+      setFilteredIngrediants((prev) =>
+        prev.filter((item) => item._id !== cardId)
+      );
       dispatch(updateStatus());
-    } else if (ingrediantStatus === "deleteError") {
+    } else if (status === "deleteError") {
       toast.error(error);
     }
-  }, [ingrediantStatus, error, success, dispatch]);
+  }, [cardId, dispatch, error, status, success]);
   return (
     <div className="main-application">
       <CssBaseline />
@@ -137,7 +86,79 @@ const Ingrediant = () => {
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                {filteredIngrediants && filteredIngrediants.length > 0 ? (
+                  filteredIngrediants.map((card) => (
+                    <ProductCard
+                      key={card._id}
+                      data={card}
+                      handleModify={() => handleModify(card)}
+                      handleClickOpen={() => handleClickOpen(card._id)}
+                      content={
+                        <>
+                          <Box
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              width: "200px",
+                            }}
+                          >
+                            Options:{" "}
+                            {truncateText(
+                              card.types?.map((type) => type.name).join(", ")
+                            )}
+                          </Box>
+                          <Typography variant="h4" color="inherit">
+                            Prix: {card.price ?? 0}
+                            {" " + settings.defaultCurrency}
+                          </Typography>
+                          <Typography variant="h4" color="inherit">
+                            Prix supplémentaire: {card.suppPrice ?? 0}
+                            {" " + settings.defaultCurrency}
+                          </Typography>
+                          <Stack
+                            justifyContent="space-between"
+                            alignItems="center"
+                            direction="row"
+                            sx={{ mt: 1 }}
+                          >
+                            <Chip
+                              variant="outlined"
+                              label={
+                                card.outOfStock
+                                  ? "Rupture de stock"
+                                  : "En stock"
+                              }
+                              color={card.outOfStock ? "error" : "success"}
+                            />
+                            <Chip
+                              variant="outlined"
+                              label={card.visible ? "Visible" : "Caché"}
+                              color={card.visible ? "success" : "error"}
+                            />
+                          </Stack>
+                        </>
+                      }
+                    />
+                  ))
+                ) : (
+                  <NoData />
+                )}
+                <AlertDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  name={"ingrédient"}
+                  cardId={cardId}
+                  deleteData={deleteIngrediant(cardId)}
+                />
+              </>
+            )}
           </Grid>
         </Container>
       </main>

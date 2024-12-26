@@ -58,8 +58,8 @@ const AddCategory = () => {
   ) : (
     <Box m="20px" className="main-application">
       <Header
-        title="AJOUTER CATEGORY"
-        subtitle="Créer une nouvelle catégorie"
+        title="AJOUTER CATÉGORIE"
+        subtitle="Créer une catégorie"
       />
 
       <Formik

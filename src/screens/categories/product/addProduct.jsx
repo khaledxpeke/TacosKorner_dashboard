@@ -54,7 +54,7 @@ const AddProduct = () => {
   const typesWithIngrediants = useSelector(selectAllTypes);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    description: yup.string().required("description est requis"),
+    description: yup.string(),
     category: yup.string().required("categorie est requis"),
     price: yup.number().required("Prix est requis"),
     choice: yup.string().required("Choix est requis"),

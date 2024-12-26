@@ -1,4 +1,12 @@
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -34,16 +42,25 @@ const ModifyDesert = () => {
 
   const desertSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    price: yup.number().required("Prix est requis"),
+    price: yup
+      .number()
+      .required("Le prix est requis")
+      .min(0, "La prix minimal est 0"),
+    outOfStock: yup.boolean(),
+    visible: yup.boolean(),
   });
   const initialValues = {
     name: data.name,
     price: data.price,
+    outOfStock: data.outOfStock,
+    visible: data.visible,
   };
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
       price: values.price,
+      outOfStock: values.outOfStock,
+      visible: values.visible,
       ...(previewImage && { image: previewImage }),
     };
     dispatch(
@@ -114,15 +131,62 @@ const ModifyDesert = () => {
                 error={errors.price}
                 colum="span 3"
                 row="2 / span 1"
-                num={1}
+                num={0}
               />
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "3 / span 1" }}
+              >
+                <FormLabel>On repture de stock :</FormLabel>
+                <RadioGroup
+                  name="outOfStock"
+                  value={values.outOfStock}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{ gridColumn: "span 3", gridRow: "4 / span 1" }}
+              >
+                <FormLabel>Afficher cet ingrédient :</FormLabel>
+                <RadioGroup
+                  name="visible"
+                  value={values.visible}
+                  onChange={handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Non"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Oui"
+                  />
+                </RadioGroup>
+              </FormControl>
               <ImageInput
-                row="3 / span 1"
+                row="5 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
-                image={data.image}
               />
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">

@@ -354,8 +354,7 @@ const History = () => {
               >
                 <TableRow>
                   <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
-                    {" "}
-                    Plus d'information{" "}
+                    Plus d'information
                   </TableCell>
                   <TableCell sx={{ fontSize: "17px", fontWeight: "bold" }}>
                     Pack

@@ -3,8 +3,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
-import DoneIcon from '@mui/icons-material/Done';
-import CloseIcon from '@mui/icons-material/Close';
 import {
   ButtonGroup,
   Table,
@@ -34,8 +32,9 @@ import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 import AppBarSearch from "../../../global/appBarSearch";
 const Type = () => {
+  const [filteredTypes, setFilteredTypes] = useState([]);
   const dispatch = useDispatch();
-  const typeStatus = useSelector(getTypesStatus);
+  const status = useSelector(getTypesStatus);
   const error = useSelector(getTypesError);
   const types = useSelector(selectAllTypes);
   const success = useSelector(getTypesSuccess);
@@ -61,99 +60,25 @@ const Type = () => {
     dispatch(getTypes());
   }, [dispatch]);
 
-  let content;
-  if (typeStatus === "loading") {
-    content = <Loading />;
-  } else if (typeStatus === "fetchError") {
-    content = <Error>{error}</Error>;
-  } else if (typeStatus === "fetchData") {
-    const filteredTypes = types?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    console.log(filteredTypes);
-    content = (
-      <Grid item xs={12}>
-        <TableContainer>
-          <Table
-            sx={{
-              backgroundColor: isLightMode ? "#F0F0F7" : colors.primary[400],
-            }}
-          >
-            <TableHead
-              sx={{
-                backgroundColor: colors.primary[700],
-              }}
-            >
-              <TableRow>
-                <TableCell>Nom</TableCell>
-                <TableCell>Message</TableCell>
-                <TableCell>Quantité</TableCell>
-                <TableCell>Payant</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Requis</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredTypes && filteredTypes.length > 0 ? (
-                filteredTypes.map((card) => (
-                  <TableRow key={card._id}>
-                    <TableCell>{card.name}</TableCell>
-                    <TableCell>{card.message}</TableCell>
-                    <TableCell>{card.quantity}</TableCell>
-                    <TableCell>{card.payment ? "Oui" : "Non"}</TableCell>
-                    <TableCell>{card.selection ? "Multiple" : "Seul"}</TableCell>
-                    <TableCell>
-                      {card.isRequired ? <DoneIcon /> : <CloseIcon />}
-                    </TableCell>
-                    <TableCell align="right">
-                      <ButtonGroup
-                        variant="contained"
-                        aria-label="outlined primary button group"
-                      >
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() => handleClickOpen(card._id)}
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="warning"
-                          onClick={() => handleModify(card)}
-                        >
-                          Edit
-                        </Button>
-                      </ButtonGroup>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <NoData />
-              )}
-              <AlertDialog
-                handleClose={() => setOpen(false)}
-                open={open}
-                name={"produit"}
-                cardId={cardId}
-                deleteData={deleteType(cardId)}
-              />
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-    );
-  }
   useEffect(() => {
-    if (typeStatus === "deleteSuccess") {
+    if (status === "fetchData") {
+      setFilteredTypes(
+        types?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [types, search, status]);
+
+  useEffect(() => {
+    if (status === "deleteSuccess") {
       toast.success(success);
-      dispatch(getTypes());
+      setFilteredTypes((prev) => prev.filter((item) => item._id !== cardId));
       dispatch(updateStatus());
-    } else if (typeStatus === "deleteError") {
+    } else if (status === "deleteError") {
       toast.error(error);
     }
-  }, [typeStatus, error, success, dispatch]);
+  }, [cardId, dispatch, error, status, success]);
   return (
     <div className="main-application">
       <CssBaseline />
@@ -166,7 +91,89 @@ const Type = () => {
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                <Grid item xs={12}>
+                  <TableContainer>
+                    <Table
+                      sx={{
+                        backgroundColor: isLightMode
+                          ? "#F0F0F7"
+                          : colors.primary[400],
+                      }}
+                    >
+                      <TableHead
+                        sx={{
+                          backgroundColor: colors.primary[700],
+                        }}
+                      >
+                        <TableRow>
+                          <TableCell>Nom</TableCell>
+                          <TableCell>Message</TableCell>
+                          <TableCell>Max</TableCell>
+                          <TableCell>Min</TableCell>
+                          <TableCell>Payant</TableCell>
+                          <TableCell>Type</TableCell>
+                          <TableCell align="right">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {filteredTypes && filteredTypes.length > 0 ? (
+                          filteredTypes.map((card) => (
+                            <TableRow key={card._id}>
+                              <TableCell>{card.name}</TableCell>
+                              <TableCell>{card.message}</TableCell>
+                              <TableCell>{card.max}</TableCell>
+                              <TableCell>{card.min}</TableCell>
+                              <TableCell>
+                                {card.payment ? "Oui" : "Non"}
+                              </TableCell>
+                              <TableCell>
+                                {card.selection ? "Multiple" : "Seul"}
+                              </TableCell>
+                              <TableCell align="right">
+                                <ButtonGroup
+                                  variant="contained"
+                                  aria-label="outlined primary button group"
+                                >
+                                  <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => handleClickOpen(card._id)}
+                                  >
+                                    Delete
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    color="warning"
+                                    onClick={() => handleModify(card)}
+                                  >
+                                    Edit
+                                  </Button>
+                                </ButtonGroup>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <NoData />
+                        )}
+                        <AlertDialog
+                          handleClose={() => setOpen(false)}
+                          open={open}
+                          name={"option"}
+                          cardId={cardId}
+                          deleteData={deleteType(cardId)}
+                        />
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Container>
       </main>

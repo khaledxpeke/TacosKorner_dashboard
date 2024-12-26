@@ -11,7 +11,7 @@ import { useTheme } from "@emotion/react";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { useResponsive } from "../hooks/uiHook";
-const AppBarSearch = ({ handleSubmit, handleSearch, title, buttonTitle }) => {
+const AppBarSearch = ({ handleSubmit, handleSearch, title, buttonTitle,buttonColor,buttonIcon }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { isSmallScreen } = useResponsive();
@@ -52,8 +52,8 @@ const AppBarSearch = ({ handleSubmit, handleSearch, title, buttonTitle }) => {
         {!isSmallScreen && (
           <Button
             variant="contained"
-            color="success"
-            startIcon={<AddIcon />}
+            color={buttonColor ? buttonColor : "success"}
+            startIcon={buttonIcon ? buttonIcon : <AddIcon />}
             style={{ marginLeft: "auto" }}
             onClick={handleSubmit}
           >

@@ -16,13 +16,14 @@ import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/no_data";
 import AppBarSearch from "../../../global/appBarSearch";
-import { Container, Grid } from "@mui/material";
+import { Chip, Container, Grid, Stack, Typography } from "@mui/material";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 
 const Drink = () => {
+  const [filteredDrinks, setFilteredDrinks] = useState([]);
   const dispatch = useDispatch();
-  const drinkStatus = useSelector(getDrinksStatus);
+  const status = useSelector(getDrinksStatus);
   const error = useSelector(getDrinksError);
   const drinks = useSelector(selectAllDrinks);
   const success = useSelector(getDrinksSuccess);
@@ -45,49 +46,25 @@ const Drink = () => {
     dispatch(getDrinks());
   }, [dispatch]);
 
-  let content;
-  if (drinkStatus === "loading") {
-    content = <Loading />;
-  } else if (drinkStatus === "fetchError") {
-    content = <Error>{error}</Error>;
-  } else if (drinkStatus === "fetchData") {
-    const filteredDrinks = drinks?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    content = (
-      <>
-        {filteredDrinks && filteredDrinks.length > 0 ? (
-          filteredDrinks.map((card) => (
-            <ProductCard
-              key={card._id}
-              data={card}
-              handleModify={() => handleModify(card)}
-              handleClickOpen={() => handleClickOpen(card._id)}
-              content={card.price}
-            />
-          ))
-        ) : (
-          <NoData />
-        )}
-        <AlertDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          name={"produit"}
-          cardId={cardId}
-          deleteData={deleteDrink(cardId)}
-        />
-      </>
-    );
-  }
   useEffect(() => {
-    if (drinkStatus === "deleteSuccess") {
+    if (status === "fetchData") {
+      setFilteredDrinks(
+        drinks?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [drinks, search, status]);
+
+  useEffect(() => {
+    if (status === "deleteSuccess") {
       toast.success(success);
-      dispatch(getDrinks());
+      setFilteredDrinks((prev) => prev.filter((item) => item._id !== cardId));
       dispatch(updateStatus());
-    } else if (drinkStatus === "deleteError") {
+    } else if (status === "deleteError") {
       toast.error(error);
     }
-  }, [drinkStatus, error, success, dispatch]);
+  }, [status, error, success, dispatch, cardId]);
   return (
     <div className="main-application">
       <CssBaseline />
@@ -100,7 +77,61 @@ const Drink = () => {
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                {filteredDrinks && filteredDrinks.length > 0 ? (
+                  filteredDrinks.map((card) => (
+                    <ProductCard
+                      key={card._id}
+                      data={card}
+                      handleModify={() => handleModify(card)}
+                      content={
+                        <>
+                          <Typography variant="h4" color="inherit">
+                            Prix: {card.price ?? 0}
+                          </Typography>
+                          <Stack
+                            justifyContent="space-between"
+                            alignItems="center"
+                            direction="row"
+                            sx={{ mt: 1 }}
+                          >
+                            <Chip
+                              variant="outlined"
+                              label={
+                                card.outOfStock
+                                  ? "Rupture de stock"
+                                  : "En stock"
+                              }
+                              color={card.outOfStock ? "error" : "success"}
+                            />
+                            <Chip
+                              variant="outlined"
+                              label={card.visible ? "Visible" : "Caché"}
+                              color={card.visible ? "success" : "error"}
+                            />
+                          </Stack>
+                        </>
+                      }
+                      handleClickOpen={() => handleClickOpen(card._id)}
+                    />
+                  ))
+                ) : (
+                  <NoData />
+                )}
+                <AlertDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  name={"boisson"}
+                  cardId={cardId}
+                  deleteData={deleteDrink(cardId)}
+                />
+              </>
+            )}
           </Grid>
         </Container>
       </main>

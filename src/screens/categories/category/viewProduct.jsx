@@ -14,7 +14,6 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import {
   deleteProduct,
-  getProducts,
   getProductsError,
   getProductsStatus,
   selectAllProducts,
@@ -32,12 +31,13 @@ import { tokens } from "../../../theme";
 import { useTheme } from "@emotion/react";
 
 const ViewProduct = () => {
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const location = useLocation();
   const categoryId = location.state.categoryId;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
-  const productStatus = useSelector(getProductsStatus);
+  const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
   const products = useSelector(selectAllProducts);
   const success = useSelector(getProductsSuccess);
@@ -53,49 +53,32 @@ const ViewProduct = () => {
     dispatch(getProductByCategoryId(categoryId));
   }, [dispatch, categoryId]);
 
-  let content;
-  if (productStatus === "loading") {
-    content = <Loading />;
-  } else if (productStatus === "fetchErrorByCategory") {
-    content = <Error>{error}</Error>;
-  } else if (productStatus === "fetchDataByCategory") {
-    const filteredProducts = products?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    content = (
-      <>
-        {filteredProducts && filteredProducts.length > 0 ? (
-          filteredProducts.map((card) => (
-            <ProductCard
-              key={card._id}
-              data={card}
-              content={card.price + " " + card.currency}
-              handleClickOpen={() => handleClickOpen(card._id)}
-              noModify={true}
-            />
-          ))
-        ) : (
-          <NoData />
-        )}
-        <AlertDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          name={"produit"}
-          cardId={cardId}
-          deleteData={deleteProduct(cardId)}
-        />
-      </>
-    );
-  }
   useEffect(() => {
-    if (productStatus === "deleteSuccess") {
-      toast.success(success);
-      dispatch(getProducts());
-      dispatch(updateStatus());
-    } else if (productStatus === "deleteError") {
-      toast.error(error);
+    if (status === "fetchDataByCategory") {
+      setFilteredProducts(
+        products?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
     }
-  }, [productStatus, error, success, dispatch]);
+  }, [status, products, search]);
+
+ useEffect(() => {
+   const statusHandlers = {
+     deleteSuccess: () => {
+       toast.success(success);
+       setFilteredProducts((prev) =>
+         prev.filter((item) => item._id !== cardId)
+       );
+       dispatch(updateStatus());
+     },
+     deleteError: () => toast.error(error),
+   };
+   if (status in statusHandlers) {
+     statusHandlers[status]();
+   }
+ }, [status, error, success, dispatch, cardId]);
+
   return (
     <div className="main-application">
       <CssBaseline />
@@ -126,7 +109,34 @@ const ViewProduct = () => {
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                {filteredProducts && filteredProducts.length > 0 ? (
+                  filteredProducts.map((card) => (
+                    <ProductCard
+                      key={card._id}
+                      data={card}
+                      content={card.price + " " + card.currency}
+                      handleClickOpen={() => handleClickOpen(card._id)}
+                      noModify={true}
+                    />
+                  ))
+                ) : (
+                  <NoData />
+                )}
+                <AlertDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  name={"produit"}
+                  cardId={cardId}
+                  deleteData={deleteProduct(cardId)}
+                />
+              </>
+            )}
           </Grid>
         </Container>
       </main>

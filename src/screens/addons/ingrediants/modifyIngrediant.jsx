@@ -71,6 +71,7 @@ const ModifyIngrediant = () => {
       price: values.price,
       suppPrice: values.suppPrice,
       outOfStock: values.outOfStock,
+      visible:values.visible,
       types: values.types,
       ...(previewImage && { image: previewImage }),
     };

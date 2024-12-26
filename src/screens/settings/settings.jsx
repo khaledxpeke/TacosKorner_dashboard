@@ -15,11 +15,9 @@ import {
   DialogContent,
   TextField,
   DialogActions,
-  IconButton,
   Typography,
   Box,
-  Toolbar,
-  AppBar,
+  Chip,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import NoData from "../../components/no_data";
@@ -43,7 +41,8 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Loading from "../../components/loading";
 import Error from "../../components/Error";
-import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
+import AppBarSearch from "../../global/appBarSearch";
 const apiUrl = process.env.REACT_APP_API_URL;
 const SettingsManagement = () => {
   const dispatch = useDispatch();
@@ -96,9 +95,6 @@ const SettingsManagement = () => {
         banner: settings.banner,
       },
     });
-  };
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
   };
   const handleUpdate = (currency) => {
     dispatch(updateCurrency({ defaultCurrency: currency }));
@@ -283,26 +279,63 @@ const SettingsManagement = () => {
             }}
           >
             <Typography variant="h2" color="inherit">
-              TVA : {settings.tva}%
+              TVA : {settings?.tva || 0}%
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
-              Nombre max d'extras : {settings.maxExtras}
+              Nombre max d'extras : {settings?.maxExtras || 0}
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
-              Nombre max de boissons : {settings.maxDrink}
+              Nombre max de boissons : {settings?.maxDrink || 0}
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
-              Nombre max de désserts : {settings.maxDessert}
+              Nombre max de désserts : {settings?.maxDessert || 0}
             </Typography>
-            <Button
-              sx={{ mt: 2 }}
-              size="small"
-              variant="contained"
-              color="secondary"
-              onClick={handleSubmit}
+            <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
+              Paiement en carte : {settings?.method[0]?.label || "Carte"}{" "}
+              <Chip
+                variant="outlined"
+                label={
+                  settings?.method[0]?.isActive !== undefined
+                    ? settings.method[0].isActive
+                      ? "Oui"
+                      : "Non"
+                    : "Oui"
+                }
+                color={
+                  settings?.method[0]?.isActive !== undefined
+                    ? settings.method[0].isActive
+                      ? "secondary"
+                      : "error"
+                    : "secondary"
+                }
+                sx={{ ml: 1 }}
+              />
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{ mt: 2, display: "flex", alignItems: "center" }}
+              color="inherit"
             >
-              Modifier
-            </Button>
+              Paiement en espèces : {settings?.method[1]?.label || "Espèces"}{" "}
+              <Chip
+                variant="outlined"
+                label={
+                  settings?.method[1]?.isActive !== undefined
+                    ? settings.method[1].isActive
+                      ? "Oui"
+                      : "Non"
+                    : "Oui"
+                }
+                color={
+                  settings?.method[1]?.isActive !== undefined
+                    ? settings.method[1].isActive
+                      ? "secondary"
+                      : "error"
+                    : "secondary"
+                }
+                sx={{ ml: 1 }}
+              />
+            </Typography>
           </Box>
         </Grid>
       </>
@@ -320,31 +353,14 @@ const SettingsManagement = () => {
 
   return (
     <div className="main-application">
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h3" color="inherit" noWrap>
-            Gestion des devises
-          </Typography>
-          <Box
-            ml={2}
-            display="flex"
-            backgroundColor={colors.primary[400]}
-            borderRadius="3px"
-          >
-            <input
-              type="text"
-              placeholder="Rechercher..."
-              className="search-input pl-2"
-              style={{ paddingLeft: "10px", maxWidth: "300px" }}
-              onChange={handleSearch}
-            />
-            <IconButton type="button" sx={{ p: 1 }}>
-              <SearchIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
+      <AppBarSearch
+        handleSubmit={handleSubmit}
+        handleSearch={(e) => setSearch(e.target.value)}
+        title={"Gestion des paramètres"}
+        buttonTitle={"modifier les paramètres"}
+        buttonColor={"info"}
+        buttonIcon={<EditIcon />}
+      />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
@@ -360,22 +376,13 @@ const SettingsManagement = () => {
         </DialogTitle>
         <DialogContent>
           {editType === "currency" ? (
-            <>
-              {/* <TextField
-                label="Ancienne Devise"
-                fullWidth
-                margin="normal"
-                value={oldCurrency}
-                disabled
-              /> */}
-              <TextField
-                label="Devise"
-                fullWidth
-                margin="normal"
-                value={newCurrency || oldCurrency}
-                onChange={(e) => setNewCurrency(e.target.value)}
-              />
-            </>
+            <TextField
+              label="Devise"
+              fullWidth
+              margin="normal"
+              value={newCurrency || oldCurrency}
+              onChange={(e) => setNewCurrency(e.target.value)}
+            />
           ) : (
             <TextField
               label="Nouvelle Devise"
@@ -411,7 +418,7 @@ const SettingsManagement = () => {
         cardId={cardId}
         deleteData={() => {
           dispatch(deleteSettings({ currency: cardId }));
-          setOpenDelete(false); // Close dialog after deletion
+          setOpenDelete(false);
         }}
       />
     </div>

@@ -60,7 +60,7 @@ const ModifyProduct = () => {
   const categories = useSelector(selectAllCategories);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
-    description: yup.string().required("description est requis"),
+    description: yup.string(),
     category: yup.string().required("categorie est requis"),
     type: yup.array().default(() => []),
     price: yup.number().required("Prix est requis"),

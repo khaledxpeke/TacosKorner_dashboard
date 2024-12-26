@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -33,21 +32,32 @@ const AddType = () => {
   const typeSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     message: yup.string(),
-    quantity: yup
+    max: yup
       .number()
-      .required("Quantité d'ingrédiant est requis")
+      .required("Quantité maximal d'ingrédiant est requis")
       .min(1, "La quantité minimal est 1"),
+    min: yup
+      .number()
+      .required("Quantité minimal d'ingrédiant est requis")
+      .min(0, "La quantité minimal est 0")
+      .test(
+        "is-less-than-or-equal",
+        "La quantité minimale doit être inférieure ou égale à la quantité maximale",
+        function (value) {
+          const { max } = this.parent;
+          return value <= max;
+        }
+      ),
     payment: yup.boolean(),
     selection: yup.boolean(),
-    isRequired: yup.boolean(),
   });
   const initialValues = {
     name: "",
     message: "",
-    quantity: 1,
+    max: 1,
+    min: 0,
     payment: false,
     selection: false,
-    isRequired: false,
   };
   const dispatch = useDispatch();
   const status = useSelector(getTypesStatus);
@@ -59,10 +69,10 @@ const AddType = () => {
       addType({
         name: values.name,
         message: values.message,
-        quantity: values.quantity,
+        max: values.max,
+        min: values.min,
         payment: values.payment,
         selection: values.selection,
-        isRequired: values.isRequired,
       })
     );
   };
@@ -128,23 +138,37 @@ const AddType = () => {
                 row="2 / span 1"
               />
               <TextFieldCompnent
-                label="Quantité d'ingrédients"
+                label="Quantité maximal d'ingrédients"
                 type="number"
                 change={handleChange}
-                value={values.quantity}
-                name="quantity"
+                value={values.max}
+                name="max"
                 blur={handleBlur}
-                touched={touched.quantity}
-                error={errors.quantity}
+                touched={touched.max}
+                error={errors.max}
                 colum="span 3"
                 row="3 / span 1"
                 num={1}
                 onlyDigits={true}
               />
+              <TextFieldCompnent
+                label="Quantité minimal d'ingrédients"
+                type="number"
+                change={handleChange}
+                value={values.min}
+                name="min"
+                blur={handleBlur}
+                touched={touched.min}
+                error={errors.min}
+                colum="span 3"
+                row="4 / span 1"
+                num={0}
+                onlyDigits={true}
+              />
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "4 / span 1" }}
+                sx={{ gridColumn: "span 3", gridRow: "5 / span 1" }}
               >
                 <FormLabel>Tous les ingrédients sont payants :</FormLabel>
                 <RadioGroup
@@ -168,7 +192,7 @@ const AddType = () => {
               <FormControl
                 variant="filled"
                 fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "5 / span 1" }}
+                sx={{ gridColumn: "span 3", gridRow: "6 / span 1" }}
               >
                 <FormLabel>Type de sélection :</FormLabel>
                 <RadioGroup
@@ -189,17 +213,6 @@ const AddType = () => {
                   />
                 </RadioGroup>
               </FormControl>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.isRequired}
-                    onChange={handleChange}
-                    name="isRequired"
-                  />
-                }
-                sx={{ gridColumn: "span 3", gridRow: "6 / span 1" }}
-                label="Requis (Il faut choisir au moins un ingrédient pour continuer)"
-              />
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

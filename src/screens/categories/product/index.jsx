@@ -22,8 +22,9 @@ import { toast } from "react-toastify";
 import { getSettings, selectAllSettings } from "../../../features/settingSlice";
 
 const Formule = () => {
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const dispatch = useDispatch();
-  const productStatus = useSelector(getProductsStatus);
+  const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
   const products = useSelector(selectAllProducts);
   const settings = useSelector(selectAllSettings);
@@ -47,55 +48,25 @@ const Formule = () => {
     dispatch(getProducts());
     dispatch(getSettings());
   }, [dispatch]);
-  let content;
-  if (productStatus === "loading") {
-    content = <Loading />;
-  } else if (productStatus === "fetchError") {
-    content = <Error>{error}</Error>;
-  } else if (productStatus === "fetchData") {
-    const filteredProducts = products?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    content = (
-      <>
-        {filteredProducts && filteredProducts.length > 0 ? (
-          filteredProducts.map((card) => (
-            <ProductCard
-              key={card._id}
-              data={card}
-              handleModify={() => handleModify(card)}
-              content={
-                <>
-                  {card?.price + " " + settings.defaultCurrency}
-                  <br />
-                  <strong>Description:</strong> {card?.description}
-                </>
-              }
-              handleClickOpen={() => handleClickOpen(card._id)}
-            />
-          ))
-        ) : (
-          <NoData />
-        )}
-        <AlertDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          name={"produit"}
-          cardId={cardId}
-          deleteData={deleteProduct(cardId)}
-        />
-      </>
-    );
-  }
   useEffect(() => {
-    if (productStatus === "deleteSuccess") {
+    if (status === "fetchData") {
+      setFilteredProducts(
+        products?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [products, search, status]);
+
+  useEffect(() => {
+    if (status === "deleteSuccess") {
       toast.success(success);
-      dispatch(getProducts());
+      setFilteredProducts((prev) => prev.filter((item) => item._id !== cardId));
       dispatch(updateStatus());
-    } else if (productStatus === "deleteError") {
+    } else if (status === "deleteError") {
       toast.error(error);
     }
-  }, [productStatus, error, success, dispatch]);
+  }, [cardId, dispatch, error, status, success]);
   return (
     <div className="main-application">
       <CssBaseline />
@@ -108,7 +79,40 @@ const Formule = () => {
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                {filteredProducts && filteredProducts.length > 0 ? (
+                  filteredProducts.map((card) => (
+                    <ProductCard
+                      key={card._id}
+                      data={card}
+                      handleModify={() => handleModify(card)}
+                      content={
+                        <>
+                          {card?.price + " " + settings.defaultCurrency}
+                          <br />
+                          <strong>Description:</strong> {card?.description}
+                        </>
+                      }
+                      handleClickOpen={() => handleClickOpen(card._id)}
+                    />
+                  ))
+                ) : (
+                  <NoData />
+                )}
+                <AlertDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  name={"produit"}
+                  cardId={cardId}
+                  deleteData={deleteProduct(cardId)}
+                />
+              </>
+            )}
           </Grid>
         </Container>
       </main>

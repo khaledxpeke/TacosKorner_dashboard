@@ -58,7 +58,7 @@ const ModifyCategory = () => {
     <Loading />
   ) : (
     <Box m="20px" className="main-application">
-      <Header title="MODIFIER CATEGORY" subtitle="Modifier une catégorie" />
+      <Header title="MODIFIER CATÉGORIE" subtitle="Modifier une catégorie" />
 
       <Formik
         onSubmit={handleFormSubmit}

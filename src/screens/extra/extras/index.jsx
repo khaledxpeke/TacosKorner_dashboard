@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, Container } from "@mui/material";
+import { Grid, Container, Chip, Stack, Typography } from "@mui/material";
 import {
 getExtra,getExtraError,getExtraStatus,getExtraSuccess,deleteExtra,selectAllExtra,updateStatus
 } from "../../../features/extraSlice";
@@ -15,8 +15,9 @@ import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 
 const Extra = () => {
+  const [filteredExtras, setFilteredExtras] = useState([]);
   const dispatch = useDispatch();
-  const extraStatus = useSelector(getExtraStatus);
+  const status = useSelector(getExtraStatus);
   const error = useSelector(getExtraError);
   const extras = useSelector(selectAllExtra);
   const success = useSelector(getExtraSuccess);
@@ -39,49 +40,25 @@ const Extra = () => {
     dispatch(getExtra());
   }, [dispatch]);
 
-  let content;
-  if (extraStatus === "loading") {
-    content = <Loading />;
-  } else if (extraStatus === "fetchError") {
-    content = <Error>{error}</Error>;
-  } else if (extraStatus === "fetchData") {
-    const filteredExtras = extras?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    content = (
-      <>
-        {filteredExtras && filteredExtras.length > 0 ? (
-          filteredExtras.map((card) => (
-            <ProductCard
-              key={card._id}
-              data={card}
-              handleModify={() => handleModify(card)}
-              content={card.price}
-              handleClickOpen={() => handleClickOpen(card._id)}
-            />
-          ))
-        ) : (
-          <NoData />
-        )}
-        <AlertDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          name={"produit"}
-          cardId={cardId}
-          deleteData={deleteExtra(cardId)}
-        />
-      </>
-    );
-  }
   useEffect(() => {
-    if (extraStatus === "deleteSuccess") {
+    if (status === "fetchData") {
+      setFilteredExtras(
+        extras?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [extras, search, status]);
+
+  useEffect(() => {
+    if (status === "deleteSuccess") {
       toast.success(success);
-      dispatch(getExtra());
+      setFilteredExtras((prev) => prev.filter((item) => item._id !== cardId));
       dispatch(updateStatus());
-    } else if (extraStatus === "deleteError") {
+    } else if (status === "deleteError") {
       toast.error(error);
     }
-  }, [extraStatus, error, success, dispatch]);
+  }, [status, error, success, dispatch, cardId]);
   return (
     <div className="main-application">
       <CssBaseline />
@@ -94,7 +71,61 @@ const Extra = () => {
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                {filteredExtras && filteredExtras.length > 0 ? (
+                  filteredExtras.map((card) => (
+                    <ProductCard
+                      key={card._id}
+                      data={card}
+                      handleModify={() => handleModify(card)}
+                      content={
+                        <>
+                          <Typography variant="h4" color="inherit">
+                            Prix: {card.price ?? 0}
+                          </Typography>
+                          <Stack
+                            justifyContent="space-between"
+                            alignItems="center"
+                            direction="row"
+                            sx={{ mt: 1 }}
+                          >
+                            <Chip
+                              variant="outlined"
+                              label={
+                                card.outOfStock
+                                  ? "Rupture de stock"
+                                  : "En stock"
+                              }
+                              color={card.outOfStock ? "error" : "success"}
+                            />
+                            <Chip
+                              variant="outlined"
+                              label={card.visible ? "Visible" : "Caché"}
+                              color={card.visible ? "success" : "error"}
+                            />
+                          </Stack>
+                        </>
+                      }
+                      handleClickOpen={() => handleClickOpen(card._id)}
+                    />
+                  ))
+                ) : (
+                  <NoData />
+                )}
+                <AlertDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  name={"extra"}
+                  cardId={cardId}
+                  deleteData={deleteExtra(cardId)}
+                />
+              </>
+            )}
           </Grid>
         </Container>
       </main>

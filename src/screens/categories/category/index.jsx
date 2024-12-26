@@ -23,12 +23,13 @@ import AppBarSearch from "../../../global/appBarSearch";
 import { toast } from "react-toastify";
 
 const Category = () => {
+  const [filteredCategories, setFilteredCategories] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
   const error = useSelector(getCategoriesError);
   const success = useSelector(getCategoriesSuccess);
-  const categoryStatus = useSelector(getCategoriesStatus);
+  const status = useSelector(getCategoriesStatus);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [cardId, setCardId] = useState(null);
@@ -50,50 +51,28 @@ const Category = () => {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-  let content;
-  if (categoryStatus === "loading") {
-    content = <Loading />;
-  } else if (categoryStatus === "fetchError") {
-    content = <Error>{error}</Error>;
-  } else if (categoryStatus === "fetchData") {
-    const filteredCategories = categories?.filter((dish) =>
-      dish.name.toLowerCase().includes(search.toLowerCase())
-    );
-    content = (
-      <>
-        {filteredCategories && filteredCategories.length > 0 ? (
-          filteredCategories.map((card) => (
-            <ProductCard
-              key={card._id}
-              data={card}
-              handleModify={() => handleModify(card)}
-              content={card.products.length + " Produit"}
-              handleClickOpen={() => handleClickOpen(card._id)}
-              viewProduct={() => handleViewProduct(card._id)}
-            />
-          ))
-        ) : (
-          <NoData />
-        )}
-        <AlertDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          name={"produit"}
-          cardId={cardId}
-          deleteData={deleteCategory(cardId)}
-        />
-      </>
-    );
-  }
+
   useEffect(() => {
-    if (categoryStatus === "deleteSuccess") {
+    if (status === "fetchData") {
+      setFilteredCategories(
+        categories?.filter((dish) =>
+          dish.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [status, categories, search]);
+
+  useEffect(() => {
+    if (status === "deleteSuccess") {
       toast.success(success);
-      dispatch(fetchCategories());
+      setFilteredCategories((prev) =>
+        prev.filter((item) => item._id !== cardId)
+      );
       dispatch(updateStatus());
-    } else if (categoryStatus === "deleteError") {
+    } else if (status === "deleteError") {
       toast.error(error);
     }
-  }, [categoryStatus, error, success, dispatch]);
+  }, [status, error, success, dispatch, cardId]);
 
   return (
     <div className="main-application">
@@ -101,13 +80,41 @@ const Category = () => {
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
-        title={"Mes categories"}
-        buttonTitle={"Ajouter un categorie"}
+        title={"Mes catégories"}
+        buttonTitle={"Ajouter une catégorie"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
           <Grid container spacing={4}>
-            {content}
+            {status === "loading" ? (
+              <Loading />
+            ) : status === "fetchError" ? (
+              <Error>{error}</Error>
+            ) : (
+              <>
+                {filteredCategories && filteredCategories.length > 0 ? (
+                  filteredCategories.map((card) => (
+                    <ProductCard
+                      key={card._id}
+                      data={card}
+                      handleModify={() => handleModify(card)}
+                      content={card.products.length + " Produit"}
+                      handleClickOpen={() => handleClickOpen(card._id)}
+                      viewProduct={() => handleViewProduct(card._id)}
+                    />
+                  ))
+                ) : (
+                  <NoData />
+                )}
+                <AlertDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  name={"produit"}
+                  cardId={cardId}
+                  deleteData={deleteCategory(cardId)}
+                />
+              </>
+            )}
           </Grid>
         </Container>
       </main>

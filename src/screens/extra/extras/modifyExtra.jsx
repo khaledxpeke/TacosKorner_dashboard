@@ -184,6 +184,7 @@ const ModifyExtra = () => {
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
+                image={data.image}
               />
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">

@@ -223,6 +223,7 @@ const ModifyProduct = () => {
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
+                image={data.image}
               />
               <FormControl
                 variant="filled"

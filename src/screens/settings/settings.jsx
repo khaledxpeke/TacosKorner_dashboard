@@ -93,6 +93,8 @@ const SettingsManagement = () => {
         maxExtras: settings.maxExtras,
         logo: settings.logo,
         banner: settings.banner,
+        address: settings.address,
+        method:settings.method
       },
     });
   };
@@ -279,6 +281,9 @@ const SettingsManagement = () => {
             }}
           >
             <Typography variant="h2" color="inherit">
+              Addresse de restaurant : {settings?.address || ""}
+            </Typography>
+            <Typography variant="h2" sx={{ mt: 2 }} color="inherit">
               TVA : {settings?.tva || 0}%
             </Typography>
             <Typography variant="h2" sx={{ mt: 2 }} color="inherit">

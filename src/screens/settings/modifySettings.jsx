@@ -1,4 +1,13 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -29,6 +38,7 @@ const ModifySettings = () => {
   const [displayLogoLabel, setDisplayLogoLabel] = useState(true);
   const [displayBannerLabel, setDisplayBannerLabel] = useState(true);
   const settingsSchema = yup.object().shape({
+    address: yup.string().required("L'addresse est requis"),
     tva: yup
       .number()
       .required("Le TVA est requis")
@@ -57,14 +67,17 @@ const ModifySettings = () => {
     cashActive: yup.boolean(),
   });
   const initialValues = {
+    address: data?.address || "",
     tva: data?.tva || 0,
     maxDrink: data?.maxDrink || 1,
     maxDessert: data?.maxDessert || 1,
     maxExtras: data?.maxExtras || 1,
     card: data?.card?.trim() ? data.card : "Carte",
+    cardId: data?.method?.[0]?._id,
     cardActive: data?.cardActive || true,
     cash: data?.cash?.trim() ? data.cash : "Espèces",
     cashActive: data?.cashActive || true,
+    cashId: data?.method?.[1]?._id,
   };
   const dispatch = useDispatch();
   const status = useSelector(getSettingsStatus);
@@ -72,20 +85,26 @@ const ModifySettings = () => {
   const loading = useSelector(getSettingsLoading);
   const success = useSelector(getSettingsSuccess);
   const handleFormSubmit = (values) => {
-    dispatch(
-      updateSetting({
-        tva: values.tva,
-        maxExtras: values.maxExtras,
-        maxDessert: values.maxDessert,
-        maxDrink: values.maxDrink,
-        method: [
-          { label: values.card, isActive: values.cardActive },
-          { label: values.cash, isActive: values.cashActive },
-        ],
-        ...(logoPreview && { logo: logoPreview }),
-        ...(bannerPreview && { banner: bannerPreview }),
-      })
-    );
+    const formData = new FormData();
+    formData.append("tva", values.tva);
+    formData.append("maxExtras", values.maxExtras);
+    formData.append("maxDessert", values.maxDessert);
+    formData.append("maxDrink", values.maxDrink);
+    formData.append("address", values.address);
+
+    const methods = [
+      { label: values.card, isActive: values.cardActive, _id: values.cardId,},
+      { label: values.cash, isActive: values.cashActive , _id: values.cashId,},
+    ];
+
+    formData.append("method", JSON.stringify(methods));
+    if (logoPreview) {
+      formData.append("logo", logoPreview);
+    }
+    if (bannerPreview) {
+      formData.append("banner", bannerPreview);
+    }
+    dispatch(updateSetting(formData));
   };
   useEffect(() => {
     if (status === "modifySuccess") {
@@ -101,7 +120,10 @@ const ModifySettings = () => {
     <Loading />
   ) : (
     <Box m="20px">
-      <Header title="MODIFIER LES PARAMÈTRES" subtitle="Modifier les paramètres" />
+      <Header
+        title="MODIFIER LES PARAMÈTRES"
+        subtitle="Modifier les paramètres"
+      />
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -124,6 +146,19 @@ const ModifySettings = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
+              <TextFieldCompnent
+                multiline
+                maxRows={4}
+                type="text"
+                label="Addresse de restaurant"
+                change={handleChange}
+                value={values.address}
+                name="address"
+                blur={handleBlur}
+                touched={touched.address}
+                error={errors.address}
+                colum="span 8"
+              />
               <TextFieldCompnent
                 type="number"
                 label="TVA"

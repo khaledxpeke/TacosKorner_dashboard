@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, Container } from "@mui/material";
+import { Grid, Container, Chip, Stack, Typography } from "@mui/material";
 import {
   deleteProduct,
   getProducts,
@@ -93,9 +93,36 @@ const Formule = () => {
                       handleModify={() => handleModify(card)}
                       content={
                         <>
-                          {card?.price + " " + settings.defaultCurrency}
-                          <br />
-                          <strong>Description:</strong> {card?.description}
+                          <Typography variant="h4" color="inherit">
+                            Prix:{" "}
+                            {card?.price ?? 0 + " " + settings.defaultCurrency}
+                          </Typography>
+                          {card.description && card.description !== "" &&(
+                            <Typography variant="h4" color="inherit">
+                              Description: {card?.description}
+                            </Typography>
+                          )}
+                          <Stack
+                            justifyContent="space-between"
+                            alignItems="center"
+                            direction="row"
+                            sx={{ mt: 1 }}
+                          >
+                            <Chip
+                              variant="outlined"
+                              label={
+                                card.outOfStock
+                                  ? "Rupture de stock"
+                                  : "En stock"
+                              }
+                              color={card.outOfStock ? "error" : "success"}
+                            />
+                            <Chip
+                              variant="outlined"
+                              label={card.visible ? "Visible" : "Caché"}
+                              color={card.visible ? "success" : "error"}
+                            />
+                          </Stack>
                         </>
                       }
                       handleClickOpen={() => handleClickOpen(card._id)}

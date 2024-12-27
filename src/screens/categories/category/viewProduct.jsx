@@ -29,6 +29,7 @@ import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 import { tokens } from "../../../theme";
 import { useTheme } from "@emotion/react";
+import { getSettings, selectAllSettings } from "../../../features/settingSlice";
 
 const ViewProduct = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -40,6 +41,7 @@ const ViewProduct = () => {
   const status = useSelector(getProductsStatus);
   const error = useSelector(getProductsError);
   const products = useSelector(selectAllProducts);
+  const settings = useSelector(selectAllSettings);
   const success = useSelector(getProductsSuccess);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
@@ -51,6 +53,7 @@ const ViewProduct = () => {
 
   useEffect(() => {
     dispatch(getProductByCategoryId(categoryId));
+    dispatch(getSettings());
   }, [dispatch, categoryId]);
 
   useEffect(() => {
@@ -120,7 +123,7 @@ const ViewProduct = () => {
                     <ProductCard
                       key={card._id}
                       data={card}
-                      content={card.price + " " + card.currency}
+                      content={card.price + " " + settings.defaultCurrency}
                       handleClickOpen={() => handleClickOpen(card._id)}
                       noModify={true}
                     />

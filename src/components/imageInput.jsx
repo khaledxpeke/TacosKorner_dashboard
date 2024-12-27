@@ -29,7 +29,6 @@ const ImageInput = ({
     setPreviewImage(null);
     setDisplayLabel(true);
   };
-
   return (
     <div
       style={{
@@ -61,7 +60,7 @@ const ImageInput = ({
             previewImage
               ? URL.createObjectURL(previewImage)
               : image
-              ? `${apiUrl}/${image}`
+              ? `${apiUrl}/${image.replace(/\\/g, '/')}`
               : upload
           }
           alt="Upload"

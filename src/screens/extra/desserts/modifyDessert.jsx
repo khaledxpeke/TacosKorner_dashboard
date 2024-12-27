@@ -55,6 +55,7 @@ const ModifyDesert = () => {
     outOfStock: data.outOfStock,
     visible: data.visible,
   };
+
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,

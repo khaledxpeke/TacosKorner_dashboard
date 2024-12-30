@@ -11,7 +11,7 @@ const initialState = {
 
 export const getVariations = createAsyncThunk("variation/getVariations", async () => {
   try {
-    const response = await axios.get(`${apiUrl}/type`);
+    const response = await axios.get(`${apiUrl}/variation`);
     return response?.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || err.message);
@@ -38,7 +38,7 @@ export const modifyVariation = createAsyncThunk(
   async ({ body, variationId }) => {
     try {
       const response = await axios.put(
-        `${apiUrl}/variation/update/${variationId}`,
+        `${apiUrl}/variation/${variationId}`,
         body,
         {
           headers: {
@@ -54,6 +54,7 @@ export const modifyVariation = createAsyncThunk(
     }
   }
 );
+
 export const deleteVariation = createAsyncThunk(
   "variation/deleteVariation",
   async (variationId) => {

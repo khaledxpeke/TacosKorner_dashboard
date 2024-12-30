@@ -1,11 +1,6 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -25,6 +20,7 @@ import { toast } from "react-toastify";
 import Loading from "../../../components/loading";
 import { useNavigate } from "react-router-dom";
 import TextFieldCompnent from "../../../components/textFieldComponent";
+import RadioButtonComponent from "../../../components/radioButtonComponent";
 
 const AddType = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -165,54 +161,30 @@ const AddType = () => {
                 num={0}
                 onlyDigits={true}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "5 / span 1" }}
-              >
-                <FormLabel>Tous les ingrédients sont payants :</FormLabel>
-                <RadioGroup
-                  name="payment"
-                  value={values.payment}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "6 / span 1" }}
-              >
-                <FormLabel>Type de sélection :</FormLabel>
-                <RadioGroup
-                  name="selection"
-                  value={values.selection}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Seul"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Multiple"
-                  />
-                </RadioGroup>
-              </FormControl>
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="5 / span 1"
+                name="payment"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="Tous les ingrédients sont payants :"
+                value={values.payment}
+              />
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="6 / span 1"
+                name="selection"
+                radioText1="Seul"
+                radioText2="Multiple"
+                radioValue1={false}
+                radioValue2={true}
+                text="Type de sélection :"
+                value={values.selection}
+              />
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

@@ -17,10 +17,11 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  TextField,
   DialogActions,
 } from "@mui/material";
 import {
+  addVariation,
+  modifyVariation,
   deleteVariation,
   getVariations,
   getVariationError,
@@ -35,19 +36,24 @@ import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 import AppBarSearch from "../../../global/appBarSearch";
 import NoDataTable from "../../../components/noDataTable";
+import { Formik } from "formik";
+import * as yup from "yup";
+import TextFieldCompnent from "../../../components/textFieldComponent";
 const Variantion = () => {
-  const [filteredTypes, setFilteredTypes] = useState([]);
+  const schema = yup.object().shape({
+    name: yup.string().required("Nom est requis"),
+  });
+  const [filteredVariations, setFilteredVariations] = useState([]);
   const dispatch = useDispatch();
   const status = useSelector(getVariationStatus);
   const error = useSelector(getVariationError);
-  const types = useSelector(selectAllVariations);
+  const variations = useSelector(selectAllVariations);
   const success = useSelector(getVariationSuccess);
   const theme = useTheme();
   const [search, setSearch] = useState("");
   const isLightMode = theme.palette.mode === "light";
   const [open, setOpen] = useState(false);
   const [addOrModify, setAddOrModify] = useState("");
-  const [variationName, setVariationName] = useState("");
   const [addModifyOpen, setAddModifyOpen] = useState(false);
   const [cardId, setCardId] = useState(null);
   const handleClickOpen = (cardId) => {
@@ -59,15 +65,12 @@ const Variantion = () => {
       setCardId("");
       setAddOrModify("Ajouter variation");
     } else {
-      setVariationName(name);
+      setCardId(cardId);
       setAddOrModify("Modifier variation");
     }
     setAddModifyOpen(true);
-    setCardId(cardId);
   };
   const handleClose = () => {
-    setCardId("");
-    setVariationName("");
     setAddModifyOpen(false);
   };
   const colors = tokens(theme.palette.mode);
@@ -77,23 +80,54 @@ const Variantion = () => {
 
   useEffect(() => {
     if (status === "fetchData") {
-      setFilteredTypes(
-        types?.filter((dish) =>
+      setFilteredVariations(
+        variations?.filter((dish) =>
           dish.name.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
-  }, [types, search, status]);
+  }, [variations, search, status]);
 
   useEffect(() => {
     if (status === "deleteSuccess") {
       toast.success(success);
-      setFilteredTypes((prev) => prev.filter((item) => item._id !== cardId));
+      setFilteredVariations((prev) => prev.filter((item) => item._id !== cardId));
       dispatch(updateStatus());
     } else if (status === "deleteError") {
       toast.error(error);
     }
   }, [cardId, dispatch, error, status, success]);
+
+  const handleFormSubmit = (values) => {
+    if (addOrModify === "Ajouter variation") {
+      dispatch(addVariation({ name: values.name }));
+    } else {
+      dispatch(
+        modifyVariation({ body: { name: values.name }, variationId: cardId })
+      );
+    }
+    setAddModifyOpen(false);
+  };
+
+  useEffect(() => {
+    if (status === "addSuccess") {
+      toast.success(success);
+      dispatch(getVariations());
+      dispatch(updateStatus());
+    } else if (status === "addError") {
+      toast.error(error);
+      dispatch(updateStatus());
+    } else if (status === "modifySuccess") {
+      setCardId("");
+      toast.success(success);
+      dispatch(getVariations());
+      dispatch(updateStatus());
+    } else if (status === "modifyError") {
+      toast.error(error);
+      console.log(error);
+      dispatch(updateStatus());
+    }
+  }, [status, error, dispatch, success]);
   return (
     <div className="main-application">
       <CssBaseline />
@@ -132,8 +166,8 @@ const Variantion = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {filteredTypes && filteredTypes.length > 0 ? (
-                          filteredTypes.map((card) => (
+                        {filteredVariations && filteredVariations.length > 0 ? (
+                          filteredVariations.map((card) => (
                             <TableRow key={card._id}>
                               <TableCell>{card.name}</TableCell>
                               <TableCell align="right">
@@ -169,33 +203,51 @@ const Variantion = () => {
                           <NoDataTable cols={2} />
                         )}
                         <Dialog open={addModifyOpen} onClose={handleClose}>
-                          <DialogTitle>{addOrModify}</DialogTitle>
-                          <DialogContent>
-                            <TextField
-                              label="Nom"
-                              fullWidth
-                              margin="normal"
-                              value={variationName}
-                              onChange={(e) => setVariationName(e.target.value)}
-                            />
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={handleClose} color="error">
-                              Annuler
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                if (addOrModify === "Ajouter variation") {
-                                  //   handleUpdateCurrency();
-                                } else {
-                                  //   handleAddCurrency();
-                                }
-                              }}
-                              color="secondary"
-                            >
-                              Confirmer
-                            </Button>
-                          </DialogActions>
+                          <Formik
+                            onSubmit={handleFormSubmit}
+                            initialValues={{
+                              name:
+                                addOrModify === "Modifier variation"
+                                  ? filteredVariations.find(
+                                      (item) => item._id === cardId
+                                    )?.name
+                                  : "",
+                            }}
+                            validationSchema={schema}
+                          >
+                            {({
+                              values,
+                              errors,
+                              touched,
+                              handleBlur,
+                              handleChange,
+                              handleSubmit,
+                            }) => (
+                              <form onSubmit={handleSubmit}>
+                                <DialogTitle>{addOrModify}</DialogTitle>
+                                <DialogContent>
+                                  <TextFieldCompnent
+                                    type="text"
+                                    label="Nom"
+                                    change={handleChange}
+                                    value={values.name}
+                                    name="name"
+                                    blur={handleBlur}
+                                    touched={touched.name}
+                                    error={errors.name}
+                                  />
+                                </DialogContent>
+                                <DialogActions>
+                                  <Button onClick={handleClose} color="error">
+                                    Annuler
+                                  </Button>
+                                  <Button type="submit" color="secondary">
+                                    Confirmer
+                                  </Button>
+                                </DialogActions>
+                              </form>
+                            )}
+                          </Formik>
                         </Dialog>
                         <AlertDialog
                           handleClose={() => setOpen(false)}

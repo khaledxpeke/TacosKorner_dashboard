@@ -1,11 +1,6 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -26,6 +21,7 @@ import {
 } from "../../../features/desertSlice";
 import { useNavigate } from "react-router-dom";
 import TextFieldCompnent from "../../../components/textFieldComponent";
+import RadioButtonComponent from "../../../components/radioButtonComponent";
 
 const AddDesert = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -128,54 +124,30 @@ const AddDesert = () => {
                 row="2 / span 1"
                 num={0}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "3 / span 1" }}
-              >
-                <FormLabel>On repture de stock :</FormLabel>
-                <RadioGroup
-                  name="outOfStock"
-                  value={values.outOfStock}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "4 / span 1" }}
-              >
-                <FormLabel>Afficher cet ingrédient :</FormLabel>
-                <RadioGroup
-                  name="visible"
-                  value={values.visible}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="3 / span 1"
+                name="outOfStock"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="On repture de stock :"
+                value={values.outOfStock}
+              />
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="4 / span 1"
+                name="visible"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="Afficher cet ingrédient :"
+                value={values.visible}
+              />
               <ImageInput
                 row="5 / span 1"
                 previewImage={previewImage}

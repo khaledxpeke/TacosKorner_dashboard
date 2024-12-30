@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -25,15 +17,19 @@ import {
   updateStatus,
 } from "../../../features/ingrediantSlice";
 import { selectAllTypes, getTypes } from "../../../features/typeSlice";
+import {
+  selectAllVariations,
+  getVariations,
+} from "../../../features/variationSlice";
 import { useNavigate } from "react-router-dom";
 import TextFieldCompnent from "../../../components/textFieldComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
+import RadioButtonComponent from "../../../components/radioButtonComponent";
 
 const AddIngrediant = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [previewImage, setPreviewImage] = useState(null);
   const [displayLabel, setDisplayLabel] = useState(true);
-  const [typeError, setTypeError] = useState(false);
   const dispatch = useDispatch();
   const status = useSelector(getIngrediantsStatus);
   const error = useSelector(getIngrediantsError);
@@ -41,6 +37,7 @@ const AddIngrediant = () => {
   const success = useSelector(getIngrediantsSuccess);
   const navigate = useNavigate();
   const types = useSelector(selectAllTypes);
+  const variations = useSelector(selectAllVariations);
 
   const ingrediantSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
@@ -54,6 +51,11 @@ const AddIngrediant = () => {
       .min(0, "La prix minimal est 0"),
     outOfStock: yup.boolean(),
     visible: yup.boolean(),
+    types: yup
+      .array()
+      .of(yup.string().required("Chaque option ne peut pas être vide"))
+      .min(1, "Options ne peut pas être vide")
+      .required("Options est requis"),
   });
   const initialValues = {
     name: "",
@@ -61,14 +63,11 @@ const AddIngrediant = () => {
     price: 0,
     suppPrice: 0,
     types: [],
+    variations: [],
     outOfStock: false,
     visible: true,
   };
   const handleFormSubmit = (values) => {
-    if (values.types.length === 0) {
-      setTypeError(true);
-      return;
-    }
     const formData = {
       name: values.name,
       price: values.price,
@@ -77,11 +76,13 @@ const AddIngrediant = () => {
       visible: values.visible,
       image: previewImage,
       typeIds: values.types,
+      variationsIds: values.variations,
     };
     dispatch(addIngrediant(formData));
   };
   useEffect(() => {
     dispatch(getTypes());
+    dispatch(getVariations());
   }, [dispatch]);
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const AddIngrediant = () => {
       toast.error(error);
     }
     dispatch(updateStatus());
-  }, [status, error, dispatch, navigate, types, success]);
+  }, [status, error, dispatch, navigate, success]);
 
   return loading ? (
     <Loading />
@@ -163,73 +164,55 @@ const AddIngrediant = () => {
                 row="3 / span 1"
                 num={0}
               />
-              <ImageInput
-                row="6 / span 1"
-                previewImage={previewImage}
-                setPreviewImage={setPreviewImage}
-                displayLabel={displayLabel}
-                setDisplayLabel={setDisplayLabel}
-              />
               <MultipleSelectComponent
                 name="types"
                 gridColumn="span 3"
                 gridRow="5 / span 1"
                 items={types}
                 value={values.types}
-                change={(e) => {
-                  handleChange(e);
-                  setTypeError(false);
-                }}
-                error={typeError}
+                change={handleChange}
+                touched={touched.types}
+                error={errors.types}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "7 / span 1" }}
-              >
-                <FormLabel>On repture de stock :</FormLabel>
-                <RadioGroup
-                  name="outOfStock"
-                  value={values.outOfStock}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "8 / span 1" }}
-              >
-                <FormLabel>Afficher cet ingrédient :</FormLabel>
-                <RadioGroup
-                  name="visible"
-                  value={values.visible}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
+              <MultipleSelectComponent
+                name="variations"
+                gridColumn="span 3"
+                gridRow="6 / span 1"
+                items={variations}
+                value={values.variations}
+                change={handleChange}
+              />
+              <ImageInput
+                row="7 / span 1"
+                previewImage={previewImage}
+                setPreviewImage={setPreviewImage}
+                displayLabel={displayLabel}
+                setDisplayLabel={setDisplayLabel}
+              />
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="8 / span 1"
+                name="outOfStock"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="On repture de stock :"
+                value={values.outOfStock}
+              />
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="9 / span 1"
+                name="visible"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="Afficher cet ingrédient :"
+                value={values.visible}
+              />
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

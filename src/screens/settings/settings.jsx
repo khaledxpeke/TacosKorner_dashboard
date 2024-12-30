@@ -94,7 +94,7 @@ const SettingsManagement = () => {
         logo: settings.logo,
         banner: settings.banner,
         address: settings.address,
-        method:settings.method
+        method: settings.method,
       },
     });
   };
@@ -115,33 +115,25 @@ const SettingsManagement = () => {
   };
 
   useEffect(() => {
-    if (settingStatus === "addSuccess") {
-      toast.success("Currency added successfully!");
-      dispatch(getSettings());
-      dispatch(updateStatus());
-    } else if (settingStatus === "addError") {
-      toast.error(error || "Failed to add currency.");
-      dispatch(updateStatus());
-    } else if (settingStatus === "modifySuccess") {
-      toast.success("Currency updated successfully!");
-      dispatch(getSettings());
-      dispatch(updateStatus());
-    } else if (settingStatus === "modifyError") {
-      toast.error(error || "Failed to update currency.");
-      dispatch(updateStatus());
-    }
-  }, [settingStatus, error, dispatch]);
-  useEffect(() => {
-    if (settingStatus === "updateSuccess") {
-      dispatch(getSettings());
-      dispatch(updateStatus());
+    const successStatuses = ["addSuccess", "modifySuccess", "updateSuccess"];
+    if (successStatuses.includes(settingStatus)) {
       toast.success(success);
+      dispatch(getSettings());
+      dispatch(updateStatus());
     }
   }, [settingStatus, dispatch, success]);
 
   useEffect(() => {
+    if (settingStatus === "modifyError" || settingStatus === "addError") {
+      toast.error(error);
+      dispatch(updateStatus());
+    }
+  }, [settingStatus, error, dispatch]);
+
+  useEffect(() => {
     dispatch(getSettings());
   }, [dispatch]);
+
   let content;
   if (settingStatus === "loading") {
     content = <Loading />;

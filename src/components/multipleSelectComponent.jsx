@@ -1,6 +1,21 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 
-const MultipleSelectComponent = ({ name, items, value, change,gridColumn,gridRow }) => {
+const MultipleSelectComponent = ({
+  name,
+  items,
+  value,
+  change,
+  gridColumn,
+  gridRow,
+  error,
+  touched,
+}) => {
   return (
     <FormControl
       variant="filled"
@@ -16,7 +31,8 @@ const MultipleSelectComponent = ({ name, items, value, change,gridColumn,gridRow
         multiple
         label={name}
         onChange={change}
-        sx={{ gridColumn: gridColumn , gridRow: gridRow }}
+        sx={{ gridColumn: gridColumn, gridRow: gridRow }}
+        error={!!touched && !!error}
       >
         {items.map((item) => (
           <MenuItem
@@ -34,6 +50,9 @@ const MultipleSelectComponent = ({ name, items, value, change,gridColumn,gridRow
           </MenuItem>
         ))}
       </Select>
+      {touched && error && (
+        <FormHelperText sx={{ color: "error.main" }}>{error}</FormHelperText>
+      )}
     </FormControl>
   );
 };

@@ -2,10 +2,6 @@ import {
   Box,
   Button,
   FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
   Stack,
   InputLabel,
   MenuItem,
@@ -38,6 +34,9 @@ import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
 import { getTypes, selectAllTypes } from "../../../features/typeSlice";
+import RadioButtonComponent from "../../../components/radioButtonComponent";
+import MultipleSelectComponent from "../../../components/multipleSelectComponent";
+import { getVariations, selectAllVariations } from "../../../features/variationSlice";
 
 const AddProduct = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -52,6 +51,7 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const categories = useSelector(selectAllCategories);
   const typesWithIngrediants = useSelector(selectAllTypes);
+  const variations = useSelector(selectAllVariations);
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     description: yup.string(),
@@ -70,6 +70,7 @@ const AddProduct = () => {
     image: "",
     category: categories.length > 0 ? categories[0]._id : "",
     type: [],
+    variations: [],
     price: 0,
     choice: "seul",
     outOfStock: false,
@@ -82,17 +83,14 @@ const AddProduct = () => {
     if (!result.destination) {
       return;
     }
-
     const updatedTypes = Array.from(selectedTypes);
     const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
-
     updatedTypes.splice(result.destination.index, 0, reorderedItem);
-
     setSelectedTypes(updatedTypes);
   };
+
   const handleFormSubmit = (values) => {
     const selectedTypeIds = selectedTypes.map((type) => type._id);
-
     dispatch(
       addProduct({
         body: {
@@ -121,8 +119,10 @@ const AddProduct = () => {
       );
     });
   };
+
   useEffect(() => {
     dispatch(getTypes());
+    dispatch(getVariations());
     dispatch(fetchCategories());
     dispatch(getIngrediantsByType());
     if (status === "addSuccess") {
@@ -215,82 +215,42 @@ const AddProduct = () => {
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
               />
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "6 / span 1" }}
-              >
-                <FormLabel>On repture de stock :</FormLabel>
-                <RadioGroup
-                  name="outOfStock"
-                  value={values.outOfStock}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{ gridColumn: "span 3", gridRow: "7 / span 1" }}
-              >
-                <FormLabel>Afficher ce produit :</FormLabel>
-                <RadioGroup
-                  name="visible"
-                  value={values.visible}
-                  onChange={handleChange}
-                  row
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="Non"
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label="Oui"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{
-                  gridColumn: "span 1",
-                  gridRow: "8 / span 1",
-                }}
-              >
-                <FormLabel>Choix de produit</FormLabel>
-                <RadioGroup
-                  defaultValue="seul"
-                  name="choice"
-                  value={values.choice}
-                  onChange={handleChange}
-                  sx={{ my: 1 }}
-                >
-                  <FormControlLabel
-                    value="seul"
-                    control={<Radio />}
-                    label="Seul"
-                  />
-                  <FormControlLabel
-                    value="multiple"
-                    control={<Radio />}
-                    label="Composée"
-                  />
-                </RadioGroup>
-              </FormControl>
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="6 / span 1"
+                name="outOfStock"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="On repture de stock :"
+                value={values.outOfStock}
+              />
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="7 / span 1"
+                name="visible"
+                radioText1="Non"
+                radioText2="Oui"
+                radioValue1={false}
+                radioValue2={true}
+                text="Afficher cet ingrédient :"
+                value={values.visible}
+              />
+              <RadioButtonComponent
+                change={handleChange}
+                colum="span 3"
+                row="8 / span 1"
+                name="choice"
+                radioText1="Seul"
+                radioText2="Composée"
+                radioValue1="seul"
+                radioValue2="multiple"
+                text="Choix du produit :"
+                value={values.choice}
+              />
               {values.choice === "multiple" && (
                 <>
                   <Stack
@@ -348,10 +308,17 @@ const AddProduct = () => {
                   >
                     <ReorderType onDragEnd={onDragEnd} types={selectedTypes} />
                   </Stack>
+                  <MultipleSelectComponent
+                    name="variations"
+                    gridColumn="span 3"
+                    gridRow="10 / span 1"
+                    items={variations}
+                    value={values.variations}
+                    change={handleChange}
+                  />
                 </>
               )}
             </Box>
-
             <Box display="flex" justifyContent="start" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Soumettre

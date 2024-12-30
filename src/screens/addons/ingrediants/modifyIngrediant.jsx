@@ -21,7 +21,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import TextFieldCompnent from "../../../components/textFieldComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 import RadioButtonComponent from "../../../components/radioButtonComponent";
-import { getVariations, selectAllVariations } from "../../../features/variationSlice";
+import {
+  getVariations,
+  selectAllVariations,
+} from "../../../features/variationSlice";
 
 const ModifyIngrediant = () => {
   const location = useLocation();
@@ -60,12 +63,15 @@ const ModifyIngrediant = () => {
     name: data.name,
     price: data.price,
     types: data.types.map((type) => type._id) || [],
-    variations: data.variations.map((variation) => variation._id) || [],
+    variations: data?.variations?.map(v => ({
+      _id: v._id,
+      price: v.price || 0
+    })) || [],
     suppPrice: data.suppPrice || 0,
     outOfStock: data.outOfStock,
     visible: data.visible,
   };
-
+console.log(variations)
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,
@@ -176,22 +182,60 @@ const ModifyIngrediant = () => {
               <MultipleSelectComponent
                 name="variations"
                 gridColumn="span 3"
-                gridRow="6 / span 1"
+                gridRow="8 / span 1"
                 items={variations}
-                value={values.variations}
-                change={handleChange}
+                value={values.variations.map(v => v._id)}
+                change={(e) => {
+                  const selectedVariations = e.target.value.map(variationId => ({
+                    _id: variationId,
+                    price: values.variations.find(v => v._id === variationId)?.price || 0
+                  }));
+                  handleChange({
+                    target: {
+                      name: "variations",
+                      value: selectedVariations
+                    }
+                  });
+                }}
               />
+              {values.variations.map((variation, index) => (
+                <TextFieldCompnent
+                  key={variation._id}
+                  type="number"
+                  label={`Prix pour ${variations.find(v => v._id === variation._id)?.name}`}
+                  change={(e) => {
+                    const newVariations = values.variations.map(v =>
+                      v._id === variation._id
+                        ? { ...v, price: Number(e.target.value) }
+                        : v
+                    );
+                    handleChange({
+                      target: {
+                        name: "variations",
+                        value: newVariations
+                      }
+                    });
+                  }}
+                  value={variation.price}
+                  name={`variation-${variation.variation}-price`}
+                  blur={handleBlur}
+                  colum="span 2"
+                  row={`${9 + index} / span 1`}
+                  num={0}
+                />
+              ))}
               <ImageInput
-                row="7 / span 1"
+                row="5 / span 1"
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
                 displayLabel={displayLabel}
                 setDisplayLabel={setDisplayLabel}
+                image={data.image}
               />
               <RadioButtonComponent
                 change={handleChange}
                 colum="span 3"
-                row="8 / span 1"
+                row="6 / span 1"
                 name="outOfStock"
                 radioText1="Non"
                 radioText2="Oui"
@@ -203,7 +247,7 @@ const ModifyIngrediant = () => {
               <RadioButtonComponent
                 change={handleChange}
                 colum="span 3"
-                row="9 / span 1"
+                row="7 / span 1"
                 name="visible"
                 radioText1="Non"
                 radioText2="Oui"

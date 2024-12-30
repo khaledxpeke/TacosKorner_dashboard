@@ -34,7 +34,7 @@ import {
   updateCurrency,
   selectAllSettings,
   updateSetting,
-  modifySettings,
+  addSettings,
 } from "../../features/settingSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -106,29 +106,37 @@ const SettingsManagement = () => {
       toast.error("New currency name cannot be empty!");
       return;
     }
-    dispatch(updateSetting({ oldCurrency, newCurrency }));
+    if (editType === "currency") {
+      dispatch(updateSetting({ oldCurrency, newCurrency }));
+    } else if (editType === "newCurrency") {
+      dispatch(addSettings({ currency: newCurrency }));
+    }
     setOpen(false);
   };
-  const handleAddCurrency = () => {
-    dispatch(modifySettings({ currency: newCurrency }));
-    setOpen(false);
-  };
+  // const handleAddCurrency = () => {
+  //   dispatch(addSettings({ currency: newCurrency }));
+  //   setOpen(false);
+  // };
 
   useEffect(() => {
-    const successStatuses = ["addSuccess", "modifySuccess", "updateSuccess"];
+    const successStatuses = ["addSuccess", "updateSettingSuccess", "updateSuccess"];
     if (successStatuses.includes(settingStatus)) {
       toast.success(success);
       dispatch(getSettings());
       dispatch(updateStatus());
     }
-  }, [settingStatus, dispatch, success]);
-
-  useEffect(() => {
-    if (settingStatus === "modifyError" || settingStatus === "addError") {
+    else if (settingStatus === "addError" || settingStatus === "updateSettingError" || settingStatus === "updateError") {
       toast.error(error);
       dispatch(updateStatus());
     }
-  }, [settingStatus, error, dispatch]);
+  }, [settingStatus, dispatch, success,error]);
+
+  // useEffect(() => {
+  //   if (settingStatus === "modifyError" || settingStatus === "addError") {
+  //     toast.error(error);
+  //     dispatch(updateStatus());
+  //   }
+  // }, [settingStatus, error, dispatch]);
 
   useEffect(() => {
     dispatch(getSettings());
@@ -393,17 +401,8 @@ const SettingsManagement = () => {
           <Button onClick={handleClose} color="error">
             Annuler
           </Button>
-          <Button
-            onClick={() => {
-              if (editType === "currency") {
-                handleUpdateCurrency();
-              } else if (editType === "newCurrency") {
-                handleAddCurrency();
-              }
-            }}
-            color="secondary"
-          >
-            Confirmer
+          <Button onClick={handleUpdateCurrency} color="secondary">
+            {editType === "currency" ? "Modifier" : "Ajouter"}
           </Button>
         </DialogActions>
       </Dialog>

@@ -30,13 +30,13 @@ import {
 } from "../../../features/categorySlice";
 import { getIngrediantsByType } from "../../../features/ingrediantSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-import ReorderType from "../../../components/reorderType";
 import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
 import { getTypes, selectAllTypes } from "../../../features/typeSlice";
 import RadioButtonComponent from "../../../components/radioButtonComponent";
 import MultipleSelectComponent from "../../../components/multipleSelectComponent";
 import { getVariations, selectAllVariations } from "../../../features/variationSlice";
+import Reorder from "../../../components/reorder";
 const ModifyProduct = () => {
   const location = useLocation();
   const data = location.state.product || {};
@@ -82,9 +82,10 @@ const ModifyProduct = () => {
     visible: data.visible,
     choice: data.choice,
     type: data.type || [],
-    variations: data.variations || [],
-    free: 0,
-    quantity: 1,
+    variations: data?.variations?.map(v => ({
+      _id: v._id,
+      price: v.price || 0
+    })) || [],
     maxExtras: data.maxExtras || 1,
     maxDessert: data.maxDessert || 1,
     maxDrink: data.maxDrink || 1,
@@ -104,6 +105,7 @@ const ModifyProduct = () => {
       maxExtras: values.maxExtras,
       maxDessert: values.maxDessert,
       maxDrink: values.maxDrink,
+      variations: values.variations,
     };
     dispatch(
       modifyProduct({
@@ -132,18 +134,19 @@ const ModifyProduct = () => {
       toast.error(error);
     }
   }, [status, error, dispatch, navigate, success]);
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
+  // const onDragEnd = (result) => {
+  //   if (!result.destination) {
+  //     return;
+  //   }
 
-    const updatedTypes = Array.from(selectedTypes);
-    const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
+  //   const updatedTypes = Array.from(selectedTypes);
+  //   const [reorderedItem] = updatedTypes.splice(result.source.index, 1);
 
-    updatedTypes.splice(result.destination.index, 0, reorderedItem);
+  //   updatedTypes.splice(result.destination.index, 0, reorderedItem);
 
-    setSelectedTypes(updatedTypes);
-  };
+  //   setSelectedTypes(updatedTypes);
+  // };
+
   return loading ? (
     <Loading />
   ) : (
@@ -162,7 +165,8 @@ const ModifyProduct = () => {
           handleBlur,
           handleChange,
           handleSubmit,
-        }) => (
+          setFieldValue,
+        }) =>  (
           <form onSubmit={handleSubmit}>
             <Box
               display="grid"
@@ -314,20 +318,63 @@ const ModifyProduct = () => {
                     flexWrap="wrap"
                     flexDirection="row"
                     sx={{
-                      gridColumn: "span 1",
+                      gridColumn: "span 2",
                       gridRow: "9 / span 1",
                     }}
                   >
-                    <ReorderType onDragEnd={onDragEnd} types={selectedTypes} />
+                   <Reorder 
+                items={selectedTypes} 
+                onReorder={(newOrder) => {
+                  setSelectedTypes(newOrder);
+                  setFieldValue('types', newOrder.map(type => type._id));
+                }} 
+              />
                   </Stack>
                   <MultipleSelectComponent
                     name="variations"
                     gridColumn="span 3"
                     gridRow="10 / span 1"
                     items={variations}
-                    value={values.variations}
-                    change={handleChange}
+                    value={values.variations.map(v => v._id)}
+                    change={(e) => {
+                      const selectedVariations = e.target.value.map(variationId => ({
+                        _id: variationId,
+                        price: values.variations.find(v => v._id === variationId)?.price || 0
+                      }));
+                      handleChange({
+                        target: {
+                          name: "variations",
+                          value: selectedVariations
+                        }
+                      });
+                    }}
                   />
+                  {values.variations.map((variation, index) => (
+                <TextFieldCompnent
+                  key={variation._id}
+                  type="number"
+                  label={`Prix pour ${variations.find(v => v._id === variation._id)?.name}`}
+                  change={(e) => {
+                    const newVariations = values.variations.map(v =>
+                      v._id === variation._id
+                        ? { ...v, price: Number(e.target.value) }
+                        : v
+                    );
+                    handleChange({
+                      target: {
+                        name: "variations",
+                        value: newVariations
+                      }
+                    });
+                  }}
+                  value={variation.price}
+                  name={`variation-${variation.variation}-price`}
+                  blur={handleBlur}
+                  colum="span 2"
+                  row={`${11 + index} / span 1`}
+                  num={0}
+                />
+              ))}
                 </>
               )}
             </Box>

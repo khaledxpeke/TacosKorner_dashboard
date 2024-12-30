@@ -15,7 +15,7 @@ import {
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
-import NoData from "../../../components/no_data";
+import NoData from "../../../components/noData";
 import AppBarSearch from "../../../global/appBarSearch";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";

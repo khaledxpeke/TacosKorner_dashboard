@@ -10,6 +10,7 @@ import desertReducer from "./features/desertSlice";
 import historyReducer from "./features/historySlice";
 import settingReducer from "./features/settingSlice";
 import carouselReducer from "./features/carouselSlice";
+import variationReducer from "./features/variationSlice";
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     history: historyReducer,
     settings: settingReducer,
     carousel: carouselReducer,
+    variation: variationReducer,
   },
 });
 

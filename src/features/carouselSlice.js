@@ -7,7 +7,6 @@ export const getCarouselMedia = createAsyncThunk(
   "carousel/getCarouselMedia",
   async () => {
     const response = await axios.get(`${apiUrl}/carousel`);
-    console.log(response.data);
     return response.data;
   }
 );

@@ -29,9 +29,9 @@ import {
   selectAllHistory,
 } from "../../features/historySlice";
 import { useEffect } from "react";
-import NoData from "../../components/no_data";
 import Loading from "../../components/loading";
 import Error from "../../components/Error";
+import NoDataTable from "../../components/noDataTable";
 
 function createData(
   product,
@@ -60,6 +60,9 @@ function Row(props) {
   const [open, setOpen] = React.useState(false);
   const [addonsOpen, setAddonsOpen] = React.useState(false);
   const isLightMode = theme.palette.mode === "light";
+  const handleToggleOpen = React.useCallback(() => {
+    setTimeout(() => setOpen((prev) => !prev), 0);
+  }, []);
 
   const handleOpenAddons = () => {
     setAddonsOpen(!addonsOpen);
@@ -77,7 +80,7 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={handleToggleOpen}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -305,14 +308,22 @@ const History = () => {
     dispatch(fetchHistory());
   }, [dispatch]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  const handleChangePage = React.useCallback(
+    (event, newPage) => {
+      const maxPage = Math.ceil(filteredHistory.length / rowsPerPage) - 1;
+      if (newPage >= 0 && newPage <= maxPage) {
+        setPage(newPage);
+      } else {
+        console.log("Page out of bounds!");
+      }
+    },
+    [filteredHistory.length, rowsPerPage]
+  );
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+  const handleChangeRowsPerPage = React.useCallback((event) => {
+    setRowsPerPage(Number(event.target.value));
     setPage(0);
-  };
+  }, []);
 
   return (
     <div className="main-application">
@@ -380,30 +391,30 @@ const History = () => {
                 </TableRow>
               </TableHead>
               {!content && (
-                <>
+                <TableBody>
                   {filteredHistory && filteredHistory.length > 0 ? (
                     filteredHistory
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                      .map((row) => {
-                        return <Row key={row.pack} row={row} />;
-                      })
-                  ) : (
+                      .map((row, index) => <Row key={index} row={row} />)
+                  ) : historyStatus === "loading" ? (
                     <TableRow>
-                      <TableCell colSpan={5}>
-                        {historyStatus === "loading" ? (
-                          <Loading />
-                        ) : historyStatus === "fetchError" ? (
-                          <Error>{error}</Error>
-                        ) : (
-                          <NoData />
-                        )}
+                      <TableCell colSpan={6}>
+                        <Loading />
                       </TableCell>
                     </TableRow>
+                  ) : historyStatus === "fetchError" ? (
+                    <TableRow>
+                      <TableCell colSpan={6}>
+                        <Error>{error}</Error>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    <NoDataTable cols={6} />
                   )}
-                </>
+                </TableBody>
               )}
             </Table>
           </TableContainer>

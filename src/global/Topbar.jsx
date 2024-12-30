@@ -8,17 +8,21 @@ import {
   ListItemText,
   Collapse,
   ButtonBase,
+  ListItemIcon,
 } from "@mui/material";
 import { useContext, useState } from "react";
 import { ColorModeContext, tokens } from "../theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
+import TuneIcon from "@mui/icons-material/Tune";
+import CollectionsIcon from "@mui/icons-material/Collections";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useDispatch } from "react-redux";
 import { logOut } from "../features/authSlice";
+
 const Topbar = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
@@ -92,7 +96,10 @@ const Topbar = () => {
                   }}
                 >
                   <ListItem>
-                    <ListItemText primary="Devise" />
+                    <ListItemIcon>
+                      <TuneIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Paramètres" />
                   </ListItem>
                 </ButtonBase>
                 <ButtonBase
@@ -112,6 +119,9 @@ const Topbar = () => {
                   }}
                 >
                   <ListItem>
+                    <ListItemIcon>
+                      <CollectionsIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Carousel" />
                   </ListItem>
                 </ButtonBase>

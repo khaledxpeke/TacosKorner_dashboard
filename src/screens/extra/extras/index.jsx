@@ -4,12 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid, Container, Chip, Stack, Typography } from "@mui/material";
 import {
-getExtra,getExtraError,getExtraStatus,getExtraSuccess,deleteExtra,selectAllExtra,updateStatus
+  getExtra,
+  getExtraError,
+  getExtraStatus,
+  getExtraSuccess,
+  deleteExtra,
+  selectAllExtra,
+  updateStatus,
 } from "../../../features/extraSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
-import NoData from "../../../components/no_data";
+import NoData from "../../../components/noData";
 import AppBarSearch from "../../../global/appBarSearch";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";

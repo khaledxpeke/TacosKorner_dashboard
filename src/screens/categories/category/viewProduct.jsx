@@ -24,7 +24,7 @@ import {
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
-import NoData from "../../../components/no_data";
+import NoData from "../../../components/noData";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 import { tokens } from "../../../theme";
@@ -66,21 +66,21 @@ const ViewProduct = () => {
     }
   }, [status, products, search]);
 
- useEffect(() => {
-   const statusHandlers = {
-     deleteSuccess: () => {
-       toast.success(success);
-       setFilteredProducts((prev) =>
-         prev.filter((item) => item._id !== cardId)
-       );
-       dispatch(updateStatus());
-     },
-     deleteError: () => toast.error(error),
-   };
-   if (status in statusHandlers) {
-     statusHandlers[status]();
-   }
- }, [status, error, success, dispatch, cardId]);
+  useEffect(() => {
+    const statusHandlers = {
+      deleteSuccess: () => {
+        toast.success(success);
+        setFilteredProducts((prev) =>
+          prev.filter((item) => item._id !== cardId)
+        );
+        dispatch(updateStatus());
+      },
+      deleteError: () => toast.error(error),
+    };
+    if (status in statusHandlers) {
+      statusHandlers[status]();
+    }
+  }, [status, error, success, dispatch, cardId]);
 
   return (
     <div className="main-application">

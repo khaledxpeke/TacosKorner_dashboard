@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
-import NoData from "../../../components/no_data";
+import NoData from "../../../components/noData";
 import AlertDialog from "../../../components/dialog";
 import AppBarSearch from "../../../global/appBarSearch";
 import { toast } from "react-toastify";

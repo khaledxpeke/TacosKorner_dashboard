@@ -20,7 +20,6 @@ import {
   Chip,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import NoData from "../../components/no_data";
 import AlertDialog from "../../components/dialog";
 import { useTheme } from "@mui/material/styles";
 import { tokens } from "../../theme";
@@ -43,6 +42,7 @@ import Loading from "../../components/loading";
 import Error from "../../components/Error";
 import EditIcon from "@mui/icons-material/Edit";
 import AppBarSearch from "../../global/appBarSearch";
+import NoDataTable from "../../components/noDataTable";
 const apiUrl = process.env.REACT_APP_API_URL;
 const SettingsManagement = () => {
   const dispatch = useDispatch();
@@ -148,7 +148,6 @@ const SettingsManagement = () => {
   } else if (settingStatus === "fetchError") {
     content = <Error>{error}</Error>;
   } else if (settingStatus === "fetchData") {
-    console.log(settings);
     const filteredSettings = settings?.currencies?.filter(
       (currency) =>
         currency.toLowerCase().includes(search?.toLowerCase()) ||
@@ -259,7 +258,7 @@ const SettingsManagement = () => {
                     </TableRow>
                   ))
                 ) : (
-                  <NoData />
+                  <NoDataTable cols={2} />
                 )}
               </TableBody>
             </Table>

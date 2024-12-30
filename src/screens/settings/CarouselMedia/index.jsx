@@ -16,6 +16,7 @@ import { getCarouselMedia } from "../../../features/carouselSlice";
 import { useDispatch, useSelector } from "react-redux";
 const apiUrl = process.env.REACT_APP_API_URL;
 const CarouselMedia = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleFullscreen = (src, type) => {
     const fullscreenElement = document.createElement(
@@ -45,7 +46,7 @@ const CarouselMedia = () => {
     fullscreenElement.onclick = closeFullscreen;
   };
 
-  const dispatch = useDispatch();
+  
   const carouselItems = useSelector((state) => state.carousel?.items || []);
   React.useEffect(() => {
     dispatch(getCarouselMedia());

@@ -5,7 +5,7 @@ const NoData = () => {
     <Grid container justifyContent="center" alignItems="center" height="60vh">
       <Grid item>
         <Typography variant="h3" color="textPrimary">
-          No data available
+          Aucune donnée disponible
         </Typography>
       </Grid>
     </Grid>

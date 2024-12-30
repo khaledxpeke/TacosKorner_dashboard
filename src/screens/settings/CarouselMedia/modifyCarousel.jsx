@@ -22,10 +22,8 @@ const ModifyCarousel = () => {
   const error = useSelector(getCarouselsError);
   const success = useSelector(getCarouselsSuccess);
   const [items, setItems] = useState([]);
-  console.log(items);
   const [open, setOpen] = useState(false);
   const [mediaId, setMediaId] = useState("");
-  console.log(status);
   const handleOpen = (id) => {
     setOpen(true);
     setMediaId(id);
@@ -40,7 +38,6 @@ const ModifyCarousel = () => {
     const [reorderedItem] = newItems.splice(result.source.index, 1);
     newItems.splice(result.destination.index, 0, reorderedItem);
     setItems(newItems);
-    console.log("newItems", newItems);
     const updatedItems = newItems.map((item, index) => ({
       id: item._id,
       order: index + 1,

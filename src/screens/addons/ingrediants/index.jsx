@@ -14,7 +14,7 @@ import {
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
-import NoData from "../../../components/no_data";
+import NoData from "../../../components/noData";
 import AppBarSearch from "../../../global/appBarSearch";
 import { Box, Chip, Container, Grid, Stack, Typography } from "@mui/material";
 import AlertDialog from "../../../components/dialog";

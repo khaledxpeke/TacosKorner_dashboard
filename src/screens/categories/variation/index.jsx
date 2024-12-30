@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { tokens } from "../../../theme";
 import {
@@ -15,49 +14,65 @@ import {
   Grid,
   Container,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
 import {
-  deleteType,
-  getTypes,
-  getTypesError,
-  getTypesStatus,
-  selectAllTypes,
+  deleteVariation,
+  getVariations,
+  getVariationError,
+  getVariationStatus,
+  selectAllVariations,
   updateStatus,
-  getTypesSuccess,
-} from "../../../features/typeSlice";
+  getVariationSuccess,
+} from "../../../features/variationSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 import AppBarSearch from "../../../global/appBarSearch";
 import NoDataTable from "../../../components/noDataTable";
-const Type = () => {
+const Variantion = () => {
   const [filteredTypes, setFilteredTypes] = useState([]);
   const dispatch = useDispatch();
-  const status = useSelector(getTypesStatus);
-  const error = useSelector(getTypesError);
-  const types = useSelector(selectAllTypes);
-  const success = useSelector(getTypesSuccess);
-  const navigate = useNavigate();
+  const status = useSelector(getVariationStatus);
+  const error = useSelector(getVariationError);
+  const types = useSelector(selectAllVariations);
+  const success = useSelector(getVariationSuccess);
   const theme = useTheme();
   const [search, setSearch] = useState("");
   const isLightMode = theme.palette.mode === "light";
   const [open, setOpen] = useState(false);
+  const [addOrModify, setAddOrModify] = useState("");
+  const [variationName, setVariationName] = useState("");
+  const [addModifyOpen, setAddModifyOpen] = useState(false);
   const [cardId, setCardId] = useState(null);
   const handleClickOpen = (cardId) => {
     setOpen(true);
     setCardId(cardId);
   };
+  const handleAddOpen = (cardId, type, name) => {
+    if (type === "Ajouter variation") {
+      setCardId("");
+      setAddOrModify("Ajouter variation");
+    } else {
+      setVariationName(name);
+      setAddOrModify("Modifier variation");
+    }
+    setAddModifyOpen(true);
+    setCardId(cardId);
+  };
+  const handleClose = () => {
+    setCardId("");
+    setVariationName("");
+    setAddModifyOpen(false);
+  };
   const colors = tokens(theme.palette.mode);
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    navigate("/addType");
-  };
-  const handleModify = (data) => {
-    navigate("/modifyType", { state: { type: data } });
-  };
   useEffect(() => {
-    dispatch(getTypes());
+    dispatch(getVariations());
   }, [dispatch]);
 
   useEffect(() => {
@@ -83,10 +98,10 @@ const Type = () => {
     <div className="main-application">
       <CssBaseline />
       <AppBarSearch
-        handleSubmit={handleSubmit}
+        handleSubmit={() => handleAddOpen("", "Ajouter variation", "")}
         handleSearch={(e) => setSearch(e.target.value)}
-        title={"Mes options"}
-        buttonTitle={"Ajouter une option"}
+        title={"Mes variations"}
+        buttonTitle={"Ajouter une variation"}
       />
       <main>
         <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
@@ -113,11 +128,6 @@ const Type = () => {
                       >
                         <TableRow>
                           <TableCell>Nom</TableCell>
-                          <TableCell>Message</TableCell>
-                          <TableCell>Max</TableCell>
-                          <TableCell>Min</TableCell>
-                          <TableCell>Payant</TableCell>
-                          <TableCell>Type</TableCell>
                           <TableCell align="right">Actions</TableCell>
                         </TableRow>
                       </TableHead>
@@ -126,15 +136,6 @@ const Type = () => {
                           filteredTypes.map((card) => (
                             <TableRow key={card._id}>
                               <TableCell>{card.name}</TableCell>
-                              <TableCell>{card.message}</TableCell>
-                              <TableCell>{card.max}</TableCell>
-                              <TableCell>{card.min}</TableCell>
-                              <TableCell>
-                                {card.payment ? "Oui" : "Non"}
-                              </TableCell>
-                              <TableCell>
-                                {card.selection ? "Multiple" : "Seul"}
-                              </TableCell>
                               <TableCell align="right">
                                 <ButtonGroup
                                   variant="contained"
@@ -145,31 +146,66 @@ const Type = () => {
                                     color="error"
                                     onClick={() => handleClickOpen(card._id)}
                                   >
-                                    Delete
+                                    Supprimer
                                   </Button>
                                   <Button
                                     variant="contained"
                                     color="warning"
-                                    onClick={() => handleModify(card)}
+                                    onClick={() =>
+                                      handleAddOpen(
+                                        card._id,
+                                        "Modifier variation",
+                                        card.name
+                                      )
+                                    }
                                   >
-                                    Edit
+                                    Modifier
                                   </Button>
                                 </ButtonGroup>
                               </TableCell>
                             </TableRow>
                           ))
                         ) : (
-                          <NoDataTable cols={7} />
+                          <NoDataTable cols={2} />
                         )}
+                        <Dialog open={addModifyOpen} onClose={handleClose}>
+                          <DialogTitle>{addOrModify}</DialogTitle>
+                          <DialogContent>
+                            <TextField
+                              label="Nom"
+                              fullWidth
+                              margin="normal"
+                              value={variationName}
+                              onChange={(e) => setVariationName(e.target.value)}
+                            />
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleClose} color="error">
+                              Annuler
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                if (addOrModify === "Ajouter variation") {
+                                  //   handleUpdateCurrency();
+                                } else {
+                                  //   handleAddCurrency();
+                                }
+                              }}
+                              color="secondary"
+                            >
+                              Confirmer
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                        <AlertDialog
+                          handleClose={() => setOpen(false)}
+                          open={open}
+                          name={"variation"}
+                          cardId={cardId}
+                          deleteData={deleteVariation(cardId)}
+                        />
                       </TableBody>
                     </Table>
-                    <AlertDialog
-                      handleClose={() => setOpen(false)}
-                      open={open}
-                      name={"option"}
-                      cardId={cardId}
-                      deleteData={deleteType(cardId)}
-                    />
                   </TableContainer>
                 </Grid>
               </>
@@ -181,4 +217,4 @@ const Type = () => {
   );
 };
 
-export default Type;
+export default Variantion;

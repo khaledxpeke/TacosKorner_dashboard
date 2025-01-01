@@ -124,7 +124,6 @@ const Variantion = () => {
       dispatch(updateStatus());
     } else if (status === "modifyError") {
       toast.error(error);
-      console.log(error);
       dispatch(updateStatus());
     }
   }, [status, error, dispatch, success]);

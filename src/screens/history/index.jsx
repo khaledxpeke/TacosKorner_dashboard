@@ -313,8 +313,6 @@ const History = () => {
       const maxPage = Math.ceil(filteredHistory.length / rowsPerPage) - 1;
       if (newPage >= 0 && newPage <= maxPage) {
         setPage(newPage);
-      } else {
-        console.log("Page out of bounds!");
       }
     },
     [filteredHistory.length, rowsPerPage]

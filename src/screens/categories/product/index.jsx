@@ -55,7 +55,6 @@ const Formule = () => {
   };
 
   const truncateText = (text, limit = 30) => {
-    console.log(filteredProducts[0].type[0].name);
     if (text.length <= limit) return text;
     return text.slice(0, limit).trim() + "...";
   };

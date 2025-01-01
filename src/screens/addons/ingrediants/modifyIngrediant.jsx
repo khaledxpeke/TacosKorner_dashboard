@@ -71,7 +71,6 @@ const ModifyIngrediant = () => {
     outOfStock: data.outOfStock,
     visible: data.visible,
   };
-console.log(variations)
   const handleFormSubmit = (values) => {
     const requestBody = {
       name: values.name,

@@ -2,10 +2,10 @@ import {
   Box,
   Button,
   FormControl,
-  Stack,
   InputLabel,
   MenuItem,
   Select,
+  Grid,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -255,120 +255,131 @@ const AddProduct = () => {
               />
               {values.choice === "multiple" && (
                 <>
-                  <Stack
-                    flexWrap="wrap"
-                    flexDirection="row"
-                    sx={{
-                      gridColumn: "span 3",
-                      gridRow: "9 / span 1",
-                      gap: "30px",
-                    }}
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{ gridColumn: "span 6", gridRow: "9 / span 1" }}
                   >
-                    <FormControl fullWidth variant="filled">
-                      <InputLabel id="type-select-label">
-                        Select Types
-                      </InputLabel>
-                      <Select
-                        labelId="type-select-label"
-                        multiple
-                        value={selectedTypes.map((type) => type._id)}
-                        onChange={handleTypeSelect}
+                    <Grid
+                      item
+                      xs={12}
+                      md={6}
+                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                    >
+                      <FormControl fullWidth variant="filled">
+                        <InputLabel id="type-select-label">
+                          Sélectionner les options
+                        </InputLabel>
+                        <Select
+                          labelId="type-select-label"
+                          multiple
+                          value={selectedTypes.map((type) => type._id)}
+                          onChange={handleTypeSelect}
+                        >
+                          {typesWithIngrediants.map((type) => (
+                            <MenuItem
+                              key={type._id}
+                              value={type._id}
+                              sx={{
+                                opacity: selectedTypes.some(
+                                  (selectedType) =>
+                                    selectedType._id === type._id
+                                )
+                                  ? 1
+                                  : 0.6,
+                                backgroundColor: selectedTypes.some(
+                                  (selectedType) =>
+                                    selectedType._id === type._id
+                                )
+                                  ? "black !important"
+                                  : "transparent",
+                                color: selectedTypes.includes(type._id)
+                                  ? "white"
+                                  : "inherit",
+                              }}
+                            >
+                              {type.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <Grid>
+                        <MultipleSelectComponent
+                          name="variations"
+                          items={variations}
+                          value={values.variations.map((v) => v._id)}
+                          change={(e) => {
+                            const selectedVariations = e.target.value.map(
+                              (variationId) => ({
+                                _id: variationId,
+                                price:
+                                  values.variations.find(
+                                    (v) => v._id === variationId
+                                  )?.price || 0,
+                              })
+                            );
+                            handleChange({
+                              target: {
+                                name: "variations",
+                                value: selectedVariations,
+                              },
+                            });
+                          }}
+                        />
+                      </Grid>
+                      <Grid
+                        xs={12}
+                        md={6}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                        }}
                       >
-                        {typesWithIngrediants.map((type) => (
-                          <MenuItem
-                            key={type._id}
-                            value={type._id}
-                            sx={{
-                              opacity: selectedTypes.some(
-                                (selectedType) => selectedType._id === type._id
-                              )
-                                ? 1
-                                : 0.6,
-                              backgroundColor: selectedTypes.some(
-                                (selectedType) => selectedType._id === type._id
-                              )
-                                ? "black !important"
-                                : "transparent",
-                              color: selectedTypes.includes(type._id)
-                                ? "white"
-                                : "inherit",
+                        {values.variations.map((variation, index) => (
+                          <TextFieldCompnent
+                            key={variation._id}
+                            type="number"
+                            label={`Prix pour ${
+                              variations.find((v) => v._id === variation._id)
+                                ?.name
+                            }`}
+                            change={(e) => {
+                              const newVariations = values.variations.map((v) =>
+                                v._id === variation._id
+                                  ? { ...v, price: Number(e.target.value) }
+                                  : v
+                              );
+                              handleChange({
+                                target: {
+                                  name: "variations",
+                                  value: newVariations,
+                                },
+                              });
                             }}
-                          >
-                            {type.name}
-                          </MenuItem>
+                            value={variation.price}
+                            name={`variation-${variation.variation}-price`}
+                            blur={handleBlur}
+                            colum="span 2"
+                            row={`${11 + index} / span 1`}
+                            num={0}
+                          />
                         ))}
-                      </Select>
-                    </FormControl>
-                  </Stack>
-                  <Stack
-                    flexWrap="wrap"
-                    flexDirection="row"
-                    sx={{
-                      gridColumn: "span 2",
-                      gridRow: "9 / span 1",
-                    }}
-                  >
-                    <Reorder
-                    
-                      items={selectedTypes}
-                      onReorder={(newOrder) => {
-                        setSelectedTypes(newOrder);
-                        setFieldValue(
-                          "types",
-                          newOrder.map((type) => type._id)
-                        );
-                      }}
-                    />
-                  </Stack>
-                  <MultipleSelectComponent
-                    name="variations"
-                    gridColumn="span 3"
-                    gridRow="10 / span 1"
-                    items={variations}
-                    value={values.variations.map((v) => v._id)}
-                    change={(e) => {
-                      const selectedVariations = e.target.value.map(
-                        (variationId) => ({
-                          _id: variationId,
-                          price: 0,
-                        })
-                      );
-                      handleChange({
-                        target: {
-                          name: "variations",
-                          value: selectedVariations,
-                        },
-                      });
-                    }}
-                  />
-                  {values.variations.map((variation, index) => (
-                    <TextFieldCompnent
-                      key={variation._id}
-                      type="number"
-                      label={`Prix pour ${
-                        variations.find((v) => v._id === variation._id)?.name
-                      }`}
-                      change={(e) => {
-                        const newVariations = values.variations.map((v) =>
-                          v._id === variation._id
-                            ? { ...v, price: Number(e.target.value) }
-                            : v
-                        );
-                        handleChange({
-                          target: {
-                            name: "variations",
-                            value: newVariations,
-                          },
-                        });
-                      }}
-                      value={variation.price}
-                      name={`variation-${variation.variation}-price`}
-                      blur={handleBlur}
-                      colum="span 2"
-                      row={`${11 + index} / span 1`}
-                      num={0}
-                    />
-                  ))}
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Reorder
+                        items={selectedTypes}
+                        onReorder={(newOrder) => {
+                          setSelectedTypes(newOrder);
+                          setFieldValue(
+                            "types",
+                            newOrder.map((type) => type._id)
+                          );
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
                 </>
               )}
             </Box>

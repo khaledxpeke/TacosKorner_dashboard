@@ -20,9 +20,9 @@ import {
   Chip,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import AlertDialog from "../../components/dialog";
+import AlertDialog from "../../../components/dialog";
 import { useTheme } from "@mui/material/styles";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 import { useNavigate } from "react-router-dom";
 import {
   getSettings,
@@ -35,14 +35,14 @@ import {
   selectAllSettings,
   updateSetting,
   addSettings,
-} from "../../features/settingSlice";
+} from "../../../features/settingSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import Loading from "../../components/loading";
-import Error from "../../components/Error";
+import Loading from "../../../components/loading";
+import Error from "../../../components/Error";
 import EditIcon from "@mui/icons-material/Edit";
-import AppBarSearch from "../../global/appBarSearch";
-import NoDataTable from "../../components/noDataTable";
+import AppBarSearch from "../../../global/appBarSearch";
+import NoDataTable from "../../../components/noDataTable";
 const apiUrl = process.env.REACT_APP_API_URL;
 const SettingsManagement = () => {
   const dispatch = useDispatch();
@@ -119,17 +119,24 @@ const SettingsManagement = () => {
   // };
 
   useEffect(() => {
-    const successStatuses = ["addSuccess", "updateSettingSuccess", "updateSuccess"];
+    const successStatuses = [
+      "addSuccess",
+      "updateSettingSuccess",
+      "updateSuccess",
+    ];
     if (successStatuses.includes(settingStatus)) {
       toast.success(success);
       dispatch(getSettings());
       dispatch(updateStatus());
-    }
-    else if (settingStatus === "addError" || settingStatus === "updateSettingError" || settingStatus === "updateError") {
+    } else if (
+      settingStatus === "addError" ||
+      settingStatus === "updateSettingError" ||
+      settingStatus === "updateError"
+    ) {
       toast.error(error);
       dispatch(updateStatus());
     }
-  }, [settingStatus, dispatch, success,error]);
+  }, [settingStatus, dispatch, success, error]);
 
   // useEffect(() => {
   //   if (settingStatus === "modifyError" || settingStatus === "addError") {

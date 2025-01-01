@@ -31,11 +31,11 @@ import Drink from "./screens/extra/drinks";
 import AddDrink from "./screens/extra/drinks/addDrink";
 import ModifyDrink from "./screens/extra/drinks/modifyDrink";
 import jwtDecode from "jwt-decode";
-import SettingsManagement from "./screens/settings/settings";
-import ModifySettings from "./screens/settings/modifySettings";
-import CarouselMedia from "./screens/settings/CarouselMedia";
-import AddToCarousel from "./screens/settings/CarouselMedia/addToCarousel";
-import ModifyCarousel from "./screens/settings/CarouselMedia/modifyCarousel";
+import SettingsManagement from "./screens/settings/parameters/settings";
+import ModifySettings from "./screens/settings/parameters/modifySettings";
+import CarouselMedia from "./screens/settings/carousel";
+import AddToCarousel from "./screens/settings/carousel/addToCarousel";
+import ModifyCarousel from "./screens/settings/carousel/modifyCarousel";
 import Variantion from "./screens/categories/variation";
 
 function App() {

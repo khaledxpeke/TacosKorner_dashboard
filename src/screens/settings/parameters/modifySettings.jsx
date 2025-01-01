@@ -11,7 +11,7 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 import { useEffect, useState } from "react";
 import {
   updateStatus,
@@ -20,13 +20,13 @@ import {
   getSettingsLoading,
   getSettingsSuccess,
   updateSetting,
-} from "../../features/settingSlice";
+} from "../../../features/settingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Loading from "../../components/loading";
+import Loading from "../../../components/loading";
 import { useLocation, useNavigate } from "react-router-dom";
-import TextFieldCompnent from "../../components/textFieldComponent";
-import ImageInput from "../../components/imageInput";
+import TextFieldCompnent from "../../../components/textFieldComponent";
+import ImageInput from "../../../components/imageInput";
 
 const ModifySettings = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -93,8 +93,8 @@ const ModifySettings = () => {
     formData.append("address", values.address);
 
     const methods = [
-      { label: values.card, isActive: values.cardActive, _id: values.cardId,},
-      { label: values.cash, isActive: values.cashActive , _id: values.cashId,},
+      { label: values.card, isActive: values.cardActive, _id: values.cardId },
+      { label: values.cash, isActive: values.cashActive, _id: values.cashId },
     ];
 
     formData.append("method", JSON.stringify(methods));

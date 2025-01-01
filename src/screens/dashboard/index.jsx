@@ -80,7 +80,7 @@ const Dashboard = () => {
   useLayoutEffect(() => {
     const handleResize = debounce(() => {
       setWindowSize(window.innerWidth);
-    }, 300); // Adjust debounce interval as needed
+    }, 300);
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -90,16 +90,12 @@ const Dashboard = () => {
   } else if (recentsStatus === "fetchRecentsError") {
     content2 = <Error>{recentsError}</Error>;
   }
-  if (recentsStatus === "fetchRecentsData") {
-  }
   return (
     <Box m="20px" className="main-application">
-      {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Bienvenue au Tacos Korner" />
       </Box>
       {content}
-
       <Box
         display="grid"
         gridTemplateColumns={isSmallScreen ? "1fr" : "repeat(12, 1fr)"}
@@ -136,7 +132,7 @@ const Dashboard = () => {
               justifyContent="center"
             >
               <StatBox
-                title={commands + " Commands"}
+                title={commands + " Commandes"}
                 subtitle="Nombre de commandes"
                 progress="0.21"
                 increase="+21%"
@@ -257,14 +253,13 @@ const Dashboard = () => {
                   10 derniers historiques
                 </Typography>
               </Box>
-              {recents.map((recent, index) => {
+              {recents.map((recent) => {
                 let addon = 0;
                 let plat = 0;
                 recent.product.forEach((prod, i) => {
                   addon += prod.addons.length;
                   plat = i + 1;
                 });
-
                 return (
                   <Box
                     key={recent._id}

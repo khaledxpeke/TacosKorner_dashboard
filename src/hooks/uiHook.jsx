@@ -13,9 +13,9 @@ export const ResponsiveProvider = ({ children }) => {
 
   useLayoutEffect(() => {
     checkScreenSize(); 
-    window.addEventListener("resize", checkScreenSize); // Listen for resize events
+    window.addEventListener("resize", checkScreenSize);
 
-    return () => window.removeEventListener("resize", checkScreenSize); // Cleanup
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   return (

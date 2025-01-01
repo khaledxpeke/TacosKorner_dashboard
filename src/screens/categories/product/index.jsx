@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid, Container, Chip, Stack, Typography } from "@mui/material";
 import {
   deleteProduct,
-  getProducts,
   getProductsError,
   getProductsStatus,
   selectAllProducts,
   getProductsSuccess,
   updateStatus,
+  getProductByCategoryId,
 } from "../../../features/productSlice";
 import Loading from "../../../components/loading";
 import Error from "../../../components/Error";
@@ -22,6 +22,9 @@ import { toast } from "react-toastify";
 import { getSettings, selectAllSettings } from "../../../features/settingSlice";
 
 const Formule = () => {
+  const location = useLocation();
+  const categoryId = location.state.categoryId;
+  const categoryName = location.state.categoryName;
   const [filteredProducts, setFilteredProducts] = useState([]);
   const dispatch = useDispatch();
   const status = useSelector(getProductsStatus);
@@ -42,14 +45,27 @@ const Formule = () => {
     navigate("/addProduct");
   };
   const handleModify = (data) => {
-    navigate("/modifyProduct", { state: { product: data } });
+    navigate("/modifyProduct", {
+      state: {
+        product: data,
+        categoryId: categoryId,
+        categoryName: categoryName,
+      },
+    });
   };
+
+  const truncateText = (text, limit = 30) => {
+    console.log(filteredProducts[0].type[0].name);
+    if (text.length <= limit) return text;
+    return text.slice(0, limit).trim() + "...";
+  };
+
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getProductByCategoryId(categoryId));
     dispatch(getSettings());
-  }, [dispatch]);
+  }, [categoryId, dispatch]);
   useEffect(() => {
-    if (status === "fetchData") {
+    if (status === "fetchDataByCategory") {
       setFilteredProducts(
         products?.filter((dish) =>
           dish.name.toLowerCase().includes(search.toLowerCase())
@@ -73,7 +89,7 @@ const Formule = () => {
       <AppBarSearch
         handleSubmit={handleSubmit}
         handleSearch={(e) => setSearch(e.target.value)}
-        title={"Mes produits"}
+        title={categoryName + " > Mes produits"}
         buttonTitle={"Ajouter un produit"}
       />
       <main>
@@ -97,6 +113,24 @@ const Formule = () => {
                             Prix:{" "}
                             {card?.price ?? 0 + " " + settings.defaultCurrency}
                           </Typography>
+                          {card.type && card.description !== "" && (
+                            <Typography
+                              variant="h4"
+                              color="inherit"
+                              sx={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              Options:{" "}
+                              {truncateText(
+                                card.type
+                                  ?.map((type) => type.name)
+                                  .join(", ") || ""
+                              )}
+                            </Typography>
+                          )}
                           {card.description && card.description !== "" && (
                             <Typography variant="h4" color="inherit">
                               Description: {card?.description}

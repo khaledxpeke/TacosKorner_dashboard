@@ -75,7 +75,7 @@ const AddExtra = () => {
     <Loading />
   ) : (
     <Box m="20px" className="main-application">
-      <Header title="AJOUTER EXTRAS" subtitle="Créer une nouvelle extra" />
+      <Header title="AJOUTER EXTRAS" subtitle="Créer un nouveau extra" />
 
       <Formik
         onSubmit={handleFormSubmit}

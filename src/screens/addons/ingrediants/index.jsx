@@ -16,7 +16,7 @@ import Error from "../../../components/Error";
 import ProductCard from "../../../components/card";
 import NoData from "../../../components/noData";
 import AppBarSearch from "../../../global/appBarSearch";
-import { Box, Chip, Container, Grid, Stack, Typography } from "@mui/material";
+import { Chip, Container, Grid, Stack, Typography } from "@mui/material";
 import AlertDialog from "../../../components/dialog";
 import { toast } from "react-toastify";
 import { getSettings, selectAllSettings } from "../../../features/settingSlice";
@@ -101,19 +101,6 @@ const Ingrediant = () => {
                       handleClickOpen={() => handleClickOpen(card._id)}
                       content={
                         <>
-                          <Box
-                            sx={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              width: "200px",
-                            }}
-                          >
-                            Options:{" "}
-                            {truncateText(
-                              card.types?.map((type) => type.name).join(", ")
-                            )}
-                          </Box>
                           <Typography variant="h4" color="inherit">
                             Prix: {card.price ?? 0}
                             {" " + settings.defaultCurrency}
@@ -121,6 +108,20 @@ const Ingrediant = () => {
                           <Typography variant="h4" color="inherit">
                             Prix supplémentaire: {card.suppPrice ?? 0}
                             {" " + settings.defaultCurrency}
+                          </Typography>
+                          <Typography
+                            variant="h4"
+                            color="inherit"
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            Options:{" "}
+                            {truncateText(
+                              card.types?.map((type) => type.name).join(", ")
+                            )}
                           </Typography>
                           <Stack
                             justifyContent="space-between"

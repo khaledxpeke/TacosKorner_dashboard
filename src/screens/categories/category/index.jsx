@@ -44,8 +44,8 @@ const Category = () => {
   const handleModify = (data) => {
     navigate("/modifyCategory", { state: { category: data } });
   };
-  const handleViewProduct = (id) => {
-    navigate("/viewProduct", { state: { categoryId: id } });
+  const handleViewProduct = (id, name) => {
+    navigate("/product", { state: { categoryId: id, categoryName: name } });
   };
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const Category = () => {
                       handleModify={() => handleModify(card)}
                       content={card.products.length + " Produit"}
                       handleClickOpen={() => handleClickOpen(card._id)}
-                      viewProduct={() => handleViewProduct(card._id)}
+                      viewProduct={() => handleViewProduct(card._id, card.name)}
                     />
                   ))
                 ) : (

@@ -75,7 +75,7 @@ const AddDesert = () => {
     <Loading />
   ) : (
     <Box m="20px" className="main-application">
-      <Header title="AJOUTER DESSERT" subtitle="Créer une nouvelle dessert" />
+      <Header title="AJOUTER DESSERT" subtitle="Créer un nouveau dessert" />
 
       <Formik
         onSubmit={handleFormSubmit}

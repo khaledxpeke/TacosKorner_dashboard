@@ -23,7 +23,6 @@ import ModifyIngrediant from "./screens/addons/ingrediants/modifyIngrediant";
 import AddExtra from "./screens/extra/extras/addExtra";
 import AddDesert from "./screens/extra/desserts/addDessert";
 import ModifyCategory from "./screens/categories/category/modifyCategory";
-import ViewProduct from "./screens/categories/category/viewProduct";
 import ModifyProduct from "./screens/categories/product/modifyProduct";
 import ModifyExtra from "./screens/extra/extras/modifyExtra";
 import ModifyDesert from "./screens/extra/desserts/modifyDessert";
@@ -77,7 +76,6 @@ function App() {
                 <Route path="/addCategory" element={<AddCategory />} />
                 <Route path="/modifyCategory" element={<ModifyCategory />} />
                 <Route path="/variation" element={<Variantion />} />
-                <Route path="/viewProduct" element={<ViewProduct />} />
                 <Route path="/product" element={<Product />} />
                 <Route path="/modifyProduct" element={<ModifyProduct />} />
                 <Route path="/addProduct" element={<AddProduct />} />

@@ -139,7 +139,7 @@ const AddProduct = () => {
     <Loading />
   ) : (
     <Box m="20px" className="main-application">
-      <Header title="AJOUTER PRODUIT" subtitle="Créer une nouvelle produit" />
+      <Header title="AJOUTER PRODUIT" subtitle="Créer un nouveau produit" />
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -308,59 +308,67 @@ const AddProduct = () => {
                       gridRow: "9 / span 1",
                     }}
                   >
-                     <Reorder 
-                items={selectedTypes} 
-                onReorder={(newOrder) => {
-                  setSelectedTypes(newOrder);
-                  setFieldValue('types', newOrder.map(type => type._id));
-                }} 
-              />
+                    <Reorder
+                    
+                      items={selectedTypes}
+                      onReorder={(newOrder) => {
+                        setSelectedTypes(newOrder);
+                        setFieldValue(
+                          "types",
+                          newOrder.map((type) => type._id)
+                        );
+                      }}
+                    />
                   </Stack>
                   <MultipleSelectComponent
                     name="variations"
                     gridColumn="span 3"
                     gridRow="10 / span 1"
                     items={variations}
-                    value={values.variations.map(v => v._id)}
+                    value={values.variations.map((v) => v._id)}
                     change={(e) => {
-                      const selectedVariations = e.target.value.map(variationId => ({
-                        _id: variationId,
-                        price: 0
-                      }));
+                      const selectedVariations = e.target.value.map(
+                        (variationId) => ({
+                          _id: variationId,
+                          price: 0,
+                        })
+                      );
                       handleChange({
                         target: {
                           name: "variations",
-                          value: selectedVariations
-                        }
+                          value: selectedVariations,
+                        },
                       });
                     }}
                   />
                   {values.variations.map((variation, index) => (
-                <TextFieldCompnent
-                  key={variation._id}
-                  type="number"
-                  label={`Prix pour ${variations.find(v => v._id === variation._id)?.name}`}
-                  change={(e) => {
-                    const newVariations = values.variations.map(v =>
-                      v._id === variation._id
-                        ? { ...v, price: Number(e.target.value) }
-                        : v
-                    );
-                    handleChange({
-                      target: {
-                        name: "variations",
-                        value: newVariations
-                      }
-                    });
-                  }}
-                  value={variation.price}
-                  name={`variation-${variation.variation}-price`}
-                  blur={handleBlur}
-                  colum="span 2"
-                  row={`${11 + index} / span 1`}
-                  num={0}
-                />
-              ))}
+                    <TextFieldCompnent
+                      key={variation._id}
+                      type="number"
+                      label={`Prix pour ${
+                        variations.find((v) => v._id === variation._id)?.name
+                      }`}
+                      change={(e) => {
+                        const newVariations = values.variations.map((v) =>
+                          v._id === variation._id
+                            ? { ...v, price: Number(e.target.value) }
+                            : v
+                        );
+                        handleChange({
+                          target: {
+                            name: "variations",
+                            value: newVariations,
+                          },
+                        });
+                      }}
+                      value={variation.price}
+                      name={`variation-${variation.variation}-price`}
+                      blur={handleBlur}
+                      colum="span 2"
+                      row={`${11 + index} / span 1`}
+                      num={0}
+                    />
+                  ))}
                 </>
               )}
             </Box>

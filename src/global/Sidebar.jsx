@@ -10,7 +10,6 @@ import CategoryIcon from "@mui/icons-material/Category";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import KebabDiningIcon from "@mui/icons-material/KebabDining";
 import ChecklistIcon from "@mui/icons-material/Checklist";
-import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import IcecreamIcon from "@mui/icons-material/Icecream";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import jwtDecode from "jwt-decode";
@@ -182,13 +181,6 @@ const Sidebar = () => {
                   title="Variation"
                   to="/variation"
                   icon={<AltRoute />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                <Item
-                  title="Produit"
-                  to="/product"
-                  icon={<DinnerDiningIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />

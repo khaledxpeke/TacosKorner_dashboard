@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 
-const Error = ({ children }) => {
+const Error = ({ children = "An error occurred" }) => {
   return (
     <Grid container justifyContent="center" alignItems="center" height="60vh">
       <Grid item>

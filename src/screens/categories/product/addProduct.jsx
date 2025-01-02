@@ -29,7 +29,7 @@ import {
   fetchCategories,
 } from "../../../features/categorySlice";
 import { getIngrediantsByType } from "../../../features/ingrediantSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SelectComponent from "../../../components/selectComponent";
 import TextFieldCompnent from "../../../components/textFieldComponent";
 import { getTypes, selectAllTypes } from "../../../features/typeSlice";
@@ -55,6 +55,10 @@ const AddProduct = () => {
   const categories = useSelector(selectAllCategories);
   const typesWithIngrediants = useSelector(selectAllTypes);
   const variations = useSelector(selectAllVariations);
+  const { state } = useLocation();
+  const categoryId = state?.categoryId;
+  const categoryName = state?.categoryName;
+
   const productSchema = yup.object().shape({
     name: yup.string().required("Nom est requis"),
     description: yup.string(),
@@ -71,7 +75,7 @@ const AddProduct = () => {
     name: "",
     description: "",
     image: "",
-    category: "",
+    category: { _id: categoryId, name: categoryName },
     type: [],
     variations: [],
     price: 0,
@@ -210,7 +214,7 @@ const AddProduct = () => {
                 gridRow="4 / span 1"
                 name="category"
                 items={categories}
-                value={values.category}
+                value={values.category._id}
                 change={handleChange}
               />
               <ImageInput

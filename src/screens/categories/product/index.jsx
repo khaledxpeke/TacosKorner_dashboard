@@ -42,7 +42,13 @@ const Formule = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/addProduct");
+    event.preventDefault();
+  navigate("/addProduct", {
+    state: {
+      categoryId: categoryId,
+      categoryName: categoryName
+    }
+  });
   };
   const handleModify = (data) => {
     navigate("/modifyProduct", {

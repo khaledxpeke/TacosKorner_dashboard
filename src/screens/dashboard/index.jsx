@@ -23,6 +23,7 @@ import { useLayoutEffect, useState } from "react";
 import Loading from "../../components/loading";
 import { debounce } from "lodash";
 import { useResponsive } from "../../hooks/uiHook";
+// import { data } from "react-router-dom";
 const Dashboard = () => {
   const { isSmallScreen } = useResponsive();
   const theme = useTheme();
@@ -36,6 +37,16 @@ const Dashboard = () => {
   const recentsError = useSelector(getRecentHistoryError);
   const recentsStatus = useSelector(getRecentHistoryStatus);
   const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const [monthlyStats, setMonthlyStats] = useState({
+    currentMonth: { sales: 0, commands: 0, plats: 0, surPlace: 0, importer: 0 },
+    previousMonth: {
+      sales: 0,
+      commands: 0,
+      plats: 0,
+      surPlace: 0,
+      importer: 0,
+    },
+  });
   const categoryCounts = {};
   let content;
   let content2;
@@ -44,6 +55,65 @@ const Dashboard = () => {
   let plats = 0;
   let importer = 0;
   let surPlace = 0;
+  useLayoutEffect(() => {
+    if (historyStatus === "fetchData" && histories.length > 0) {
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+  
+      const currentMonthData = histories.filter((history) => {
+        const date = new Date(history.boughtAt);
+        return (
+          date.getMonth() === currentMonth &&
+          date.getFullYear() === currentYear
+        );
+      });
+
+      const previousMonthData = histories.filter((history) => {
+        const date = new Date(history.boughtAt);
+        return (
+          date.getMonth() === previousMonth &&
+        date.getFullYear() === previousYear
+        );
+      });
+
+      const currentStats = {
+        sales: currentMonthData.reduce(
+          (sum, history) => sum + parseFloat(history.total),
+          0
+        ),
+        commands: currentMonthData.length,
+        plats: currentMonthData.reduce(
+          (sum, history) => sum + history.product.length,
+          0
+        ),
+        surPlace: currentMonthData.filter((h) => h.pack !== "Importer").length,
+        importer: currentMonthData.filter((h) => h.pack === "Importer").length,
+      };
+
+      const previousStats = {
+        sales: previousMonthData.reduce(
+          (sum, history) => sum + parseFloat(history.total),
+          0
+        ),
+        commands: previousMonthData.length,
+        plats: previousMonthData.reduce(
+          (sum, history) => sum + history.product.length,
+          0
+        ),
+        surPlace: previousMonthData.filter((h) => h.pack !== "Importer").length,
+        importer: previousMonthData.filter((h) => h.pack === "Importer").length,
+      };
+
+      setMonthlyStats({
+        currentMonth: currentStats,
+        previousMonth: previousStats,
+      });
+    }
+  }, [historyStatus, histories]);
   if (historyStatus === "loading") {
     content = <Loading />;
   } else if (historyStatus === "fetchError") {
@@ -54,6 +124,7 @@ const Dashboard = () => {
     plats = 0;
     importer = 0;
     surPlace = 0;
+
     histories.forEach((history) => {
       sales += parseFloat(history.total);
       plats += history.product.length;
@@ -71,8 +142,8 @@ const Dashboard = () => {
     });
   }
 
-  let surPlacePercentage = (surPlace / commands) * 100;
-  let importerPercentage = (importer / commands) * 100;
+  // let surPlacePercentage = (surPlace / commands) * 100;
+  // let importerPercentage = (importer / commands) * 100;
   useLayoutEffect(() => {
     dispatch(fetchHistory());
     dispatch(fetchRecentHistories());
@@ -115,11 +186,22 @@ const Dashboard = () => {
               <StatBox
                 title={sales + " DT"}
                 subtitle="Ventes obtenues"
-                progress=".50"
-                increase="+50%"
+                progress={monthlyStats.currentMonth.sales === 0 ? "0.00" : (
+                  monthlyStats.currentMonth.sales /
+                  (monthlyStats.previousMonth.sales || 1)
+                ).toFixed(2)}
+                increase={monthlyStats.currentMonth.sales === 0 ? "0%" : 
+                  `${monthlyStats.currentMonth.sales >= monthlyStats.previousMonth.sales ? "+" : ""}${(
+                    ((monthlyStats.currentMonth.sales - monthlyStats.previousMonth.sales) /
+                    (monthlyStats.previousMonth.sales || 1)) *
+                    100
+                  ).toFixed(1)}%`
+                }
                 icon={
                   <PointOfSaleIcon
-                    sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                    sx={{ color:  monthlyStats.currentMonth.sales >= monthlyStats.previousMonth.sales 
+                      ? colors.greenAccent[600] 
+                      : colors.redAccent[600], fontSize: "26px" }}
                   />
                 }
               />
@@ -134,12 +216,26 @@ const Dashboard = () => {
               <StatBox
                 title={commands + " Commandes"}
                 subtitle="Nombre de commandes"
-                progress="0.21"
-                increase="+21%"
+                progress={monthlyStats.currentMonth.commands === 0 ? "0.00" : (
+                  monthlyStats.currentMonth.commands /
+                  (monthlyStats.previousMonth.commands || 1)
+                ).toFixed(2)}
+                increase={monthlyStats.currentMonth.commands === 0 ? "0%" : 
+                  `${monthlyStats.currentMonth.commands >= monthlyStats.previousMonth.commands ? "+" : ""}${(
+                    ((monthlyStats.currentMonth.commands - monthlyStats.previousMonth.commands) /
+                    (monthlyStats.previousMonth.commands || 1)) *
+                    100
+                  ).toFixed(1)}%`
+                }
                 icon={
                   <LocalShippingIcon
-                    sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                  />
+                  sx={{ 
+                    color: monthlyStats.currentMonth.commands >= monthlyStats.previousMonth.commands 
+                      ? colors.greenAccent[600] 
+                      : colors.redAccent[600],
+                    fontSize: "26px" 
+                  }}
+                />
                 }
               />
             </Box>
@@ -153,12 +249,26 @@ const Dashboard = () => {
               <StatBox
                 title={plats + " Plats"}
                 subtitle="Nombre des plats"
-                progress="0.40"
-                increase="+40%"
+                progress={monthlyStats.currentMonth.plats === 0 ? "0.00" : (
+                  monthlyStats.currentMonth.plats /
+                  (monthlyStats.previousMonth.plats || 1)
+                ).toFixed(2)}
+                increase={monthlyStats.currentMonth.plats === 0 ? "0%" : 
+                  `${monthlyStats.currentMonth.plats >= monthlyStats.previousMonth.plats ? "+" : ""}${(
+                    ((monthlyStats.currentMonth.plats - monthlyStats.previousMonth.plats) /
+                    (monthlyStats.previousMonth.plats || 1)) *
+                    100
+                  ).toFixed(1)}%`
+                }
                 icon={
                   <RamenDiningIcon
-                    sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                  />
+                  sx={{ 
+                    color: monthlyStats.currentMonth.plats >= monthlyStats.previousMonth.plats 
+                      ? colors.greenAccent[600] 
+                      : colors.redAccent[600],
+                    fontSize: "26px" 
+                  }}
+                />
                 }
               />
             </Box>
@@ -172,12 +282,26 @@ const Dashboard = () => {
               <StatBox
                 title={surPlace}
                 subtitle=" Sur place"
-                progress={surPlacePercentage / 100}
-                increase={surPlacePercentage.toFixed(2) + " %"}
+                progress={monthlyStats.currentMonth.surPlace === 0 ? "0.00" : (
+                  monthlyStats.currentMonth.surPlace /
+                  (monthlyStats.previousMonth.surPlace || 1)
+                ).toFixed(2)}
+                increase={monthlyStats.currentMonth.surPlace === 0 ? "0%" : 
+                  `${monthlyStats.currentMonth.surPlace >= monthlyStats.previousMonth.surPlace ? "+" : ""}${(
+                    ((monthlyStats.currentMonth.surPlace - monthlyStats.previousMonth.surPlace) /
+                    (monthlyStats.previousMonth.surPlace || 1)) *
+                    100
+                  ).toFixed(1)}%`
+                }
                 icon={
                   <TrafficIcon
-                    sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                  />
+                  sx={{ 
+                    color: monthlyStats.currentMonth.surPlace >= monthlyStats.previousMonth.surPlace 
+                      ? colors.greenAccent[600] 
+                      : colors.redAccent[600],
+                    fontSize: "26px" 
+                  }}
+                />
                 }
               />
             </Box>
@@ -191,11 +315,23 @@ const Dashboard = () => {
               <StatBox
                 title={importer}
                 subtitle="Impoter"
-                progress={importerPercentage / 100}
-                increase={importerPercentage.toFixed(2) + " %"}
+                progress={monthlyStats.currentMonth.importer === 0 ? "0.00" : (
+                  monthlyStats.currentMonth.importer /
+                  (monthlyStats.previousMonth.importer || 1)
+                ).toFixed(2)}
+                increase={monthlyStats.currentMonth.importer === 0 ? "0%" : 
+                  `${monthlyStats.currentMonth.importer >= monthlyStats.previousMonth.importer ? "+" : ""}${(
+                    ((monthlyStats.currentMonth.importer - monthlyStats.previousMonth.importer) /
+                    (monthlyStats.previousMonth.importer || 1)) *
+                    100
+                  ).toFixed(1)}%`
+                }
                 icon={
                   <TrafficIcon
-                    sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                    sx={{  color: monthlyStats.currentMonth.importer >= monthlyStats.previousMonth.importer 
+                      ? colors.greenAccent[600] 
+                      : colors.redAccent[600],
+                    fontSize: "26px"  }}
                   />
                 }
               />
@@ -217,7 +353,7 @@ const Dashboard = () => {
               >
                 Quantité de vente
               </Typography>
-              <Box height="250px" >
+              <Box height="250px">
                 <BarChart
                   data={Object.keys(categoryCounts).map((category) => ({
                     category:

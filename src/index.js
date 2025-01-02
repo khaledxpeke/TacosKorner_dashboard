@@ -9,7 +9,6 @@ import store from "./store";
 import { ResponsiveProvider } from './hooks/uiHook';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-document.documentElement.lang = "fr"; 
 root.render(
   <React.StrictMode>
     <BrowserRouter>

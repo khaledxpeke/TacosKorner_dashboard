@@ -3,7 +3,7 @@ import { useTheme } from "@emotion/react";
 import { tokens } from "../theme";
 import React from "react";
 
-const BarChart = React.memo(({ data }) => {
+const BarChart = React.memo(({ data = []}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isLightMode = theme.palette.mode === "light";

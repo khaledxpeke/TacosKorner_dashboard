@@ -173,7 +173,6 @@ const Dashboard = () => {
         gridAutoRows="140px"
         gap="20px"
       >
-        {/* ROW 1 */}
         {!content && (
           <>
             <Box
@@ -338,7 +337,6 @@ const Dashboard = () => {
             </Box>
           </>
         )}
-        {/* ROW 2 */}
         {!content && (
           <>
             <Box
